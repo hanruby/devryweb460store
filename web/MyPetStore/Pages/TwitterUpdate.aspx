@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="TwitterUpdate.aspx.cs" Inherits="Pages_TwitterUpdate" Title="Untitled Page" %>
+<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="TwitterUpdate.aspx.cs" Inherits="Pages_TwitterUpdate" Title="Untitled Page" ValidateRequest="false" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="headPH" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="headerPH" Runat="Server">
@@ -11,11 +11,26 @@
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="mainContentPH" Runat="Server">
 
+<asp:Label ID="lblURL" runat="server" Text="URL:"></asp:Label>
+    &nbsp; &nbsp; &nbsp;&nbsp;
+    <asp:TextBox ID="txtUrl" ToolTip="Enter URL."
+        runat="server"></asp:TextBox>
+    <br />
+        
+    <asp:Label ID="lblTinyUrl" runat="server" Text="Tiny URL:"></asp:Label>
+    <asp:TextBox ID="txtTinyUrl" ReadOnly="true" ToolTip="Tiny URL."
+        runat="server"></asp:TextBox><br />
+    <br />
+
+<asp:Button ID="btnGetTinyUrl" runat="server" Text="Get Tiny" OnClick="btnGetTinyUrl_Click" />
+    <br />
+    <br />
+
     <asp:Label ID="lblTwitterComment" runat="server" Text="Comment:"></asp:Label>
     <br />
     
     <asp:TextBox ID="txtTwitterComment"
-        runat="server" TextMode="Multiline" Height="85px" Width="186px"></asp:TextBox>
+        runat="server" TextMode="Multiline" Height="85px" Width="186px" ToolTip="Please, place twitter comment here."></asp:TextBox>
         <br />
         
     <asp:Button ID="btnUpdateTwitterAccount" runat="server" Text="Post To Twitter" OnClick="UpdateTwitterAccount_Click" />

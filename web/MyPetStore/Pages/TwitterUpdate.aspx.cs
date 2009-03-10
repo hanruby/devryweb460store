@@ -33,6 +33,8 @@ public partial class Pages_TwitterUpdate : System.Web.UI.Page
             }
         }
     }
+
+    // post twit
      protected void UpdateTwitterAccount_Click(object sender, EventArgs e)
     {
          // variable
@@ -40,5 +42,18 @@ public partial class Pages_TwitterUpdate : System.Web.UI.Page
 
         // sends values to method for twitter post 
         Twitter.PostTweet("username of company", "password of company", txttwittercomment);
+    }
+
+    // convert regular url into a tiny url
+    protected void btnGetTinyUrl_Click(object sender, EventArgs e)
+    {
+
+        // inserts variables to method
+        string strShortURL = ConvertURL.ShortenURL(Server.HtmlEncode(txtUrl.Text), ConvertURL.ShortURLProvider.Tinyurl);
+
+        // sets tiny url to txtTinyUrl textbox
+        txtTinyUrl.Text = strShortURL;
+
+
     }
 }
