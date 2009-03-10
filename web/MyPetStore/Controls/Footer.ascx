@@ -3,10 +3,9 @@
     <div id="footer">
         <a href="#">About</a> | 
         <a href="#">Contact</a> | 
-        <a href="#">Terms of Sale</a> |
-        <a href="../Pages/search.aspx">Search</a>
+        <a href="#">Terms of Sale</a>
         <br /><br />
         <div id="footerText">
-            Copyright &copy 2009 MyPetsFavoriteWebsite.com
+            Copyright &copy 2009 MyPetsFW.com
         </div>
     </div>
