@@ -44,16 +44,26 @@ public partial class Pages_TwitterUpdate : System.Web.UI.Page
         Twitter.PostTweet("mypetsfw", "", txttwittercomment);
     }
 
+    // creates random enum 
+    // I took out the -1 after items.Length, it doesn't seem to be needed
+    // http://stackoverflow.com/questions/319814/generate-random-enum-in-c-2-0
+    public provider RandomEnum<provider>()
+    {
+        string[] items = Enum.GetNames(typeof(provider));
+        Random r = new Random();
+        string e = items[r.Next(0, items.Length)];
+        return (provider)Enum.Parse(typeof(provider), e, true);
+    }
+
     // convert regular url into a tiny url
     protected void btnGetTinyUrl_Click(object sender, EventArgs e)
     {
-
-        // inserts variables to method
-        string strShortURL = ConvertURL.ShortenURL(Server.HtmlEncode(txtUrl.Text), ConvertURL.ShortURLProvider.Tinyurl);
+        // ConvertURL.ShortURLProvider.Tinyurl;
+        // inserts txtUrl.Text, and a random enum to method
+        string strShortURL = ConvertURL.ShortenURL(Server.HtmlEncode(txtUrl.Text), RandomEnum<ConvertURL.ShortURLProvider>());
 
         // sets tiny url to txtTinyUrl textbox
         txtTinyUrl.Text = strShortURL;
-
 
     }
 }
