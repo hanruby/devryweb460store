@@ -41,7 +41,7 @@ public partial class Pages_TwitterUpdate : System.Web.UI.Page
         string txttwittercomment = Server.HtmlEncode(txtTwitterComment.Text);
 
         // sends values to method for twitter post 
-        Twitter.PostTweet("username of company", "password of company", txttwittercomment);
+        Twitter.PostTweet("mypetsfw", "", txttwittercomment);
     }
 
     // convert regular url into a tiny url
