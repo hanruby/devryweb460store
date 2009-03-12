@@ -9,7 +9,7 @@
 	            
 	<div id="tabs-1">
         <ul>
-            <li><a href="~/Pages/Default.aspx" runat="server">Home</a></li>
+            <li><a href="#">Link to page a</a></li>
             <li><a href="#">Link to page b</a></li>
             <li><a href="#">Link to page c</a></li>
             <li><a href="#">Link to page d</a></li>

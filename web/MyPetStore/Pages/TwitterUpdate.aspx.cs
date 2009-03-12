@@ -41,29 +41,19 @@ public partial class Pages_TwitterUpdate : System.Web.UI.Page
         string txttwittercomment = Server.HtmlEncode(txtTwitterComment.Text);
 
         // sends values to method for twitter post 
-        Twitter.PostTweet("mypetsfw", "", txttwittercomment);
-    }
-
-    // creates random enum 
-    // I took out the -1 after items.Length, it doesn't seem to be needed
-    // http://stackoverflow.com/questions/319814/generate-random-enum-in-c-2-0
-    public provider RandomEnum<provider>()
-    {
-        string[] items = Enum.GetNames(typeof(provider));
-        Random r = new Random();
-        string e = items[r.Next(0, items.Length)];
-        return (provider)Enum.Parse(typeof(provider), e, true);
+        Twitter.PostTweet("username of company", "password of company", txttwittercomment);
     }
 
     // convert regular url into a tiny url
     protected void btnGetTinyUrl_Click(object sender, EventArgs e)
     {
-        // ConvertURL.ShortURLProvider.Tinyurl;
-        // inserts txtUrl.Text, and a random enum to method
-        string strShortURL = ConvertURL.ShortenURL(Server.HtmlEncode(txtUrl.Text), RandomEnum<ConvertURL.ShortURLProvider>());
+
+        // inserts variables to method
+        string strShortURL = ConvertURL.ShortenURL(Server.HtmlEncode(txtUrl.Text), ConvertURL.ShortURLProvider.Tinyurl);
 
         // sets tiny url to txtTinyUrl textbox
         txtTinyUrl.Text = strShortURL;
+
 
     }
 }

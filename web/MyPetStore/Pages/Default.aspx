@@ -10,27 +10,13 @@
 </asp:Content>
 
 <asp:Content ID="Content4" ContentPlaceHolderID="leftColumnPH" Runat="Server">
-    <!--just throwin' this in we'll style it after-->
-    <asp:LoginView ID="LoginView1" runat="server">
-        <LoggedInTemplate>
-            Welcome,
-            <asp:LoginName ID="LoginName1" runat="server" />
-        </LoggedInTemplate>
-        <AnonymousTemplate>
-            Welcome, guest
-        </AnonymousTemplate>
-    </asp:LoginView>
-    <br /><br />
-    <asp:LoginStatus ID="LoginStatus1" runat="server" CssClass="loginStatus" 
-        ForeColor="black" LoginText="Login" LogoutPageUrl="~/Pages/Default.aspx" />
-     <br />
 </asp:Content>
 
 <asp:Content ID="Content5" ContentPlaceHolderID="PagePhotoPH" Runat="Server">
 </asp:Content>
 
 <asp:Content ID="Content6" ContentPlaceHolderID="mainContentPH" Runat="Server">
-    <div id="doStuff" style="cursor:pointer">
+<div id="doStuff" style="cursor:pointer">
                 OR click me
             </div>
 </asp:Content>
