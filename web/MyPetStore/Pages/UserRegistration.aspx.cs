@@ -11,10 +11,15 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 
-public partial class Pages_Login : System.Web.UI.Page
+public partial class Pages_UserRegistration : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
 
+    }
+
+    protected void UserRegistrationWizard_ContinueButtonClick(object sender, EventArgs e)
+    {
+        Response.Redirect("Default.aspx");
     }
 }

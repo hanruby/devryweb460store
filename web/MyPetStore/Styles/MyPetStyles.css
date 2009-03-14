@@ -40,7 +40,7 @@ body {
 .myCart {
     float:right;
     font-size:10pt;
-    padding:20px 25px 0px 0px;
+    padding:10px 25px 0px 0px;
 }
 .search {
     float:right;
@@ -108,3 +108,12 @@ body {
     background-color:#ccc;
 }
 
+#contactUs {
+    padding:50px;
+    text-align:center;
+    font-size:12pt;
+}
+#contactUs a{
+    text-decoration:none;
+    border:0;
+}
