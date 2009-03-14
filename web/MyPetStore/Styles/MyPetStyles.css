@@ -108,3 +108,12 @@ body {
     background-color:#ccc;
 }
 
+#contactUs {
+    padding:50px;
+    text-align:center;
+    font-size:12pt;
+}
+#contactUs a{
+    text-decoration:none;
+    border:0;
+}
