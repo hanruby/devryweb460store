@@ -31,8 +31,9 @@
                 </AnonymousTemplate>
                 <LoggedInTemplate>
                     Welcome, <asp:LoginName ID="loginName" runat="server" />! | <asp:LoginStatus ID="loginStatus1" runat="server" />
-                </LoggedInTemplate>
-            </asp:LoginView></p>
+                </LoggedInTemplate> 
+            </asp:LoginView>
+            <asp:Label ID="lblUsersOnline" runat="server" Text="Users Online: "></asp:Label><asp:Label ID="lblOnline" runat="server" Text="" ForeColor="Green"></asp:Label></p>
             <!-- <a href="#" class="popup">CLICK ME</a> -->
             <div class="myCart">
                 <a href="#">My Account</a> | 
