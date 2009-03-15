@@ -16,7 +16,7 @@
 </asp:Content>
 
 <asp:Content ID="Content6" ContentPlaceHolderID="mainContentPH" Runat="Server">
-    <!--Richard - User login form-->
+    <!--Richard Crouch - User login form-->
     <asp:Login ID="UserLogin" runat="server" CreateUserText="Not a member? Click here." 
         CreateUserUrl="../Pages/UserRegistration.aspx">
     </asp:Login>
