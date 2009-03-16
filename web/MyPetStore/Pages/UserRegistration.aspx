@@ -17,7 +17,7 @@
 
 <asp:Content ID="Content6" ContentPlaceHolderID="mainContentPH" Runat="Server">
     <div id="userRegistrationForm" >
-        <!--Richard - User registration form-->
+        <!--Richard Crouch - User registration form-->
         <asp:CreateUserWizard ID="userRegistrationWizard" runat="server" 
             OnContinueButtonClick="UserRegistrationWizard_ContinueButtonClick">
         </asp:CreateUserWizard>

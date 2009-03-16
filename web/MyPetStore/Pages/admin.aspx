@@ -1,10 +1,10 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="admin.aspx.cs" Inherits="Pages_admin" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Admin.aspx.cs" Inherits="Pages_Admin" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
+    <title>Untitled Page</title>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -25,6 +25,7 @@
             ConnectionString="<%$ ConnectionStrings:ASPNETDBConnectionString1 %>" 
             ProviderName="<%$ ConnectionStrings:ASPNETDBConnectionString1.ProviderName %>" 
             SelectCommand="SELECT [TestId], [TestData] FROM [Test_Table]"></asp:SqlDataSource>
+    
     
     </div>
     </form>
