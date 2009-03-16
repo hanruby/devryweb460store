@@ -1,0 +1,28 @@
+﻿using System;
+<<<<<<< HEAD:web/MyPetStore/Pages/Login.aspx.cs
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+=======
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+>>>>>>> 6c949ce15cf7da1be2ffe62351583947cd4a6d08:web/MyPetStore/Pages/Login.aspx.cs
+
+public partial class Pages_Login : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+}
