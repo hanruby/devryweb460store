@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="../Styles/MasterPage.master" AutoEventWireup="true" CodeFile="TwitterUpdate.aspx.cs" Inherits="Pages_TwitterUpdate" Title="Untitled Page" ValidateRequest="false" %>
+<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="TwitterUpdate.aspx.cs" Inherits="TwitterUpdate" Title="Untitled Page" ValidateRequest="false" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="headPH" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="headerPH" Runat="Server">

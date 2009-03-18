@@ -11,7 +11,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 
-public partial class Pages_ResetPassword : System.Web.UI.Page
+public partial class ResetPassword : System.Web.UI.Page
 {
     // attributes
     private string userName; // stores the username from the query string

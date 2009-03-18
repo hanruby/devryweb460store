@@ -11,10 +11,18 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 
-public partial class Pages_Login : System.Web.UI.Page
+public partial class dbtest : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection();
+        conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ASPNETDBConnectionString1"].ToString();
+        
+        conn.Open();
+
+            Response.Write(conn.State);
+
+                conn.Dispose();
 
     }
 }

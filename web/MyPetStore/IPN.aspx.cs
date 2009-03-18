@@ -9,7 +9,7 @@ using System.Text;
 using System.Net;
 using System.Data.SqlClient;
 
-public partial class Pages_IPN : System.Web.UI.Page
+public partial class IPN : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {

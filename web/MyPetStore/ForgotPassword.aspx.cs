@@ -11,7 +11,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 
-public partial class Pages_ForgotPassword : System.Web.UI.Page
+public partial class ForgotPassword : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
