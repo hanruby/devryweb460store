@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="../Styles/MasterPage.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Pages_Members_LoggedIn" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="ItemImport.aspx.cs" Inherits="ItemImport" Title="Untitled Page" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="headPH" Runat="Server">
 </asp:Content>
@@ -11,7 +11,6 @@
 <asp:Content ID="Content5" ContentPlaceHolderID="PagePhotoPH" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="mainContentPH" Runat="Server">
-<h1>Welcome member</h1>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="footerPH" Runat="Server">
 </asp:Content>

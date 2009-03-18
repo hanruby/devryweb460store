@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Web.UI.HtmlControls;
 
-public partial class Pages_TwitterUpdate : System.Web.UI.Page
+public partial class TwitterUpdate : System.Web.UI.Page
 {
        
 
@@ -38,10 +38,10 @@ public partial class Pages_TwitterUpdate : System.Web.UI.Page
      protected void UpdateTwitterAccount_Click(object sender, EventArgs e)
     {
          // variable
-        string txttwittercomment = Server.HtmlEncode(txtTwitterComment.Text);
+        string TwitterComment = Server.HtmlEncode(txtTwitterComment.Text);
 
         // sends values to method for twitter post 
-        Twitter.PostTweet("mypetsfw", "", txttwittercomment);
+        Twitter.PostTweet("mypetsfw", "", TwitterComment);
     }
 
     // creates random enum 
