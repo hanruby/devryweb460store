@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 
 /// <summary>
-/// Summary description for IBase
+/// The interface for our dbAPI objects to implement
 /// </summary>
 public interface IBase
 {
