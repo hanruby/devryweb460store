@@ -67,6 +67,10 @@ body {
     
 }
 
+#tabs {
+    /*text-align:center;*/
+}
+
 #tabs-1{
     
 }
@@ -100,6 +104,39 @@ body {
     text-decoration:none;
 }
 #tabs-3 li a:hover {
+    color:#59b4d4;
+}
+
+#tabs-4 li {
+    display:inline;
+    margin-right:20px;
+}
+#tabs-4 li a {
+    text-decoration:none;
+}
+#tabs-4 li a:hover {
+    color:#59b4d4;
+}
+
+#tabs-5 li {
+    display:inline;
+    margin-right:20px;
+}
+#tabs-5 li a {
+    text-decoration:none;
+}
+#tabs-5 li a:hover {
+    color:#59b4d4;
+}
+
+#tabs-6 li {
+    display:inline;
+    margin-right:20px;
+}
+#tabs-6 li a {
+    text-decoration:none;
+}
+#tabs-6 li a:hover {
     color:#59b4d4;
 }
 
