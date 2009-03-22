@@ -18,6 +18,14 @@ public class Customer : IBase
         set
         {this.userId = value;}
     }
+    private int customerID;
+    public int CustomerID
+    {
+        get
+        { return this.customerID; }
+        set
+        { this.customerID = value; }
+    }
 
     private bool isActive;
     public bool IsActive
