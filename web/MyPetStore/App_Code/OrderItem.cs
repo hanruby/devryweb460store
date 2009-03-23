@@ -13,7 +13,7 @@ public class OrderItem : IBase
     private int orderID;
     private string itemID;
     private int vendorID;
-    private decimal price;
+    private double price;
     private int quantity;
 
 
@@ -40,7 +40,7 @@ public class OrderItem : IBase
         //
     }
 
-    public OrderItem(int orderID, string itemID, int vendorID, decimal price, int quantity)
+    public OrderItem(int orderID, string itemID, int vendorID, double price, int quantity)
     {
         this.orderID = orderID;
         this.itemID = itemID;
@@ -86,7 +86,7 @@ public class OrderItem : IBase
         while (reader.Read())
         {
             OrderItem orderItem = new OrderItem((int)reader["orderID"], (string)reader["itemID"],
-                (int)reader["vendorID"], (decimal)reader["price"], (int)reader["quantity"]);
+                (int)reader["vendorID"], (double)reader["price"], (int)reader["quantity"]);
 
             orderList.Add(orderItem);
 
@@ -181,7 +181,11 @@ public class OrderItem : IBase
 
     public void Clear()
     {
-        throw new Exception("The method or operation is not implemented.");
+        orderID = -1;
+        itemID = null;
+        vendorID = -1;
+        price = -1;
+        quantity = -1;
     }
 
     #endregion
@@ -223,7 +227,7 @@ public class OrderItem : IBase
         }
     }
 
-    public decimal Price
+    public double Price
     {
         get
         {

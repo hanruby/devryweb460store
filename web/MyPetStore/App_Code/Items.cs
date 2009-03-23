@@ -7,6 +7,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Web.UI.HtmlControls;
+using System.Collections.Generic;
 
 /// <summary>
 /// Summary description for Items
@@ -15,6 +16,27 @@ using System.Web.UI.HtmlControls;
 public class Items : IBase
 {
     // attributes
+    private string itemID;
+    private int vendorID;
+    private bool isActive;
+    private string description;
+    private int quantityAvailable;
+    private double price;
+    private string photoName;
+    private string photoLocation;
+    private int minQuantity;
+    private double costPrice;
+    private double recommendedPrice;
+
+
+
+
+
+
+
+
+
+
     public const string ItemIDColumn = "ItemID";
     public const string VendorIDColumn = "VendorID";
     public const string IsActiveColumn = "IsActive";
@@ -37,16 +59,33 @@ public class Items : IBase
     public const string ParmPhotoLocation = "@photoLocation";
     public const string ParmMinQuantity = "@minQuantity";
     public const string ParmCostPrice = "@costPrice";
-    public const string ParmRecomendation = "@recommendation";
-    
+    public const string ParmRecomendation = "@recommendedPrice";
+
 
     // constructors
-	public Items()
-	{
-		//
-		// TODO: Add constructor logic here
-		//
-	}
+    public Items()
+    {
+        //
+        // TODO: Add constructor logic here
+        //
+    }
+
+    public Items(string itemID, int vendorID, bool isActive, string description, int quantityAvailable,
+        double price, string photoName, string photoLocation, int minQuantity, double costPrice, double recommendedPrice)
+    {
+        this.itemID = itemID;
+        this.vendorID = vendorID;
+        this.isActive = isActive;
+        this.description = description;
+        this.quantityAvailable = quantityAvailable;
+        this.price = price;
+        this.photoName = photoName;
+        this.photoLocation = photoLocation;
+        this.minQuantity = minQuantity;
+        this.costPrice = costPrice;
+        this.recommendedPrice = recommendedPrice;
+
+    }
 
 
     // behaviors
@@ -54,12 +93,14 @@ public class Items : IBase
 
     public System.Collections.Generic.IList<object> Get()
     {
-        throw new Exception("The method or operation is not implemented.");
+        List<object> list = new List<object>();
+
+        return list;
     }
 
     public bool Add()
     {
-       
+
         ParmList parm = new ParmList();
 
         parm.Add(ParmItemID, ItemID);
@@ -71,15 +112,15 @@ public class Items : IBase
         // connect to database
         DBConnect dbConnect = new DBConnect("connectionString", parm);
 
-       
+
 
         // build insert command
-         string comm = String.Format("INSERT INTO Items VALUES({0} = {1},{2} = {3}, {4} = {5}, {6} = {7})",
-            ItemIDColumn, ParmItemID, VendorIDColumn, ParmVendorID, VendorIDColumn, ParmVendorID, PriceColumn, ParmPrice
-            );
+        string comm = String.Format("INSERT INTO Items VALUES({0} = {1},{2} = {3}, {4} = {5}, {6} = {7})",
+           ItemIDColumn, ParmItemID, VendorIDColumn, ParmVendorID, VendorIDColumn, ParmVendorID, PriceColumn, ParmPrice
+           );
 
 
-       
+
 
         // execute command
         dbConnect.ExecSQL(comm);
@@ -118,7 +159,18 @@ public class Items : IBase
 
     public void Clear()
     {
-        throw new Exception("The method or operation is not implemented.");
+        
+        itemID = null;
+        vendorID = -1;
+        price = -1;
+        description = null;
+        quantityAvailable = -1;
+        price = -1;
+        photoName = null;
+        photoLocation = null;
+        minQuantity = -1;
+        costPrice = -1;
+        recommendedPrice = -1;
     }
 
     #endregion
@@ -128,35 +180,35 @@ public class Items : IBase
     {
         get
         {
-            return ItemID;
+            return itemID;
         }
         set
         {
-            ItemID = value;
+            this.itemID = value;
         }
     }
 
-    public string VendorID
+    public int VendorID
     {
         get
         {
-            return VendorID;
+            return vendorID;
         }
         set
         {
-            VendorID = value;
+            this.vendorID = value;
         }
     }
 
-    public string IsActive
+    public bool IsActive
     {
         get
         {
-            return IsActive;
+            return isActive;
         }
         set
         {
-            IsActive = value;
+            this.isActive = value;
         }
     }
 
@@ -164,35 +216,35 @@ public class Items : IBase
     {
         get
         {
-            return Description;
+            return description;
         }
         set
         {
-            Description = value;
+            this.description = value;
         }
     }
 
-    public string QuantityAvailable
+    public int QuantityAvailable
     {
         get
         {
-            return QuantityAvailable;
+            return quantityAvailable;
         }
         set
         {
-            QuantityAvailable = value;
+            this.quantityAvailable = value;
         }
     }
 
-    public string Price
+    public double Price
     {
         get
         {
-            return Price;
+            return price;
         }
         set
         {
-            Price = value;
+            price = value;
         }
     }
 
@@ -200,11 +252,11 @@ public class Items : IBase
     {
         get
         {
-            return PhotoName;
+            return photoName;
         }
         set
         {
-            PhotoName = value;
+            this.photoName = value;
         }
     }
 
@@ -212,47 +264,47 @@ public class Items : IBase
     {
         get
         {
-            return PhotoLocation;
+            return photoLocation;
         }
         set
         {
-            PhotoLocation = value;
+            this.photoLocation = value;
         }
     }
 
-    public string MinQuantity
+    public int MinQuantity
     {
         get
         {
-            return MinQuantity;
+            return minQuantity;
         }
         set
         {
-            MinQuantity = value;
+            this.minQuantity = value;
         }
     }
 
-    public string CostPrice
+    public double CostPrice
     {
         get
         {
-            return CostPrice;
+            return costPrice;
         }
         set
         {
-            CostPrice = value;
+            this.costPrice = value;
         }
     }
 
-    public string Recommendation
+    public double RecommendedPrice
     {
         get
         {
-            return Recommendation;
+            return recommendedPrice;
         }
         set
         {
-            Recommendation = value;
+            this.recommendedPrice = value;
         }
     }
 }
