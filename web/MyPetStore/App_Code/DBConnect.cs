@@ -13,8 +13,8 @@ public class DBConnect
 {
     private SqlConnection conn;
     private SqlCommand comm;
-    private string sConnectionString;
-    private ParmList parmList;
+    private string _sConnectionString;
+    private ParmList _paramList;
     
     #region Constructors
     public DBConnect()
@@ -22,27 +22,27 @@ public class DBConnect
         //Default constructor.  Will need to set _sConnectionString manually in the calling class.
     }
 
-    public DBConnect(string _sConnectionString)
+    public DBConnect(string p_sConnectionString)
     {
-        sConnectionString = _sConnectionString;
+        _sConnectionString = p_sConnectionString;
         conn = new SqlConnection();
         comm = new SqlCommand();
         OpenConnection();
     }
 
-    public DBConnect(string _sConnectionString, ParmList paramList)
+    public DBConnect(string p_sConnectionString, ParmList p_paramList)
     {
-       sConnectionString = _sConnectionString;
+       _sConnectionString = p_sConnectionString;
         conn = new SqlConnection();
         comm = new SqlCommand();
 
-        this.parmList  = parmList;
+        _paramList = p_paramList;
 
 
-        if (parmList.Items.Count > 0)
+        if (_paramList.Items.Count > 0)
         {
             // add paramaters
-            foreach (ParmObject obj in parmList.Items)
+            foreach (ParmObject obj in _paramList.Items)
             {
                 comm.Parameters.AddWithValue(obj.ParmName, obj.ParmObj);
             }
