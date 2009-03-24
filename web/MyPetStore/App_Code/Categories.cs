@@ -13,6 +13,7 @@ using System.Xml.Linq;
 
 /// <summary>
 /// API for Categories DB Table
+/// Jonathan Sourp
 /// </summary>
 public class Categories : IBase
 {
@@ -44,8 +45,8 @@ public class Categories : IBase
 
     public void Clear()
     {
-        //dal logic here
-        throw new NotImplementedException();
+        CategoryID = null;
+        CategoryName = null;
     }
 
     #endregion
@@ -55,4 +56,9 @@ public class Categories : IBase
     {
 
     }
+    public Categories(string sCatId, string sCatName)
+    { 
+    
+    }
+
 }

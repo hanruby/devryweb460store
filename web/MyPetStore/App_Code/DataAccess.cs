@@ -7,7 +7,8 @@ using System.Collections;
 using System.Configuration;
 using System.Reflection;
 using System.Data.SqlClient;
-
+namespace DAL
+{
 public class DataAccess
 {
     private string connectionString;
@@ -20,9 +21,9 @@ public class DataAccess
         connectionString = ConfigurationManager.AppSettings["DATA.CONNECTIONSTRING"];
         providerName = ConfigurationManager.AppSettings["DATA.PROVIDER"];
     }
-    public DataAccess(string factory, string connectionString, string providerName)
+    public DataAccess(string connectionString, string providerName)
     {
-        this.factory = DbProviderFactories.GetFactory(factory);
+        this.factory = DbProviderFactories.GetFactory(providerName);
         this.connectionString = connectionString;
         this.providerName = providerName;
     }
@@ -79,7 +80,7 @@ public class DataAccess
                 //add parameters
                 for (int i = 0; i < values.Length; i++)
                 {
-                    cmd.Parameters.Add(new SqlParameter(values[i], paramters[i]));
+                    cmd.Parameters.Add(new SqlParameter(paramters[i],values[i]));
                 }
 
                 conn.Open();
@@ -89,7 +90,7 @@ public class DataAccess
         }
     }
 
-    public DataSet ExecuteQuery(string sql, string[] paramters, string[] values)
+    public DataSet ExecuteQuery(string sql, string[] parameters, string[] values)
     {
         //create connection
         using (DbConnection conn = CreateConnection())
@@ -100,12 +101,14 @@ public class DataAccess
                 //add parameters
                 for (int i = 0; i < values.Length; i++)
                 {
-                    cmd.Parameters.Add(new SqlParameter(values[i], paramters[i]));
+                    cmd.Parameters.Add(new SqlParameter(parameters[i], values[i]));
                 }
 
                 conn.Open();
                 DbDataAdapter adapter = factory.CreateDataAdapter();
                 DataSet ds = new DataSet();
+                cmd.CommandText = sql;
+                adapter.SelectCommand = cmd;
                 adapter.Fill(ds);
                 conn.Close();
                 return ds;
@@ -124,5 +127,4 @@ public class DataAccess
         set { providerName = value; }
     }
 }
-
-
+}

@@ -18,7 +18,6 @@ public class DataAccess
         connectionString = ConfigurationManager.AppSettings["DATA.CONNECTIONSTRING"];
         providerName = ConfigurationManager.AppSettings["DATA.PROVIDER"];
     }
-    
 
     private DbConnection CreateConnection()
     {
