@@ -31,6 +31,13 @@ public partial class MyPetStore_ViewCategories : System.Web.UI.Page
     protected void btnClickMe_Click(object sender, EventArgs e)
     {
         DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+
+        string sql1 = "Update categories set CategoryName = @catname where categoryid = @catid";
+        //the parameters must be in the order they appear in the sql above!
+        string[] s1 = { "@catname", "@catid" };
+        string[] r1 = { txtsearch.Text, "1" };
+        da.ExecuteNonQuery(sql1, s1, r1);
+        //Rob wrote all of this code....
         string sql = "select * from categories where categoryName = @categoryname";
         DataSet ds = new DataSet();
         string[] s = {"@categoryname"};
