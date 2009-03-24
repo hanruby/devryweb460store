@@ -20,9 +20,18 @@ public class ItemOptions : IBase
     #region constructors
     public ItemOptions()
 	{
-		//
-		// TODO: Add constructor logic here
-		//
+        ItemOptionID = Guid.Empty;
+        ItemID = Guid.Empty;
+        VendorID = Guid.Empty;
+        OptionName = "";
+    }
+
+    public ItemOptions(Guid ItemOptionID, Guid ItemID, Guid VendorID, string OptionName)
+    {
+        this.ItemOptionID = ItemOptionID;
+        this.ItemID = ItemID;
+        this.VendorID = VendorID;
+        this.OptionName = OptionName;
     }
     #endregion
 
@@ -47,7 +56,10 @@ public class ItemOptions : IBase
 
     public void Clear()
     {
-        throw new NotImplementedException();
+        ItemOptionID = Guid.Empty;
+        ItemID = Guid.Empty;
+        VendorID = Guid.Empty;
+        OptionName = "";
     }
 
     #endregion

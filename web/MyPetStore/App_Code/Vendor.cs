@@ -20,9 +20,40 @@ public class Vendor : IBase
     #region constructors
     public Vendor()
 	{
-		//
-		// TODO: Add constructor logic here
-		//
+        VendorID = Guid.Empty;
+        IsActive = false;
+        VendorName = "";
+        MainPhone = "";
+        ContactName = "";
+        ContactEmail = "";
+        ContactPhone = "";
+        Website = "";
+        Address = "";
+        Address2 = "";
+        City = "";
+        State = "";
+        Zip = "";
+        Country = "";
+    }
+
+    public Vendor(Guid VendorID, bool IsActive, string VendorName, string MainPhone, string ContactName,
+        string ContactEmail, string ContactPhone, string Website, string Address, string Address2,
+        string City, string State, string Zip, string Country)
+    {
+        this.VendorID = VendorID;
+        this.IsActive = IsActive;
+        this.VendorName = VendorName;
+        this.MainPhone = MainPhone;
+        this.ContactName = ContactName;
+        this.ContactEmail = ContactEmail;
+        this.ContactPhone = ContactPhone;
+        this.Website = Website;
+        this.Address = Address;
+        this.Address2 = Address2;
+        this.City = City;
+        this.State = State;
+        this.Zip = Zip;
+        this.Country = Country;
     }
     #endregion
 
@@ -47,7 +78,20 @@ public class Vendor : IBase
 
     public void Clear()
     {
-        throw new NotImplementedException();
+        VendorID = Guid.Empty;
+        IsActive = false;
+        VendorName = "";
+        MainPhone = "";
+        ContactName = "";
+        ContactEmail = "";
+        ContactPhone = "";
+        Website = "";
+        Address = "";
+        Address2 = "";
+        City = "";
+        State = "";
+        Zip = "";
+        Country = "";
     }
 
     #endregion
