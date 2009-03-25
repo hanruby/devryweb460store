@@ -61,7 +61,7 @@ public partial class ItemDetails : System.Web.UI.Page
 
 
         // make command statement 
-        string comm2 = "Insert Into Order VALUES(@orderID, @customerID, @grossTotal, @tax, @netTotal)";
+        string comm2 = "INSERT INTO Orders VALUES(@orderID, @customerID, @grossTotal, @tax, @netTotal)";
 
 
         // get values from form labels and textboxes
@@ -80,7 +80,7 @@ public partial class ItemDetails : System.Web.UI.Page
         Label recommendedPrice2 = (Label)FormView1.FindControl("lblRecommendedPrice");
 
 
-        string[] s2 = { "@orderID, @customerID", "@grossTotal", "@tax", "@netTotal" };
+        string[] s2 = { "@orderID", "@customerID", "@grossTotal", "@tax", "@netTotal" };
 
 
 
