@@ -21,7 +21,7 @@ public partial class ItemDetails : System.Web.UI.Page
         //DAL.DataAccess dataAccess = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
 
-        //// make command statement with parameters
+        //// make command statement 
         //string comm = "Insert Into OrderItem VALUES (@orderID, @itemID, @vendorID, @price, @quantity)";
 
 
@@ -60,8 +60,8 @@ public partial class ItemDetails : System.Web.UI.Page
         DAL.DataAccess dataAccess2 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
 
-        // make command statement with parameters
-        string comm2 = "Insert Into Order VALUES(@order, @customerID, @grossTotal, @tax, @netTotal)";
+        // make command statement 
+        string comm2 = "Insert Into Order VALUES(@orderID, @customerID, @grossTotal, @tax, @netTotal)";
 
 
         // get values from form labels and textboxes
@@ -80,7 +80,7 @@ public partial class ItemDetails : System.Web.UI.Page
         Label recommendedPrice2 = (Label)FormView1.FindControl("lblRecommendedPrice");
 
 
-        string[] s2 = { "@order, @customerID", "@grossTotal", "@tax", "@netTotal" };
+        string[] s2 = { "@orderID, @customerID", "@grossTotal", "@tax", "@netTotal" };
 
 
 

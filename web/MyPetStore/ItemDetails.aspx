@@ -118,11 +118,14 @@
             MinQuantity:
             <asp:Label ID="lblMinQuantity" runat="server" Text='<%# Bind("MinQuantity") %>'>
             </asp:Label><br />
-         
-             <a href="ItemDetails.aspx?=<%# Eval("ItemID") %>" ><asp:Image ID="Image1" runat="server" ImageUrl='<%# Eval("PhotoLocation") %>' Width="150" Height="150" /></a>
+            <!-- hyperlink sends querystirng itemID and displays name of item -->
+                      <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%# "~/ItemDetails.aspx?ItemID=" + (DataBinder.Eval(Container.DataItem, "ItemID")) %>' ><%# Eval("PhotoName") %></asp:HyperLink>
+                      <br />
+                      
+                      <!-- image sends querystirng itemID and displays name of item -->
+             <a href="ItemDetails.aspx?ItemID=<%# Eval("ItemID") %>" ><asp:Image ID="Image1" runat="server" ImageUrl='<%# Eval("PhotoLocation") %>' Width="150" Height="150" /></a>
            <br />
-            PhotoName:
-            <asp:Label ID="lblPhotoName" runat="server" Text='<%# Bind("PhotoName") %>'></asp:Label><br />
+           
             
            <div style="text-align:right;">
             <asp:Button runat="server" ID="btnAddToCart" Text="AddToCart" UseSubmitBehavior="false" OnClick="btnAddToCart_Click" />

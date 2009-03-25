@@ -24,7 +24,10 @@
                   
                       <asp:HyperLink ID="hl" runat="server" NavigateUrl='<%# "~/ItemDetails.aspx?ItemID=" + (DataBinder.Eval(Container.DataItem, "ItemID")) %>' >Details</asp:HyperLink>
             </div> 
-                   <a href="ItemDetails.aspx?=<%# Eval("ItemID") %>" ><asp:Image ID="Image1" runat="server" ImageUrl='<%# Eval("PhotoLocation") %>' Width="150" Height="150" /></a><br />
+            <!-- hyperlink with item's name -->
+             <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%# "~/ItemDetails.aspx?ItemID=" + (DataBinder.Eval(Container.DataItem, "ItemID")) %>' ><%# Eval("PhotoName") %></asp:HyperLink>
+             <br />
+                   <a href="ItemDetails.aspx?ItemID=<%# Eval("ItemID") %>" ><asp:Image ID="Image1" runat="server" ImageUrl='<%# Eval("PhotoLocation") %>' Width="150" Height="150" /></a><br />
                     
                     <div style="text-align:left;">
                     <asp:Label ID="lblPrice" runat="server" Text="Price: "></asp:Label>
