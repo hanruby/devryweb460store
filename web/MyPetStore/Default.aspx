@@ -124,7 +124,7 @@
         </td>
     </SelectedItemTemplate>
 </asp:ListView>
-    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>"
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:MyPetStoreDB %>"
         SelectCommand="SELECT [CategoryID], [CategoryName], [CategoryPhoto] FROM [Categories]">
     </asp:SqlDataSource>
 </asp:Content>

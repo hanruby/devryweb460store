@@ -109,12 +109,12 @@
             <asp:Label ID="lblQuantityAvailable" runat="server" Text='<%# Bind("QuantityAvailable") %>'>
             </asp:Label><br />
             Price:
-            <asp:Label ID="lblPrice" runat="server" Text='<%# Bind("Price") %>'></asp:Label><br />
+            <asp:Label ID="lblPrice" runat="server" Text='<%# Bind("Price", "{0:C}") %>'></asp:Label><br />
             RecommendedPrice:
-            <asp:Label ID="lblRecommendedPrice" runat="server" Text='<%# Bind("RecommendedPrice") %>'>
+            <asp:Label ID="lblRecommendedPrice" runat="server" Text='<%# Bind("RecommendedPrice", "{0:C}") %>'>
             </asp:Label><br />
             CostPrice:
-            <asp:Label ID="lblCostPrice" runat="server" Text='<%# Bind("CostPrice") %>'></asp:Label><br />
+            <asp:Label ID="lblCostPrice" runat="server" Text='<%# Bind("CostPrice", "{0:C}") %>'></asp:Label><br />
             MinQuantity:
             <asp:Label ID="lblMinQuantity" runat="server" Text='<%# Bind("MinQuantity") %>'>
             </asp:Label><br />
@@ -133,7 +133,7 @@
             
         </ItemTemplate>
     </asp:FormView>
-    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>"
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:MyPetStoreDB %>"
         SelectCommand="SELECT [ItemID], [VendorID], [IsActive], [Description], [QuantityAvailable], [Price], [RecommendedPrice], [CostPrice], [MinQuantity], [PhotoLocation], [PhotoName] FROM [Items] WHERE ([ItemID] = @ItemID)">
         <SelectParameters>
             <asp:QueryStringParameter Name="ItemID" QueryStringField="ItemID" Type="String" />

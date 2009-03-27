@@ -8,7 +8,10 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Web.UI.HtmlControls;
-
+/*
+ * Author(s): Daniel Aguayo
+ * 
+ */ 
 public partial class TwitterUpdate : System.Web.UI.Page
 {
        
@@ -25,9 +28,9 @@ public partial class TwitterUpdate : System.Web.UI.Page
         if (IsValid)
         { 
             
-            int maxLenght = 140;
+            int maxlength = 140;
 
-            if (txtTwitterComment.Text.Length > maxLenght)
+            if (txtTwitterComment.Text.Length > maxlength)
             {
                 args.IsValid = false;
             }
