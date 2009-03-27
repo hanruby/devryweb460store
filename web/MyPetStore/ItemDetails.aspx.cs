@@ -56,10 +56,10 @@ public partial class ItemDetails : System.Web.UI.Page
         DAL.DataAccess dataAccess2 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
         // make command statement 
-        string comm2 = "INSERT INTO Orders (CustomerID, GrossTotal, Tax, NetTotal, Verified) VALUES(@customerID, @grossTotal, @tax, @netTotal, @verified)";
+        string comm2 = "INSERT INTO Orders (CustomerID, GrossTotal, Tax, NetTotal, TXNID) VALUES(@customerID, @grossTotal, @tax, @netTotal, @txnID)";
 
-        string[] s2 = {"@customerID", "@grossTotal", "@tax", "@netTotal", "@verified" };
-        string[] v2 = {"1", "0.00", "0.00", "0.00", "False" };
+        string[] s2 = {"@customerID", "@grossTotal", "@tax", "@netTotal", "@txnID" };
+        string[] v2 = {"1", "0.00", "0.00", "0.00", "" };
 
         dataAccess2.ExecuteNonQuery(comm2, s2, v2);
 

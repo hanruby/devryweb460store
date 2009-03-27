@@ -53,14 +53,14 @@ public partial class ShoppingCart : System.Web.UI.Page
 
         // sql command
         
-        string comm = "SELECT Orders.OrderID, Orders.CustomerID, Orders.GrossTotal, Orders.Tax, Orders.NetTotal, OrderItem.OrderID, OrderItem.ItemID, OrderItem.Price, OrderItem.Quantity FROM OrderItem INNER JOIN Orders ON Orders.OrderID = OrderItem.OrderID WHERE Orders.CustomerID = @customerID AND Orders.Verified = @verified";
+        string comm = "SELECT Orders.OrderID, Orders.CustomerID, Orders.GrossTotal, Orders.Tax, Orders.NetTotal, OrderItem.OrderID, OrderItem.ItemID, OrderItem.Price, OrderItem.Quantity FROM OrderItem INNER JOIN Orders ON Orders.OrderID = OrderItem.OrderID WHERE Orders.CustomerID = @customerID AND Orders.TXNID = @txnID";
 
         // data set
         DataSet ds = new DataSet();
 
         // empty array
-        string[] p = { "@customerID", "@verified" };
-        string[] v = { "1", "False"};
+        string[] p = { "@customerID", "@txnID" };
+        string[] v = { "1", ""};
 
         ds = da.ExecuteQuery(comm, p, v);
 
@@ -79,14 +79,14 @@ public partial class ShoppingCart : System.Web.UI.Page
 
         // sql command
 
-        string comm = "SELECT Orders.OrderID, Orders.CustomerID, Orders.GrossTotal, Orders.Tax, Orders.NetTotal, OrderItem.OrderID FROM OrderItem INNER JOIN Orders ON Orders.OrderID = OrderItem.OrderID WHERE Orders.CustomerID = @customerID AND Orders.Verified = @verified";
+        string comm = "SELECT Orders.OrderID, Orders.CustomerID, Orders.GrossTotal, Orders.Tax, Orders.NetTotal, OrderItem.OrderID FROM OrderItem INNER JOIN Orders ON Orders.OrderID = OrderItem.OrderID WHERE Orders.CustomerID = @customerID AND Orders.TXNID = @txnID";
 
         // data set
         DataSet ds = new DataSet();
 
         // empty array
-        string[] p = { "@customerID", "@verified" };
-        string[] v = { "1", "False" };
+        string[] p = { "@customerID", "@txnID" };
+        string[] v = { "1", "" };
 
         ds = da.ExecuteQuery(comm, p, v);
 
