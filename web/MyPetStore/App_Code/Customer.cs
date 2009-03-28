@@ -5,6 +5,7 @@ using System.Web;
 
 /// <summary>
 /// API for Customer DB Table
+/// Created By: Rob Robbins
 /// </summary>
 public class Customer : IBase
 {

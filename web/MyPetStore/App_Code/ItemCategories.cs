@@ -13,6 +13,7 @@ using System.Xml.Linq;
 
 /// <summary>
 /// API for ItemCategories DB Table
+/// Created By: Jonathan Sourp
 /// </summary>
 public class ItemCategories : IBase
 {
@@ -47,8 +48,9 @@ public class ItemCategories : IBase
 
     public void Clear()
     {
-        //dal logic here
-        throw new NotImplementedException();
+        this.ItemID = null;
+        this.VendorID = null;
+        this.CategoryID = null;
     }
 
     #endregion
@@ -57,5 +59,9 @@ public class ItemCategories : IBase
     public ItemCategories()
     {
 
+    }
+    public ItemCategories(string sItemID, string sVendorID, string sCategoryID)
+    { 
+    
     }
 }

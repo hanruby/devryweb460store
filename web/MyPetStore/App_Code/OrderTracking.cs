@@ -6,6 +6,7 @@ using System.Configuration;
 
 /// <summary>
 /// DBAPI for OrderTracking table.
+/// Created By: Ethan Drotning
 /// </summary>
 public partial class OrderTracking : IBase
 {
