@@ -9,15 +9,7 @@ using System.Web;
 public class Customer : IBase
 {
 	//attributes and properties
-    
-    private System.Guid userId;
-    public System.Guid UserId
-    {
-        get
-        {return this.userId;}
-        set
-        {this.userId = value;}
-    }
+ 
     private int customerID;
     public int CustomerID
     {
@@ -34,6 +26,14 @@ public class Customer : IBase
         { return this.isActive; }
         set
         { this.isActive = value; }
+    }
+    private string userName;
+    public string UserName
+    {
+        get
+        { return this.userName; }
+        set
+        { this.userName = value; }
     }
     private string fName;
     public string Fname
@@ -125,8 +125,16 @@ public class Customer : IBase
 
     public void Clear()
     {
-        //dal logic here
-        throw new NotImplementedException();
+        this.CustomerID = -1;
+        this.IsActive = false;
+        this.UserName = null;
+        this.Fname = null;
+        this.Lname = null;
+        this.Address = null;
+        this.Address2 = null;
+        this.City = null;
+        this.state = null;
+        this.Zip = null;
     }
 
     #endregion
@@ -135,5 +143,10 @@ public class Customer : IBase
     public Customer()
     {
 
+    }
+    //with a username passed via the page.identity.name prop
+    public Customer(string uName)
+    {
+        this.UserName = uName;
     }
 }
