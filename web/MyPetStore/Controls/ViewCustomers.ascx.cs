@@ -27,8 +27,16 @@ public partial class Controls_ViewCustomers : System.Web.UI.UserControl
         DataSet ds = new DataSet();
         string[] s = { };
         ds = da.ExecuteQuery(sql, s, s);
-        dlRegisteredCustomers.DataSource = ds.Tables[0];
-        dlRegisteredCustomers.DataBind();
+        gvCustomers.DataSource = ds.Tables[0];
+        gvCustomers.DataBind();
+
+        if (this.gvCustomers.Rows.Count > 0)
+        {
+            gvCustomers.UseAccessibleHeader = true;
+            gvCustomers.HeaderRow.TableSection = TableRowSection.TableHeader;
+            gvCustomers.FooterRow.TableSection = TableRowSection.TableFooter;
+
+        }
 
         s = null;
         sql = null;
