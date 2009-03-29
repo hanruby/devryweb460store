@@ -8,7 +8,10 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Web.UI.HtmlControls;
-
+/*
+ * Author: 
+ * 
+ */
 public partial class CategoryImages_Items : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)

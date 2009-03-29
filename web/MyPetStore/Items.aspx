@@ -19,7 +19,7 @@
                 </EditItemTemplate>
                 
                 <ItemTemplate>
-                <!-- Details button -->
+                <!-- div for details button -->
                   <div style="text-align:right;">
                   
                       <asp:HyperLink ID="hl" runat="server" NavigateUrl='<%# "~/ItemDetails.aspx?ItemID=" + (DataBinder.Eval(Container.DataItem, "ItemID")) %>' >Details</asp:HyperLink>
@@ -43,7 +43,7 @@
             </asp:TemplateField>
         </Columns>
     </asp:GridView>
-    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>"
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:MyPetStoreDB %>"
         SelectCommand="SELECT [ItemID], [VendorID], [IsActive], [QuantityAvailable], [Description], [Price], [RecommendedPrice], [CostPrice], [MinQuantity], [PhotoLocation], [PhotoName] FROM [Items] WHERE (([Description] LIKE '%' + @Description + '%') AND ([IsActive] = @IsActive))">
         <SelectParameters>
             <asp:QueryStringParameter Name="Description" QueryStringField="CategoryName" Type="String" />
