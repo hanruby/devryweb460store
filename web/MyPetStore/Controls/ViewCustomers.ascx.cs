@@ -30,6 +30,7 @@ public partial class Controls_ViewCustomers : System.Web.UI.UserControl
         gvCustomers.DataSource = ds.Tables[0];
         gvCustomers.DataBind();
 
+        //code for tablesorter ready gridviews
         if (this.gvCustomers.Rows.Count > 0)
         {
             gvCustomers.UseAccessibleHeader = true;
@@ -37,6 +38,7 @@ public partial class Controls_ViewCustomers : System.Web.UI.UserControl
             gvCustomers.FooterRow.TableSection = TableRowSection.TableFooter;
 
         }
+        //end
 
         s = null;
         sql = null;
