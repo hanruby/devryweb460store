@@ -23,9 +23,20 @@
 <!-- GridView to display items -->
 <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False">
 <Columns>
-<asp:TemplateField HeaderText="ItemID">
+<asp:TemplateField HeaderText="Product">
 <ItemTemplate>
-<asp:Label ID="lblItemID" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "ItemID")%>' ></asp:Label>
+<asp:Label ID="lblOrderIDHidden" Visible="false" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "OrderID")%>' ></asp:Label>
+<asp:Label ID="lblItemID" runat="server" Text="Item#: " ></asp:Label>
+<asp:Label ID="lblItemIDAnswer" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "ItemID")%>' ></asp:Label>
+<br />
+<asp:Label ID="lblDescription" runat="server" Text="Description: " ></asp:Label>
+<asp:Label ID="lblDescriptionAnswer" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "Description")%>' ></asp:Label>
+<br />
+<asp:Label ID="lblMinQuantity" runat="server" Text="Minimum Quantity: " ></asp:Label>
+<asp:Label ID="lblMinQuantityAnswer" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "MinQuantity")%>' ></asp:Label>
+<br />
+<asp:Label ID="lblQuantityAvailable" runat="server" Text="Quantity Available: " ></asp:Label>
+<asp:Label ID="lblQuantityAvailableAnswer" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "QuantityAvailable")%>' ></asp:Label>
 </ItemTemplate>
 </asp:TemplateField>
 
@@ -39,13 +50,15 @@
 <ItemTemplate>
 <asp:Label ID="lblQuantity" runat="server" Visible='<%# !(bool) IsInEditMode %>' Text='<%# DataBinder.Eval(Container.DataItem, "Quantity")%>' ></asp:Label>
 <asp:TextBox ID="txtQuantity" runat="server" Visible='<%# IsInEditMode %>' Width="40" Text='<%# DataBinder.Eval(Container.DataItem, "Quantity")%>' ></asp:TextBox>
+    
+  
+
 </ItemTemplate>
 </asp:TemplateField>
 
 </Columns>
 </asp:GridView>
 </div>
-
 <!-- div for displaying total price and tax -->
 <div style="font-family:@Arial Unicode MS; background-color:Gray;">
 <!-- repeater for total price, tax, grosstotal, shipping? -->
@@ -63,24 +76,27 @@
 </ItemTemplate>
 
 </asp:Repeater>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <br />
-<asp:Button ID="btnUpdateQuantity" runat="server" Text="Update Quantity" />
+
+</div>
+<!-- label for total -->
+<asp:Label runat="server" ID="lblTotalAnswer" Text=""></asp:Label>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- buttons -->
+<br />
+<asp:Button ID="btnUpdateQuantity" runat="server" Text="Update Quantity" OnClick="btnUpdateQuantity_Click" />
 <asp:Button ID="btnEditQuantity" runat="server" Text="Edit Quantity" OnClick="btnEditQuantity_Click" />
 <asp:Button ID="btnProceed" runat="server" Text="Proceed" OnClick="btnProceed_Click" />
 
