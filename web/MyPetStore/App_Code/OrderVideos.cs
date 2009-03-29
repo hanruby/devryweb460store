@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Configuration;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
 
 /// <summary>
 /// Summary description for OrderVideos
 /// Created By: Ethan Drotning
 /// </summary>
+/// 
+//[DBTable("OrderVideos")]
 public partial class OrderVideos : IBase
 {
 #region Attributes
@@ -74,42 +84,43 @@ public partial class OrderVideos : IBase
 #endregion
 
 #region Properties
+    //[DBColumn("VideoID")]
     public int VideoID
     {
         get { return _VideoID; }
         set { _VideoID = value; }
     }
-
+    //[DBColumn("ItemID")]
     public string ItemID
     {
         get { return _ItemID; }
         set { _ItemID = value; }
     }
-
+    //[DBColumn("VendorID")]
     public int VendorID
     {
         get { return _VendorID; }
         set { _VendorID = value; }
     }
-
+    //[DBColumn("VideoName")]
     public string VideoName
     {
         get { return _VideoName; }
         set { _VideoName = value; }
     }
-
+    //[DBColumn("VideoDescription")]
     public string VideoDescription
     {
         get { return _VideoDescription; }
         set { _VideoDescription = value; }
     }
-
+    //[DBColumn("Link")]
     public string Link
     {
         get { return _Link; }
         set { _Link = value; }
     }
-
+    //[DBColumn("VideoSource")]
     public string VideoSource
     {
         get { return _VideoSource; }
