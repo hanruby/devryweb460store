@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using System.Web.UI;
@@ -125,7 +126,7 @@ public partial class ShoppingCart : System.Web.UI.Page
             // update total of orders table for the customer
             DAL.DataAccess da2 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
-            string comm2 = "UPDATE Orders SET GrossTotal = @grossTotal, Tax = @tax WHERE OrderID = @orderID AND CustomerID = @customerID AND TXNID = @txnID AND Tax = @tax";
+            string comm2 = "UPDATE Orders SET GrossTotal = @grossTotal, Tax = @tax WHERE OrderID = @orderID AND CustomerID = @customerID";
 
             string calculateTotal = CalculateTotal(total).ToString("n2");
 
@@ -149,13 +150,13 @@ public partial class ShoppingCart : System.Web.UI.Page
         }
         catch (FormatException ex)
         {
-            // nothing?
-            Response.Write("<script>alert('Error: quantity must be a number and cannot be left empty.')</script>");
+          
+           Alert.Show("Error: Either 1.) Quantity is not a number. 2.) Quantity was left blank.");
         }
         catch (SqlException ex)
         {
             // nothing?
-            Response.Write("<script>alert('Please contact our network administrator.')</script>");
+            Alert.Show("Please contact our network administrator.");
         }
 
     }
@@ -254,7 +255,7 @@ public partial class ShoppingCart : System.Web.UI.Page
 
             totalCount = count++;
 
-            Response.Write("<script>alert('Error: 1.) Either quantity is less than minimum quantity. 2.) Quantity is less than 1. 3.) Quantity is greater than quantity available.')</script>");
+            Alert.Show("Error: 1.) Either quantity is less than minimum quantity. 2.) Quantity is less than 1. 3.) Quantity is greater than quantity available.");
            
         }
 

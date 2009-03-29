@@ -12,6 +12,7 @@
 <asp:Content ID="Content6" ContentPlaceHolderID="mainContentPH" Runat="Server">
 
 
+
 <!-- top div -->
 <div style="font-family:@Arial Unicode MS; background-color:Beige;">
 <h1>Shopping Cart</h1>
@@ -19,11 +20,11 @@
 </div>
 
 <!-- div for displaying item prices and quantity -->
-<div style="font-family:@Arial Unicode MS; background-color:Red;">
+<div style="font-family:Andalus; background-color:Red; text-align:center;">
 <!-- GridView to display items -->
-<asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False">
+<asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" AllowPaging="true">
 <Columns>
-<asp:TemplateField HeaderText="Product">
+<asp:TemplateField HeaderText="Product" >
 <ItemTemplate>
 <asp:Label ID="lblOrderIDHidden" Visible="false" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "OrderID")%>' ></asp:Label>
 <asp:Label ID="lblItemID" runat="server" Text="Item#: " ></asp:Label>
@@ -60,7 +61,9 @@
 </asp:GridView>
 </div>
 <!-- div for displaying total price and tax -->
-<div style="font-family:@Arial Unicode MS; background-color:Gray;">
+<div style="font-family:@Arial Unicode MS; background-color:Gray; height:auto">
+
+<div style="text-align:left; float:right; overflow:hidden; background-color:Green; width:150px; height:auto; padding:0px 0px 0px 0px; position:relative;">
 <!-- repeater for total price, tax, grosstotal, shipping? -->
 <asp:Repeater runat="server" ID="rptOne">
 
@@ -76,6 +79,7 @@
 </ItemTemplate>
 
 </asp:Repeater>
+</div>
 <br />
 
 </div>
