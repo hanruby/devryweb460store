@@ -35,22 +35,22 @@
         </tr>
         <tr>
             <td class="style1"><asp:Label ID="lblMainPhone" runat="server" Text="Main Phone "></asp:Label></td>
-            <td><asp:TextBox ID="txtMainPhone" runat="server"></asp:TextBox></td>
+            <td><asp:TextBox ID="txtMainPhone" runat="server" ></asp:TextBox></td>
             <td align="right" class="style2"><asp:Label ID="lblWebsite" runat="server" Text="Website "></asp:Label></td>
             <td><asp:TextBox ID="txtWebsite" runat="server"></asp:TextBox></td>
 
         </tr>
         <tr>
             <td class="style1"><asp:Label ID="lblAddress" runat="server" Text="Address "></asp:Label></td>
-            <td colspan="3" ><asp:TextBox ID="txtAddress" runat="server"></asp:TextBox></td>
+            <td colspan="3" ><asp:TextBox ID="txtAddress" runat="server" Width="518px"></asp:TextBox></td>
         </tr>
         <tr>
             <td class="style1"><asp:Label ID="lblAddress2" runat="server" Text="Address 2"></asp:Label></td>
-            <td colspan="3" ><asp:TextBox ID="txtAddress2" runat="server"></asp:TextBox></td>
+            <td colspan="3" ><asp:TextBox ID="txtAddress2" runat="server" Width="518px"></asp:TextBox></td>
         </tr>
         <tr>
             <td class="style1"><asp:Label ID="lblCity" runat="server" Text="City "></asp:Label></td>
-            <td colspan="3" ><asp:TextBox ID="txtCity" runat="server"></asp:TextBox></td>
+            <td colspan="3" ><asp:TextBox ID="txtCity" runat="server" Width="518px"></asp:TextBox></td>
         </tr>
         <tr>
             <td class="style1"><asp:Label ID="lblState" runat="server" Text="State "></asp:Label></td>
