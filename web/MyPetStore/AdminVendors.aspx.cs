@@ -45,5 +45,64 @@ public partial class AdminVendors : System.Web.UI.Page
         txtState.Text = ds.Tables[0].Rows[0]["State"].ToString();
         txtZip.Text = ds.Tables[0].Rows[0]["Zip"].ToString();
         txtCountry.Text = ds.Tables[0].Rows[0]["Country"].ToString();
+
+        txtVendorID.ReadOnly = true;
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        string s1;
+        string[] p1 = { "@VendorID", "@IsActive","@VendorName","@MainPhone","@ContactName","@ContactEmail", "@ContactPhone",
+                          "@Website", "@Address", "@Address2", "@City", "@State", "@Zip", "@Country" };
+        string[] v1 = { txtVendorID.Text, Convert.ToString(cboxIsActive.Checked), txtVendorName.Text,
+                          txtMainPhone.Text,txtContactName.Text,txtContactEmail.Text,txtContactPhone.Text,
+                          txtWebsite.Text,txtAddress.Text,txtAddress2.Text,txtCity.Text,txtState.Text,
+                          txtZip.Text,txtCountry.Text };
+
+        DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+
+        s1 = "UPDATE Vendor " +
+            "SET IsActive = @IsActive, VendorName = @VendorName, MainPhone = @MainPhone, ContactName = @ContactName, " +
+            "ContactEmail = @ContactEmail, ContactPhone = @ContactPhone, Website = @Website, Address = @Address, " +
+            "Address2 = @Address2, City = @City, State = @State, Zip = @Zip, Country = @Country " +
+            "WHERE VendorID = @VendorID";
+
+        da.ExecuteNonQuery(s1, p1, v1);
+
+    }
+    protected void btnAdd_Click(object sender, EventArgs e)
+    {
+
+    }
+    protected void btnDelete_Click(object sender, EventArgs e)
+    {
+        string s1;
+        string[] p1 = { "@VendorID" };
+        string[] v1 = { txtVendorID.Text };
+
+        DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+
+        s1 = "DELETE FROM Vendor WHERE VendorID = @VendorID";
+
+        da.ExecuteNonQuery(s1, p1, v1);
+    }
+    protected void btnClear_Click(object sender, EventArgs e)
+    {
+        txtVendorID.ReadOnly = false;
+
+        txtVendorID.Text = "";
+        cboxIsActive.Checked = false;
+        txtVendorName.Text = "";
+        txtMainPhone.Text = "";
+        txtContactName.Text = "";
+        txtContactEmail.Text = "";
+        txtContactPhone.Text = "";
+        txtWebsite.Text = "";
+        txtAddress.Text = "";
+        txtAddress2.Text = "";
+        txtCity.Text = "";
+        txtState.Text = "";
+        txtZip.Text = "";
+        txtCountry.Text = "";
+
     }
 }

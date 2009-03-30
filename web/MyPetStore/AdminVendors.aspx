@@ -84,9 +84,11 @@
     <br />
     <asp:Button ID="btnSearch" runat="server" Text="Search" 
         onclick="btnSearch_Click" /> &nbsp
-    <asp:Button ID="btnSave" runat="server" Text="Save" /> &nbsp
-    <asp:Button ID="btnAdd" runat="server" Text="Add New" /> &nbsp
-    <asp:Button ID="btnDelete" runat="server" Text="Delete" />
+    <asp:Button ID="btnSave" runat="server" Text="Save" onclick="btnSave_Click" /> &nbsp
+    <asp:Button ID="btnAdd" runat="server" Text="Add New" onclick="btnAdd_Click" /> &nbsp
+    <asp:Button ID="btnDelete" runat="server" Text="Delete" onclick="btnDelete_Click" /> &nbsp
+    <asp:Button ID="btnClear" runat="server" Text="ClearForm" 
+        onclick="btnClear_Click" />
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="footerPH" Runat="Server">
 </asp:Content>
