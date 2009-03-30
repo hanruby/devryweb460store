@@ -25,18 +25,25 @@ public partial class AdminVendors : System.Web.UI.Page
 
         DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
         DataSet ds = new DataSet();
-        DataTable dt = new DataTable();
-        SqlDataAdapter sda = new SqlDataAdapter();
-
+        
         s1 = "SELECT VendorID,IsActive,VendorName,MainPhone,ContactName,ContactEmail, " +
             "ContactPhone, Website, Address, Address2, City, State, Zip, Country " +
             "FROM Vendor WHERE VendorID = @VendorID";
 
-        //sda.Fill(da.ExecuteQuery(s1, p1, v1);
-        //dt.
-
-        //lblVendorName.Text = ds.
-        
-
+        ds = da.ExecuteQuery(s1, p1, v1);
+        //This should be easy but it is not working, it is setting the textboxes to the column names.
+        //cboxIsActive.Checked = Convert.ToBoolean(Convert.ToInt32(ds.Tables[0].Columns["IsActive"].ToString()));
+        txtVendorName.Text = ds.Tables[0].Columns["VendorName"].ToString();
+        txtMainPhone.Text = ds.Tables[0].Columns["MainPhone"].ToString();
+        txtContactName.Text = ds.Tables[0].Columns["ContactName"].ToString();
+        txtContactEmail.Text = ds.Tables[0].Columns["ContactEmail"].ToString();
+        txtContactPhone.Text = ds.Tables[0].Columns["ContactPhone"].ToString();
+        txtWebsite.Text = ds.Tables[0].Columns["Website"].ToString();
+        txtAddress.Text = ds.Tables[0].Columns["Address"].ToString();
+        txtAddress2.Text = ds.Tables[0].Columns["Address2"].ToString();
+        txtCity.Text = ds.Tables[0].Columns["City"].ToString();
+        txtState.Text = ds.Tables[0].Columns["State"].ToString();
+        txtZip.Text = ds.Tables[0].Columns["Zip"].ToString();
+        txtCountry.Text = ds.Tables[0].Columns["Country"].ToString();
     }
 }
