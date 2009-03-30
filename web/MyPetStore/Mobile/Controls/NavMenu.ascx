@@ -60,16 +60,16 @@
 	
 	<div id="tabs-6">
 	    <ul>
-            <li><a href="~/Default.aspx" runat="server">Home</a></li>
-            <li><a href="~/contact.aspx" runat="server">Contact</a></li>
-            <li><a href="~/dbtest.aspx" runat="server">DatabaseTest</a></li>
-            <li><a href="~/ForgotPassword.aspx" runat="server">ForgotPassword</a></li>
-            <li><a href="~/IPN.aspx" runat="server">IPN</a></li>
-            <li><a href="~/Login.aspx" runat="server">Login</a></li>
-            <li><a href="~/PasswordSuccess.aspx" runat="server">PasswordSuccess</a></li>
-            <li><a href="~/ResetPassword.aspx" runat="server">ResetPassword</a></li>
-            <li><a href="~/TwitterUpdate.aspx" runat="server">TwitterUpdate</a></li>
-            <li><a href="~/UserRegistration.aspx" runat="server">UserRegistration</a></li>
+            <li><a href="../Default.aspx" runat="server">Home</a></li>
+            <li><a href="../contact.aspx" runat="server">Contact</a></li>
+            <li><a href="#" runat="server">DatabaseTest</a></li>
+            <li><a href="#" runat="server">ForgotPassword</a></li>
+            <li><a href="#" runat="server">IPN</a></li>
+            <li><a href="#" runat="server">Login</a></li>
+            <li><a href="#" runat="server">PasswordSuccess</a></li>
+            <li><a href="#" runat="server">ResetPassword</a></li>
+            <li><a href="#" runat="server">TwitterUpdate</a></li>
+            <li><a href="#" runat="server">UserRegistration</a></li>
         </ul>
 	</div>
 	
