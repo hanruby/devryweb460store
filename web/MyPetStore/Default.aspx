@@ -27,7 +27,7 @@
             <asp:Label ID="CategoryNameLabel" runat="server" Text='<%# Eval("CategoryName") %>'>
             </asp:Label><br />
             
-            <a href="Items.aspx?CategoryName=<%# Eval("CategoryName")  %>" ><asp:Image ID="Image1" ImageUrl='<%# Eval("CategoryPhoto") %>' Width="100" Height="100" runat="server" /></a>
+            <a href="Items.aspx?CategoryName=<%# Eval("CategoryName")  %>" ><asp:Image ID="imgItem" ImageUrl='<%# Eval("CategoryPhoto") %>' Width="100" Height="100" runat="server" /></a>
         </td>
     </ItemTemplate>
     <AlternatingItemTemplate>

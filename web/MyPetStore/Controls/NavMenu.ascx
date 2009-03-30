@@ -70,6 +70,7 @@
             <li><a href="~/ResetPassword.aspx" runat="server">ResetPassword</a></li>
             <li><a href="~/TwitterUpdate.aspx" runat="server">TwitterUpdate</a></li>
             <li><a href="~/UserRegistration.aspx" runat="server">UserRegistration</a></li>
+            <li><a href="~/AdminPage.aspx" runat="server">Administrative</a></li>
         </ul>
 	</div>
 	
