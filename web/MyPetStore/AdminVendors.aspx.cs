@@ -31,19 +31,19 @@ public partial class AdminVendors : System.Web.UI.Page
             "FROM Vendor WHERE VendorID = @VendorID";
 
         ds = da.ExecuteQuery(s1, p1, v1);
-        //This should be easy but it is not working, it is setting the textboxes to the column names.
-        //cboxIsActive.Checked = Convert.ToBoolean(Convert.ToInt32(ds.Tables[0].Columns["IsActive"].ToString()));
-        txtVendorName.Text = ds.Tables[0].Columns["VendorName"].ToString();
-        txtMainPhone.Text = ds.Tables[0].Columns["MainPhone"].ToString();
-        txtContactName.Text = ds.Tables[0].Columns["ContactName"].ToString();
-        txtContactEmail.Text = ds.Tables[0].Columns["ContactEmail"].ToString();
-        txtContactPhone.Text = ds.Tables[0].Columns["ContactPhone"].ToString();
-        txtWebsite.Text = ds.Tables[0].Columns["Website"].ToString();
-        txtAddress.Text = ds.Tables[0].Columns["Address"].ToString();
-        txtAddress2.Text = ds.Tables[0].Columns["Address2"].ToString();
-        txtCity.Text = ds.Tables[0].Columns["City"].ToString();
-        txtState.Text = ds.Tables[0].Columns["State"].ToString();
-        txtZip.Text = ds.Tables[0].Columns["Zip"].ToString();
-        txtCountry.Text = ds.Tables[0].Columns["Country"].ToString();
+
+        cboxIsActive.Checked = Convert.ToBoolean(ds.Tables[0].Rows[0]["IsActive"].ToString());
+        txtVendorName.Text = ds.Tables[0].Rows[0]["VendorName"].ToString();
+        txtMainPhone.Text = ds.Tables[0].Rows[0]["MainPhone"].ToString();
+        txtContactName.Text = ds.Tables[0].Rows[0]["ContactName"].ToString();
+        txtContactEmail.Text = ds.Tables[0].Rows[0]["ContactEmail"].ToString();
+        txtContactPhone.Text = ds.Tables[0].Rows[0]["ContactPhone"].ToString();
+        txtWebsite.Text = ds.Tables[0].Rows[0]["Website"].ToString();
+        txtAddress.Text = ds.Tables[0].Rows[0]["Address"].ToString();
+        txtAddress2.Text = ds.Tables[0].Rows[0]["Address2"].ToString();
+        txtCity.Text = ds.Tables[0].Rows[0]["City"].ToString();
+        txtState.Text = ds.Tables[0].Rows[0]["State"].ToString();
+        txtZip.Text = ds.Tables[0].Rows[0]["Zip"].ToString();
+        txtCountry.Text = ds.Tables[0].Rows[0]["Country"].ToString();
     }
 }
