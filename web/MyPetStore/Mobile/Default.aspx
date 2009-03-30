@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Members_LoggedIn" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/Mobile/Mobile.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Mobile_Default" Title="Untitled Page" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="headPH" Runat="Server">
 </asp:Content>
@@ -15,7 +15,7 @@
 
 <asp:ListView runat="server" ID="ListView1" DataKeyNames="CategoryID" DataSourceID="SqlDataSource1" GroupItemCount="4">
     <EmptyItemTemplate>
-        <td runat="server">
+        <td id="Td1" runat="server">
         </td>
     </EmptyItemTemplate>
     <ItemTemplate>
@@ -27,7 +27,7 @@
             <asp:Label ID="CategoryNameLabel" runat="server" Text='<%# Eval("CategoryName") %>'>
             </asp:Label><br />
             
-            <a href="Items.aspx?CategoryName=<%# Eval("CategoryName")  %>" ><asp:Image ID="imgItem" ImageUrl='<%# Eval("CategoryPhoto") %>' Width="100" Height="100" runat="server" /></a>
+            <a href="Items.aspx?CategoryName=<%# Eval("CategoryName")  %>" ><asp:Image ID="Image1" ImageUrl='<%# Eval("CategoryPhoto") %>' Width="100" Height="100" runat="server" /></a>
         </td>
     </ItemTemplate>
     <AlternatingItemTemplate>
@@ -42,7 +42,7 @@
         </td>
     </AlternatingItemTemplate>
     <EmptyDataTemplate>
-        <table runat="server" style="">
+        <table id="Table1" runat="server" style="">
             <tr>
                 <td>
                     No data was returned.</td>
@@ -50,7 +50,7 @@
         </table>
     </EmptyDataTemplate>
     <InsertItemTemplate>
-        <td runat="server" style="">
+        <td id="Td2" runat="server" style="">
             CategoryID:
             <asp:TextBox ID="CategoryIDTextBox" runat="server" Text='<%# Bind("CategoryID") %>'>
             </asp:TextBox><br />
@@ -65,17 +65,17 @@
         </td>
     </InsertItemTemplate>
     <LayoutTemplate>
-        <table runat="server">
-            <tr runat="server">
-                <td runat="server">
+        <table id="Table2" runat="server">
+            <tr id="Tr1" runat="server">
+                <td id="Td3" runat="server">
                     <table id="groupPlaceholderContainer" runat="server" border="0" style="">
                         <tr id="groupPlaceholder" runat="server">
                         </tr>
                     </table>
                 </td>
             </tr>
-            <tr runat="server">
-                <td runat="server" style="">
+            <tr id="Tr2" runat="server">
+                <td id="Td4" runat="server" style="">
                     <asp:DataPager ID="DataPager1" runat="server" PageSize="12">
                         <Fields>
                             <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" ShowNextPageButton="False"
@@ -90,7 +90,7 @@
         </table>
     </LayoutTemplate>
     <EditItemTemplate>
-        <td runat="server" style="">
+        <td id="Td5" runat="server" style="">
             CategoryID:
             <asp:Label ID="CategoryIDLabel1" runat="server" Text='<%# Eval("CategoryID") %>'>
             </asp:Label><br />
@@ -111,7 +111,7 @@
         </tr>
     </GroupTemplate>
     <SelectedItemTemplate>
-        <td runat="server" style="">
+        <td id="Td6" runat="server" style="">
             CategoryID:
             <asp:Label ID="CategoryIDLabel" runat="server" Text='<%# Eval("CategoryID") %>'>
             </asp:Label><br />
