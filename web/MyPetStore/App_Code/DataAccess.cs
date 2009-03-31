@@ -18,9 +18,10 @@ public class DataAccess
     public DataAccess()
     {
         factory = DbProviderFactories.GetFactory("System.Data.SqlClient");
-        connectionString = ConfigurationManager.AppSettings["DATA.CONNECTIONSTRING"];
-        providerName = ConfigurationManager.AppSettings["DATA.PROVIDER"];
+        connectionString = ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString;
+        providerName = ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ProviderName;
     }
+
     public DataAccess(string connectionString, string providerName)
     {
         this.factory = DbProviderFactories.GetFactory(providerName);
@@ -43,31 +44,6 @@ public class DataAccess
         command.CommandText = commandText;
         return command;
     }
-
-    //public void CreateObjectFromDB(Type objType)
-    //{
-
-
-    //    //instantiate an object of the type specified
-    //    object instance = Activator.CreateInstance(objType, true);
-
-    //    //get all properties of the class specified
-    //    PropertyInfo[] properties = objType.GetProperties();
-
-    //    for (int i = 0; i < properties.Length; i++)
-    //    {
-    //        //add the DBColumnAttributes for each property
-    //        DBColumnAttribute[] attribute = (DBColumnAttribute[])properties[i].GetCustomAttributes(typeof(DBColumnAttribute), true);
-
-    //        //make sure the property has a column attribute
-    //        if (attribute.Length > 0)
-    //        {
-    //            //fill in the value for the property
-    //            object value = reader[attribute[0].Name];
-    //            properties[i].SetValue(instance, value, null);
-    //        }
-    //    }
-    //}
 
     public void ExecuteNonQuery(string sql, string[] paramters, string[] values)
     {
