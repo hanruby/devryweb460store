@@ -26,6 +26,6 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
-*.mdf
-*.ldf
+#*.mdf
+#*.ldf
 *_vti_*

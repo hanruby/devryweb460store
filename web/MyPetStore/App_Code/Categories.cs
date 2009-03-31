@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 /// <summary>
 /// API for Categories DB Table
-/// Jonathan Sourp
+/// Created By: Jonathan Sourp
 /// </summary>
 public class Categories : IBase
 {

@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Configuration;
 using System.Linq;
 using System.Web;
-using System.Configuration;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
 
 /// <summary>
 /// DBAPI for OrderTracking table.
+/// Created By: Ethan Drotning
 /// </summary>
+/// 
+
+//[DBTable("OrderTracking")]
 public partial class OrderTracking : IBase
 {
 #region Attributes
@@ -77,42 +88,43 @@ public partial class OrderTracking : IBase
 #endregion
 
 #region Properties
+    //[DBColumn("TrackingID")]
     public string TrackingID
     {
         get{return _TrackingID;}
         set{_TrackingID = value;}
     }
-
+    //[DBColumn("OrderID")]
     public int OrderID
     {
         get{return _OrderID;}
         set{_OrderID = value;}
     }
-
+    //[DBColumn("ItemID")]
     public string ItemID
     {
         get{return _ItemID;}
         set{_ItemID = value;}
     }
-
+    //[DBColumn("VendorID")]
     public int VendorID
     {
         get{return _VendorID;}
         set{_VendorID = value;}
     }
-
+    //[DBColumn("ShipDate")]
     public DateTime ShipDate
     {
         get{return _ShipDate;}
         set{_ShipDate = value;}
     }
-
+    //[DBColumn("EstArrival")]
     public DateTime EstArrival
     {
         get{return _EstArrival;}
         set{_EstArrival = value;}
     }
-
+    //[DBColumn("TrackingURL")]
     public string TrackingURL
     {
         get{return _TrackingID;}

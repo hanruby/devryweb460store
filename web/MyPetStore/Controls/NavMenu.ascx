@@ -61,17 +61,16 @@
 	<div id="tabs-6">
 	    <ul>
             <li><a href="~/Default.aspx" runat="server">Home</a></li>
-            <li><a href="~/admin.aspx" runat="server">Admin</a></li>
             <li><a href="~/contact.aspx" runat="server">Contact</a></li>
             <li><a href="~/dbtest.aspx" runat="server">DatabaseTest</a></li>
             <li><a href="~/ForgotPassword.aspx" runat="server">ForgotPassword</a></li>
             <li><a href="~/IPN.aspx" runat="server">IPN</a></li>
-            <li><a href="~/ItemImport.aspx" runat="server">ItemImport</a></li>
             <li><a href="~/Login.aspx" runat="server">Login</a></li>
             <li><a href="~/PasswordSuccess.aspx" runat="server">PasswordSuccess</a></li>
             <li><a href="~/ResetPassword.aspx" runat="server">ResetPassword</a></li>
             <li><a href="~/TwitterUpdate.aspx" runat="server">TwitterUpdate</a></li>
             <li><a href="~/UserRegistration.aspx" runat="server">UserRegistration</a></li>
+            <li><a href="~/AdminPage.aspx" runat="server">Administrative</a></li>
         </ul>
 	</div>
 	
