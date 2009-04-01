@@ -9,7 +9,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using Utilities;
+//using Utilities;
 
 namespace DataAccessModule
 {
@@ -82,10 +82,10 @@ namespace DataAccessModule
                           };
 
             string msg = String.Format("Exec Call: \"{0}\"", P_storedProcedureCall);
-            SystemDebug.Log((int)TraceLevel.Verbose, msg);
+            //SystemDebug.Log((int)TraceLevel.Verbose, msg);
             DateTime now = DateTime.Now;
             msg = String.Format("Start Processing: {0}", now);
-            SystemDebug.Log((int)TraceLevel.Verbose, msg);
+            //SystemDebug.Log((int)TraceLevel.Verbose, msg);
 
             var sqlAdapter = new SqlDataAdapter(cmd);
             var dtResults = new DataTable();
@@ -93,7 +93,7 @@ namespace DataAccessModule
 
             now = DateTime.Now;
             msg = String.Format("End Processing: {0}\r\n", now);
-            SystemDebug.Log((int)TraceLevel.Info, msg);
+            //SystemDebug.Log((int)TraceLevel.Info, msg);
         }
 
             /// <summary>
