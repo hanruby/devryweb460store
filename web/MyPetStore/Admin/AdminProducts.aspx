@@ -1,10 +1,15 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AdminProducts.aspx.cs" Inherits="Admin_AdminProducts" Title="Untitled Page" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="headPH" Runat="Server">
+    <link href="../Styles/MyPetStyles.css" rel="stylesheet" type="text/css" />
+    <link href="../Styles/ui.all.css" rel="stylesheet" type="text/css" />
+    <script src="../Scripts/jquery-1.3.2.js" type="text/javascript"></script>
+    <script src="../Scripts/jquery-ui-personalized-1.6rc6.js" type="text/javascript"></script>
+    <script src="../Scripts/MyPetStore.js" type="text/javascript"></script>
+    <script src="../Scripts/tablesorter.js" type="text/javascript"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="headerPH" Runat="Server">
-    <p>
-        q</p>
+    
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="navMenuPH" Runat="Server">
 </asp:Content>
