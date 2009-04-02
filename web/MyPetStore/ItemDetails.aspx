@@ -123,7 +123,12 @@
                       <br />
                       
                       <!-- image sends querystirng itemID and displays name of item -->
-             <a href="ItemDetails.aspx?ItemID=<%# Eval("ItemID") %>" ><asp:Image ID="Image1" runat="server" ImageUrl='<%# Eval("PhotoLocation") %>' Width="150" Height="150" /></a>
+  
+<div  onmouseover="zoom_on(event,250,250,'<%# Eval("PhotoLocation") %>');" onmousemove="zoom_move(event);" onmouseout="zoom_off();"> 
+<img src='<%# Eval("PhotoLocation") %>' alt="tjpzoom picture title" style="padding:0;margin:0;border:0;width:250px;height:250px;" />
+</div>                    
+                      
+           
            <br />
            
             

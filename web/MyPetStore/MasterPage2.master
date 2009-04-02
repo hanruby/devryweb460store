@@ -10,6 +10,7 @@
     <title>Master Page Two</title>
     <link href="~/Styles/MyPetStyles.css" rel="stylesheet" type="text/css" runat="server" />
     <link href="~/Styles/ui.all.css" rel="stylesheet" type="text/css" runat="server" />
+   
     <asp:ContentPlaceHolder id="head" runat="server">
     </asp:ContentPlaceHolder>
     
