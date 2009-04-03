@@ -29,6 +29,44 @@ public partial class ItemDetails : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
 
+        // code will be used in the future   
+        //// instantiate class
+        //        DAL.DataAccess da3 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+
+        //        // make command statement 
+        //        string comm3 = "select OrderID from Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
+        //            //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
+
+        //         DataSet ds = new DataSet(); 
+
+
+
+
+        //        // make arrays for paramaters and input
+        //        string[] s3 = { "@customerID", "@txnID" };
+        //        string[] v3 = { "1", "" };
+        //           ds = da3.ExecuteQuery(comm3, s3, v3);
+
+
+        //         //we usually use just one table
+
+        //         //  tbl.Columns.Add("CustomerID");
+
+        //         // counts total rows in the table
+        //         //  int intCount = ds.Tables["Orders"].Rows.Count;
+
+        //        // returns specific column
+        //        // object first = ds.Tables[0].Rows[0]["CustomerID"];
+
+        //        // returns one item
+        //        object first = ds.Tables[0].Rows[0].ItemArray[0];
+
+        //         Response.Write("" + first.ToString());
+
+        // //clear
+        //        s3 = null;
+        //        v3 = null;
+      
     }
     protected void btnAddToCart_Click(object sender, EventArgs e)
     {

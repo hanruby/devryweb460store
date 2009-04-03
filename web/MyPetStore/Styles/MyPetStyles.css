@@ -16,8 +16,11 @@ body {
 
 #container {
     margin: 0px auto;
-    width: 1000px;
-    
+    width: 1006px;  
+}
+
+.clearer {
+    clear:both;
 }
 
 /*----------header and footer------------*/
@@ -28,6 +31,7 @@ body {
     background: #e8e8e8 no-repeat;
     height:120px;
     padding-left:10px;
+    border:solid 1px green;
 }
 #header a{
     text-decoration:none;
@@ -52,6 +56,7 @@ body {
     background-color:#e8e8e8;
     text-align:center;
     padding:25px;
+    border:solid 1px green;
 }
 #footer a{
     text-decoration:none;
@@ -61,10 +66,17 @@ body {
 }
 
 /*---------left column-------------*/
-
+#leftColumn {
+    float:left;
+    width:180px;
+    height:758px;
+    padding:10px;
+    Border:solid 1px blue;
+}
 
 /*---------nav menu-------------*/
 #navMenu {
+    border:solid 1px orange;
     
 }
 
@@ -141,9 +153,22 @@ body {
     color:#59b4d4;
 }
 
+/*----------pagePhoto------------*/
+#pagePhoto {
+    float:left;
+    border:solid 1px purple;
+    width:600px;
+    height:280px;
+    
+}
 /*----------main content------------*/
 #mainContent {
+    float:left;
     background-color:#ccc;
+    border:solid 1px Red;
+    width:580px;
+    height:476px;
+    padding:10px;
 }
 
 #contactUs {
@@ -154,6 +179,21 @@ body {
 #contactUs a{
     text-decoration:none;
     border:0;
+}
+
+#mainContent2 {
+    width: 980px;
+    background-color:#ccc;
+    padding:10px;
+    border:solid 1px Red;
+}
+/*-------------rightColumn------------*/
+#rightColumn {
+    float:right;
+    width:180px;
+    height:758px;
+    padding:10px;
+    Border:solid 1px brown;
 }
 /*----------tablesorter styles------------*/
 /* tables */
@@ -218,3 +258,32 @@ background-color: #8dbdd8;
 	height:200px;
 }
 
+/* -- Daniel Edit, For ListView1 in Items.aspx */
+.listViewItemTemplate:hover
+{
+	background-color:Yellow;
+}
+.listViewItemTemplate
+{
+	background-color:Gray;
+	width:250px;
+	height:200px;
+}
+.listViewAlternativeItemTemplate:hover
+{
+	background-color:Orange;
+}
+.listViewAlternativeItemTemplate
+{
+	background-color:Gray;
+	width:250px;
+	height:200px;
+}
+
+/* -- for ShoppingCart.aspx -- */
+.shoppingCartProductImage
+{
+	width:50px;
+	height:50px;
+	float:left;
+}

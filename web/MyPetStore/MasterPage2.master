@@ -1,0 +1,44 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage2.master.cs" Inherits="MasterPage2" %>
+<%@ Register Src="~/Controls/NavMenu.ascx" TagName="ctrlNavMenu" TagPrefix="rr"%>
+<%@ Register Src="~/Controls/Footer.ascx" TagName="ctrlFooter" TagPrefix="js"%>
+<%@ Register Src="~/Controls/Header.ascx" TagName="ctrlHeader" TagPrefix="js"%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Master Page Two</title>
+    <link href="~/Styles/MyPetStyles.css" rel="stylesheet" type="text/css" runat="server" />
+    <link href="~/Styles/ui.all.css" rel="stylesheet" type="text/css" runat="server" />
+   
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+    
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div id="container">
+        <div id="header">
+            <js:ctrlHeader ID="header2ndMaster" runat="server" />
+        </div>
+        
+        <div id="navMenu">
+            <rr:ctrlNavMenu ID="navMenu2ndMaster" runat="server" />
+        </div>
+        
+        <div class="clearer" />
+    
+        <div id="mainContent2">
+            <asp:ContentPlaceHolder id="MainContent2" runat="server">
+                <!--holder for 2nd master content-->
+            </asp:ContentPlaceHolder>
+        </div>
+        
+        <div id="footer">
+            <js:ctrlFooter ID="footer2ndMaster" runat="server" />
+        </div>
+        
+    </div>
+    </form>
+</body>
+</html>
