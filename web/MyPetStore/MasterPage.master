@@ -14,7 +14,7 @@
             <script src="Scripts/jquery-ui-personalized-1.6rc6.js" type="text/javascript"></script>
             <script src="Scripts/MyPetStore.js" type="text/javascript"></script>
             <script src="Scripts/tablesorter.js" type="text/javascript"></script>
-             <script type="text/javascript" src="Scripts/tjpzoom.js"></script>
+            <script type="text/javascript" src="Scripts/tjpzoom.js"></script>
     <asp:ContentPlaceHolder id="headPH" runat="server">
         <!--unique head content for child pages-->
     </asp:ContentPlaceHolder>
@@ -23,8 +23,6 @@
 <body>
     <form id="form1" runat="server">
     <div id="container">
-    
-        
         <div id="header">
             <js:ctrlHeader id="CtrlHeader1" runat="server" />
             <asp:ContentPlaceHolder id="headerPH" runat="server">
