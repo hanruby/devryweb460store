@@ -14,7 +14,7 @@
     <!-- <a href="#" class="popup">CLICK ME</a> -->
     <div class="myCart">
         <a href="~/ViewProfile.aspx">My Account</a> | 
-        <a href="#">Cart Contents</a> | 
+        <a href="ShoppingCart.aspx">View Cart</a> (<asp:Label ID="lblItemsInCart" runat="server" Text=""></asp:Label>) | 
         <a href="#">Checkout</a>
     </div>
     <div class="search">
