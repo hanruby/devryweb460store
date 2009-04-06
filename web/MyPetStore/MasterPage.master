@@ -14,6 +14,7 @@
             <script src="Scripts/jquery-ui-personalized-1.6rc6.js" type="text/javascript"></script>
             <script src="Scripts/MyPetStore.js" type="text/javascript"></script>
             <script src="Scripts/tablesorter.js" type="text/javascript"></script>
+            <script type="text/javascript" src="Scripts/tjpzoom.js"></script>
     <asp:ContentPlaceHolder id="headPH" runat="server">
         <!--unique head content for child pages-->
     </asp:ContentPlaceHolder>
@@ -22,27 +23,7 @@
 <body>
     <form id="form1" runat="server">
     <div id="container">
-    
         <div id="header">
-            <!--Richard Crouch - This code displays the users login status and gives them the option of logging in and out-->
-            <p><asp:LoginView ID="view" runat="server">
-                <AnonymousTemplate>
-                    <asp:LoginStatus ID="loginStatus1" runat="server" /> | Not a member? <a href="../UserRegistration.aspx">Click here!</a>
-                </AnonymousTemplate>
-                <LoggedInTemplate>
-                    Welcome, <asp:LoginName ID="loginName" runat="server" />! | <asp:LoginStatus ID="loginStatus1" runat="server" />
-                </LoggedInTemplate> 
-            </asp:LoginView>
-            <asp:Label ID="lblUsersOnline" runat="server" Text="Users Online: "></asp:Label><asp:Label ID="lblOnline" runat="server" Text="" ForeColor="Green"></asp:Label></p>
-            <!-- <a href="#" class="popup">CLICK ME</a> -->
-            <div class="myCart">
-                <a href="#">My Account</a> | 
-                <a href="#">Cart Contents</a> | 
-                <a href="#">Checkout</a>
-            </div>
-            <div class="search">
-                SEARCH TOOL CAN GO HERE
-            </div>
             <js:ctrlHeader id="CtrlHeader1" runat="server" />
             <asp:ContentPlaceHolder id="headerPH" runat="server">
                 <!--header holder-->

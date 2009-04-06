@@ -61,8 +61,12 @@ body {
 #footer a{
     text-decoration:none;
 }
-#footerText {
+#footerText p {
     font-style: italic;
+}
+#footerText img {
+    text-decoration: none;
+    border:0;
 }
 
 /*---------left column-------------*/
@@ -258,3 +262,32 @@ background-color: #8dbdd8;
 	height:200px;
 }
 
+/* -- Daniel Edit, For ListView1 in Items.aspx */
+.listViewItemTemplate:hover
+{
+	background-color:Yellow;
+}
+.listViewItemTemplate
+{
+	background-color:Gray;
+	width:250px;
+	height:200px;
+}
+.listViewAlternativeItemTemplate:hover
+{
+	background-color:Orange;
+}
+.listViewAlternativeItemTemplate
+{
+	background-color:Gray;
+	width:250px;
+	height:200px;
+}
+
+/* -- for ShoppingCart.aspx -- */
+.shoppingCartProductImage
+{
+	width:50px;
+	height:50px;
+	float:left;
+}

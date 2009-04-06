@@ -11,12 +11,10 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 
-public partial class Login : System.Web.UI.Page
+public partial class Import2 : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        // focus in the login name textbox
-        var userNameTB = (TextBox) UserLogin.FindControl("UserName");
-        userNameTB.Focus();
+
     }
 }

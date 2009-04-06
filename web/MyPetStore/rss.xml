@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="us-ascii" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>My Pets Favorite Website</title>
+        <link>http://www.mypetsfavoritewebsite.com/</link>
+        <description></description>
+        <ttl>60</ttl>
+        <atom:link href="http://www.mypetsfavoritewebsite.com/rss.xml" rel="self" type="application/rss+xml" />
+        <item>
+            <title>Title 1</title>
+            <link>http://www.mypetsfavoritewebsite.com/page1.aspx</link>
+            <guid isPermaLink="true">http://www.mypetsfavoritewebsite.com/page1.aspx</guid>
+            <description></description>
+            <author>DeVry WEB460 (Jonathan Sourp)</author>
+            <pubDate>Sat, 04 Apr 2009 14:00:00 GMT</pubDate>
+        </item>
+        <item>
+            <title>Title 2</title>
+            <link>http://www.mypetsfavoritewebsite.com/page2.aspx</link>
+            <guid isPermaLink="true">http://www.mypetsfavoritewebsite.com/page2.aspx</guid>
+            <description></description>
+            <author>DeVry WEB460 (Jonathan Sourp)</author>
+            <pubDate>Sat, 04 Apr 2009 14:00:00 GMT</pubDate>
+        </item>
+        <item>
+            <title>Title 3</title>
+            <link>http://www.mypetsfavoritewebsite.com/page3.aspx</link>
+            <guid isPermaLink="true">http://www.mypetsfavoritewebsite.com/page3.aspx</guid>
+            <description></description>
+            <author>DeVry WEB460 (Jonathan Sourp)</author>
+            <pubDate>Sat, 04 Apr 2009 14:00:00 GMT</pubDate>
+        </item>
+        <item>
+            <title>Title 4</title>
+            <link>http://www.mypetsfavoritewebsite.com/page4.aspx</link>
+            <guid isPermaLink="true">http://www.mypetsfavoritewebsite.com/page4.aspx</guid>
+            <description></description>
+            <author>DeVry WEB460 (Jonathan Sourp)</author>
+            <pubDate>Sat, 04 Apr 2009 14:00:00 GMT</pubDate>
+        </item>
+        <item>
+            <title>Title 5</title>
+            <link>http://www.mypetsfavoritewebsite.com/page5.aspx</link>
+            <guid isPermaLink="true">http://www.mypetsfavoritewebsite.com/page5.aspx</guid>
+            <description></description>
+            <author>DeVry WEB460 (Jonathan Sourp)</author>
+            <pubDate>Sat, 04 Apr 2009 14:00:00 GMT</pubDate>
+        </item>
+    </channel>
+    <!--
+    12:00am = 7:00:00 GMT
+    1:00am = 8:00:00 GMT
+    2:00am = 9:00:00 GMT
+    3:00am = 10:00:00 GMT
+    4:00am = 11:00:00 GMT
+    5:00am = 12:00:00 GMT
+    6:00am = 13:00:00 GMT
+    7:00am = 14:00:00 GMT
+    8:00am = 15:00:00 GMT
+    9:00am = 16:00:00 GMT
+    10:00am = 17:00:00 GMT
+    11:00am = 18:00:00 GMT
+    12:00pm = 19:00:00 GMT
+    1:00pm = 20:00:00 GMT
+    2:00pm = 21:00:00 GMT
+    3:00pm = 22:00:00 GMT
+    4:00pm = 23:00:00 GMT
+    5:00pm = 24:00:00 GMT
+    6:00pm = 1:00:00 GMT
+    7:00pm = 2:00:00 GMT
+    8:00pm = 3:00:00 GMT
+    9:00pm = 4:00:00 GMT
+    10:00pm = 5:00:00 GMT
+    11:00pm = 6:00:00 GMT
+    -->
+</rss>

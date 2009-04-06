@@ -23,20 +23,28 @@ public partial class ShoppingCart : System.Web.UI.Page
     private Label quantityAvailable;
     private Label itemID;
     private Label orderID;
+    private Label vendorID;
+
+    private Label totalIndividualItem;
 
     // for calculating price method
     private Label price;
     private double addPrice;
     private double total;
+    private double tax;
 
+
+
+    
+    // used to warn user if quantity entered is invalid
+    // count and totalCount are used for counting 
+    // the total price in the shopping cart
     private int minQuantityInt;
     private int quantityAvailableInt;
     private int quantityInt;
-
     private int count;
-    private int totalCount = 0;
+    private int totalCount;
 
-    private string quantityWarning = "alert('Warning'): ";
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -44,13 +52,96 @@ public partial class ShoppingCart : System.Web.UI.Page
 
         if (!Page.IsPostBack)
         {
+            // fill up state dropdownlist
+            string[] states = {"AL","AK","AS","AZ","AR","CA","CO","CT","DE","DC"
+            ,"FM","FL","GA","GU","HI","ID","IL","IN","IA","KS","KY","LA","ME",
+            "MH","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY",
+            "NC","ND","MP","OH","OK","OR","PW","PA","PR","RI","SC","SD","TN","TX",
+            "UT","VT","VI","VA","WA","WV","WI","WY"};
+
+            ddlState.DataSource = states;
+            ddlState.DataBind();
+
+
+
+
+
+
             // fill up the gridview with customer's order info
             BindGridView();
 
-
             // fill up the repeater with cusotmer's order info
             BindRepeater();
+
+
+
+            //code for tablesorter ready gridviews
+            // check to see if gridview has data in it
+            // if gridview has data in it set everything
+            // visible if not set it unvinsible
+            // and tell user they have nothing in their
+            // shopping cart
+            if (this.GridView1.Rows.Count > 0)
+            {
+                GridView1.UseAccessibleHeader = true;
+                GridView1.HeaderRow.TableSection = TableRowSection.TableHeader;
+                rptOne.Visible = true;
+                lblState.Visible = true;
+                ddlState.Visible = true;
+                btnUpdateQuantity.Visible = true;
+                btnEditQuantity.Visible = true;
+                btnProceed.Visible = true;
+
+
+                // update gridview
+                UpdateQuantity();
+
+            }
+            else
+            {
+                rptOne.Visible = false;
+                lblState.Visible = false;
+                ddlState.Visible = false;      
+                btnUpdateQuantity.Visible = false;
+                btnEditQuantity.Visible = false;
+                btnProceed.Visible = false;
+            }
+            //end
         }
+
+
+
+
+
+
+        // delete item with specific item ID and CustomerID 
+        if (Request.QueryString["Delete"] == "true" && Request.QueryString["Delete"] != null)
+        {
+            // deletes orderItem from shopping cart
+            DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+
+            string comm = "Delete FROM OrderItem WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
+
+            // array with itemID, orderID, and vendorID
+            string[] p = { "@itemID", "@orderID", "@vendorID" };
+            string[] v = { Request.QueryString["IID"], Request.QueryString["OID"], Request.QueryString["VID"] };
+
+
+            da.ExecuteNonQuery(comm, p, v);
+
+            // clear
+            p = null;
+            v = null;
+
+            // call method to update the entire cart
+            UpdateQuantity();
+
+            Response.Redirect("ShoppingCart.aspx");
+        }
+
+
+
+
 
 
 
@@ -66,6 +157,13 @@ public partial class ShoppingCart : System.Web.UI.Page
 
     protected void btnUpdateQuantity_Click(object sender, EventArgs e)
     {
+        // call method to update the quantity, nettotal, grosstotal, totalprice
+        UpdateQuantity();
+    }
+
+
+    private void UpdateQuantity()
+    {
         // catch format exception and sql exception
         try
         {
@@ -75,13 +173,15 @@ public partial class ShoppingCart : System.Web.UI.Page
                 // Regex tagMatch = new Regex("<[^>]+>");
 
                 quantity = (TextBox)row.FindControl("txtQuantity");
-                itemID = (Label)row.FindControl("lblItemIDAnswer");
+                itemID = (Label)row.FindControl("lblItemIDHidden");
                 orderID = (Label)row.FindControl("lblOrderIDHidden");
                 minQuantity = (Label)row.FindControl("lblMinQuantityAnswer");
                 quantityAvailable = (Label)row.FindControl("lblQuantityAvailableAnswer");
                 price = (Label)row.FindControl("lblPrice");
+                totalIndividualItem = (Label)row.FindControl("lblTotaIndividualPrice");
+                vendorID = (Label)row.FindControl("lblVendorIDHidden");
 
-
+                // make text from labels double types
                 addPrice = double.Parse(price.Text, System.Globalization.NumberStyles.Currency);
 
                 // quantityAvailable.Text = tagMatch.Replace(quantityAvailable.Text, "");
@@ -91,6 +191,7 @@ public partial class ShoppingCart : System.Web.UI.Page
                 quantityAvailableInt = int.Parse(quantityAvailable.Text, System.Globalization.NumberStyles.Integer);
                 quantityInt = int.Parse(quantity.Text, System.Globalization.NumberStyles.Integer);
 
+                double TotalPrice = addPrice * quantityInt;
 
                 if (totalCount == 0)
                 {
@@ -99,13 +200,16 @@ public partial class ShoppingCart : System.Web.UI.Page
                 }
                 if (totalCount < 1)
                 {
+                    // calculate total price for each individual item
+                    //   double totalPrice = totalIndividualItemPrice*int.Parse((quantity.Text));
+
                     DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
-                    string comm = "UPDATE OrderItem SET Quantity = @quantity WHERE ItemID = @itemID AND OrderID = @orderID";
+                    string comm = "UPDATE OrderItem SET TotalPrice = @totalPrice, Quantity = @quantity WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
 
-                    // empty array
-                    string[] p = { "@quantity", "@itemID", "@orderID" };
-                    string[] v = { quantity.Text, itemID.Text, orderID.Text };
+                    // array with quantity, itemID, orderiD, vendorID, and totalPrice
+                    string[] p = { "@quantity", "@itemID", "@orderID", "@vendorID", "@totalPrice" };
+                    string[] v = { quantity.Text, itemID.Text, orderID.Text, vendorID.Text, TotalPrice.ToString("n2") };
 
 
                     da.ExecuteNonQuery(comm, p, v);
@@ -117,8 +221,6 @@ public partial class ShoppingCart : System.Web.UI.Page
                     // add the total
                     total += addPrice * Convert.ToDouble(quantity.Text);
 
-
-
                 }
 
             }
@@ -126,13 +228,14 @@ public partial class ShoppingCart : System.Web.UI.Page
             // update total of orders table for the customer
             DAL.DataAccess da2 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
-            string comm2 = "UPDATE Orders SET GrossTotal = @grossTotal, Tax = @tax WHERE OrderID = @orderID AND CustomerID = @customerID";
+            string comm2 = "UPDATE Orders SET GrossTotal = @grossTotal, Tax = @tax, NetTotal = @netTotal WHERE OrderID = @orderID AND CustomerID = @customerID";
 
-            string calculateTotal = CalculateTotal(total).ToString("n2");
+            string calculateTax = CalculateTax(total, tax).ToString("n2");
+            string calculateTotal = CalculateTotal(total, double.Parse(calculateTax));
 
             // empty array
-            string[] p2 = { "@grossTotal", "@orderID", "@customerID", "@txnID", "@tax" };
-            string[] v2 = { calculateTotal, orderID.Text, "1", "", CalculateTax(1.00).ToString() };
+            string[] p2 = { "@grossTotal", "@orderID", "@customerID", "@txnID", "@tax", "@netTotal" };
+            string[] v2 = { calculateTotal, orderID.Text, "1", "", calculateTax, total.ToString("n2") };
 
 
             da2.ExecuteNonQuery(comm2, p2, v2);
@@ -150,15 +253,14 @@ public partial class ShoppingCart : System.Web.UI.Page
         }
         catch (FormatException ex)
         {
-          
-           Alert.Show("Error: Either 1.) Quantity is not a number. 2.) Quantity was left blank.");
+
+            Alert.Show("Error: Either 1.) Quantity is not a number. 2.) Quantity was left blank.");
         }
         catch (SqlException ex)
         {
             // nothing?
             Alert.Show("Please contact our network administrator.");
         }
-
     }
 
     private void BindGridView()
@@ -169,7 +271,7 @@ public partial class ShoppingCart : System.Web.UI.Page
         // sql command
 
         string comm =
-            "SELECT Orders.OrderID, Orders.CustomerID, Orders.TXNID, OrderItem.ItemID, OrderItem.Price, OrderItem.Quantity, Items.ItemID, Items.Description, Items.QuantityAvailable, Items.MinQuantity FROM Orders, OrderItem, Items WHERE Orders.OrderID = OrderItem.OrderID and OrderItem.ItemID = Items.ItemID and Orders.CustomerID = @customerID AND Orders.TXNID = @txnID AND Orders.CustomerID = @customerID";
+            "SELECT Orders.OrderID, Orders.CustomerID, Orders.TXNID, OrderItem.ItemID, OrderItem.Price, OrderItem.TotalPrice, OrderItem.Quantity, Items.ItemID, Items.ProductName, Items.Description, Items.PhotoLocation, Items.QuantityAvailable, Items.MinQuantity, Items.VendorID FROM Orders, OrderItem, Items WHERE Orders.OrderID = OrderItem.OrderID and OrderItem.ItemID = Items.ItemID and Orders.CustomerID = @customerID AND Orders.TXNID = @txnID AND Orders.CustomerID = @customerID";
 
         // data set
         DataSet ds = new DataSet();
@@ -194,7 +296,7 @@ public partial class ShoppingCart : System.Web.UI.Page
         DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
         // sql command
-        string comm = "SELECT Orders.OrderID, Orders.CustomerID, Orders.GrossTotal, Orders.Tax, Orders.NetTotal, OrderItem.OrderID FROM OrderItem INNER JOIN Orders ON Orders.OrderID = OrderItem.OrderID WHERE Orders.CustomerID = @customerID AND Orders.TXNID = @txnID";
+        string comm = "SELECT OrderID, CustomerID, GrossTotal, Tax, NetTotal, OrderID FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
 
         // data set
         DataSet ds = new DataSet();
@@ -215,16 +317,25 @@ public partial class ShoppingCart : System.Web.UI.Page
     }
 
     // calculates total plus tax
-    private double CalculateTotal(double total)
+    private string CalculateTotal(double total, double tax)
     {
-        double tax = 2.00;
 
 
-        return total + 3.00;
+
+        if (tax == 0.0)
+        {
+            return total.ToString("n2");
+        }
+
+
+        return (tax + total).ToString("n2");
+
+
+
     }
 
     // calculates tax only
-    private double CalculateTax(double tax)
+    private double CalculateTax(double total, double tax)
     {
         //// check to see what state user is in
         //DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
@@ -241,7 +352,19 @@ public partial class ShoppingCart : System.Web.UI.Page
         //p = null;
         //v = null;
 
-        return tax;
+        double totalTax;
+
+        if (ddlState.SelectedItem.Text == "AZ")
+        {
+            totalTax = total * 0.08;
+
+        }
+        else
+        {
+            totalTax = 0.00;
+        }
+
+        return totalTax;
     }
 
     private void ValidateQuantity(int minQuantityInt, int quantityAvailableInt, int quantityInt)
@@ -256,7 +379,7 @@ public partial class ShoppingCart : System.Web.UI.Page
             totalCount = count++;
 
             Alert.Show("Error: 1.) Either quantity is less than minimum quantity. 2.) Quantity is less than 1. 3.) Quantity is greater than quantity available.");
-           
+
         }
 
 

@@ -18,7 +18,7 @@
         <a href="http://www.youtube.com/user/MyPetsFW" target="_new"><img src="Images/youtubeLogo.jpg" alt="YouTube.com" title="YouTube.com"/></a>
         <br /><br />
         <p>Check out our LIVE <a href="https://twitter.com/MYPETSFW" target="_new">Twitter</a> feed:</p>
-        <a href="https://twitter.com/MYPETSFW" target="_new"><img src="Images/twitterLogo.jpg" alt="Twitter.com" title="Twitter.com"/></a>
+        <a href="https://twitter.com/MYPETSFW" target="_new"><img src="Images/twitterLogo.jpg" alt="Twitter.com/MyPetsFW" title="Twitter.com/MyPetsFW"/></a>
     </div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="footerPH" Runat="Server">
