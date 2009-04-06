@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+
+/// <summary>
+/// Summary description for IBODataAccess
+/// </summary>
+public interface IBODataAccess
+{
+    //performs SELECT query
+    //and returns a list of business objects
+    List<T> Get(T businessObject);
+
+    //performs INSERT or UPDATE
+    //returns rows affected
+    int Save(List<T> businessObjectList);
+    int Save(T businessObject);
+}

@@ -1,0 +1,74 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Configuration;
+using System.Data.Common;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+namespace DataAccessModule
+{
+    /// <summary>
+    /// Summary description for OrderItemDA
+    /// </summary>
+    public class OrderItemDA : DataAccessBase<OrderItem>
+    {
+        #region Constructors
+        public OrderItemDA()
+        {
+        }
+
+        public OrderItemDA(string connectionString, string providerInvariantName) : base(connectionString, providerInvariantName)
+        {
+        }
+        #endregion
+
+        public override int Save(OrderItem orderItem)
+        {
+            //Check for the objects existsence in the database using the Primary key
+            var checkParam = new DbParameter[1];
+
+            //IMPORTANT ISSUE!!!!!
+            //The table as NO PRIMARY KEY (how should it be identified
+            checkParam[0] = CreateParameter( OrderItemTable.OrderIdColumn, orderItem.OrderId);
+            
+            
+            var orderItemCheck = ExecuteQuery(checkParam, OrderItemTable.Select);
+
+
+
+            //Add parameters
+            List<DbParameter> parameters = new List<DbParameter>();
+            parameters.Add(CreateParameter(OrderItemTable.OrderIdParam, orderItem.OrderId));
+            parameters.Add(CreateParameter(OrderItemTable.ItemIdParam, orderItem.ItemId));
+            parameters.Add(CreateParameter(OrderItemTable.VendorIdParam, orderItem.VendorId));
+            parameters.Add(CreateParameter(OrderItemTable.PriceParam, orderItem.Price));
+            parameters.Add(CreateParameter(OrderItemTable.TotalPriceParam, orderItem.TotalPrice));
+            parameters.Add(CreateParameter(OrderItemTable.QuantityParam, orderItem.Quantity));
+
+
+
+            if (orderItemCheck.Count == 0)
+                //does not exist, do INSERT
+                return base.ExecuteNonQuery(parameters.ToArray(), OrderItemTable.Insert);
+            else
+                //exists, do UPDATE
+                return base.ExecuteNonQuery(parameters.ToArray(), OrderItemTable.UpdateById);
+        }
+
+        public override void Save(List<OrderItem> orderItems)
+        {
+            foreach (var item in orderItems)
+            {
+                Save(item);
+            }
+        }
+    }
+}

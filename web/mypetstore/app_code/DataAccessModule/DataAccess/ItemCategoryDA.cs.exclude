@@ -1,0 +1,61 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Configuration;
+using System.Data.Common;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+namespace DataAccessModule
+{
+    /// <summary>
+    /// Summary description for ItemCategoryDA
+    /// </summary>
+    public class ItemCategoryDA : DataAccessBase<ItemCategory>
+    {
+
+        #region Constructors
+        public ItemCategoryDA()
+        {
+        }
+
+        public ItemCategoryDA(string connectionString, string providerInvariantName) : base(connectionString, providerInvariantName)
+        {
+        }
+        #endregion
+
+        public override int Save(ItemCategory itemCategory)
+        {
+            //Check for the objects existsence in the database using the Primary key
+            var checkParam = new DbParameter[1];
+            checkParam[0] = CreateParameter(CategoryTable.IdParam, category.Id);
+            Collection<ItemCategory> categoryCheck = ExecuteQuery(checkParam, CategoryTable.SelectById);
+
+
+
+            //Add parameters
+            List<DbParameter> parameters = new List<DbParameter>();
+            parameters.Add(CreateParameter(CategoryTable.IdParam, category.Id));
+            parameters.Add(CreateParameter(CategoryTable.NameParam, category.Name));
+            parameters.Add(CreateParameter(CategoryTable.ImageParam, category.ImageLocation));
+
+
+            if (categoryCheck.Count == 0)
+                //does not exist, do INSERT
+                return base.ExecuteNonQuery(parameters.ToArray(),ItemCategoryTable.Insert);
+            else
+                //exists, do UPDATE
+                return base.ExecuteNonQuery(parameters.ToArray(), ItemCategoryTable.UpdateById);
+        }
+        
+
+
+    }
+}
