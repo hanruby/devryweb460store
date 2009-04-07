@@ -14,7 +14,7 @@ namespace DataAccessModule
 {
     public class Item
     {
-        private int? id;
+        private string id;
         private string name;
         private string description;
         private string size;
@@ -44,7 +44,7 @@ namespace DataAccessModule
             //
         }
 
-        public Item(int id, string name, string description, string size, string code, string upc, int vendorId, bool isActive, int quantityAvailable, int minQuantity, decimal price, decimal costPrice, decimal recommendPrice, string imageName, string imageLocation)
+        public Item(string id, string name, string description, string size, string code, string upc, int vendorId, bool isActive, int quantityAvailable, int minQuantity, decimal price, decimal costPrice, decimal recommendPrice, string imageName, string imageLocation)
         {
             this.id = id;
             this.name = name;
@@ -63,7 +63,7 @@ namespace DataAccessModule
             this.imageLocation = imageLocation;
         }
 
-        public int? Id
+        public string Id
         {
             get { return id; }
             set { id = value; }

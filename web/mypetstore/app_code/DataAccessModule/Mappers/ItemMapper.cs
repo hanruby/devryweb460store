@@ -29,7 +29,7 @@ namespace DataAccessModule
 
             //Id
             if (record[ItemTable.IdColumn] != DBNull.Value)
-                item.Id = (int)record[ItemTable.IdColumn];
+                item.Id = (string)record[ItemTable.IdColumn];
 
             //VendorId
             if (record[ItemTable.VendorIdColumn] != DBNull.Value)

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage2.master" AutoEventWireup="true" CodeFile="AdminViewCustomer.aspx.cs" Inherits="Admin_AdminViewCustomer" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="AdminViewCustomer.aspx.cs" Inherits="Admin_AdminViewCustomer" %>
 <%@ Register Src="~/Controls/ViewCustomers.ascx" TagName="viewCustomers" TagPrefix="rr" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">

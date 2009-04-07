@@ -104,7 +104,8 @@ public static class ItemTable
                                      + NameColumn + "=" + NameParam + ", "
                                      + CodeColumn + "=" + CodeParam + ", "
                                      + SizeColumn + "=" + SizeParam
-                                     + " WHERE " + IdColumn + "=" + IdParam;
+                                     + " WHERE " + IdColumn + "=" + IdParam
+                                     + " AND " + VendorIdColumn + "=" + VendorIdParam;
 
     public const string Delete = "DELETE FROM " + TableName + " ";
     public const string DeleteById = "DELETE FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
