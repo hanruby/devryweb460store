@@ -19,23 +19,19 @@ public partial class TestDal : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-     //   Category category = new Category(4, "upadted", "updated");
-       // CategoryDA categoryDA = new CategoryDA();
-       // categoryDA.Save(category);
+        var category1  = new Category(1, "name", "image");
+        var category2 = new Category(2, "name", "image");
+        var category3 = new Category(3, "name", "image");
+        var category4 = new Category(4, "name", "image");
+        var category5 = new Category(5, "name", "image");
+        var category6 = new Category(6, "name", "image");
+        var category7 = new Category(7, "name", "image");
 
-
-
-        Category category1 = new Category(1, "insertedByDal", "insertedByDal");
-        Category category2 = new Category(2, "insertedByDal", "insertedByDal");
-        Category category3 = new Category(3, "insertedByDal", "insertedByDal");
-        Category category4 = new Category(4, "insertedByDal", "insertedByDal");
-        Category category5 = new Category(5, "insertedByDal", "insertedByDal");
-        Category category6 = new Category(6, "insertedByDal", "insertedByDal");
-        Category category7 = new Category(7, "insertedByDal", "insertedByDal");
-        Category category8 = new Category(8, "insertedByDal", "insertedByDal");
+        //var categories = new Collection<Category>();
         
 
         CategoryDA categoryDA = new CategoryDA();
+
         categoryDA.Save(category1);
         categoryDA.Save(category2);
         categoryDA.Save(category3);
@@ -43,32 +39,17 @@ public partial class TestDal : System.Web.UI.Page
         categoryDA.Save(category5);
         categoryDA.Save(category6);
         categoryDA.Save(category7);
-        categoryDA.Save(category8);
 
-        Category category9 = new Category();
-        category9.Name = "insertedByDal";
+        
+        
+        Category category8 = new Category();
+        category8.Name = "name";
+        Collection<Category> categories = categoryDA.Get(category8);
 
-
-        Customer customer1 = new Customer(99, true, "Zorro", "Zach", "Brown", "Adress", "Address2", "City", "State", "Zip", "Country");
-        Customer customer2 = new Customer(2, true, "Zorro", "Zach", "Brown", "Adress", "Address2", "City", "State", "Zip", "Country");
-
-        CustomerDA customerDA = new CustomerDA();
-        customerDA.Save(customer1);
-        customerDA.Save(customer2);
-
-        Collection<Customer> customers = customerDA.Get(new Customer(){State = "AZ"});
-
-
-        Collection<Category> categories = categoryDA.Get(category9);
-
-        List<Category> cats = new List<Category>();
-        cats.Add(category1);
-        cats.Add(category2);
-        Repeater1.DataSource = customers;
+        Repeater1.DataSource = categories;
         Repeater1.DataBind();
 
-        GridView1.DataSource = customers;
+        GridView1.DataSource = categories;
         GridView1.DataBind();
-
     }
 }

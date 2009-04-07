@@ -17,8 +17,8 @@
 
         <ItemTemplate>
                 <div>Id:  <%# DataBinder.Eval(Container.DataItem, "Id")%> 
-                <div>Name: <%# DataBinder.Eval(Container.DataItem, "FirstName")%> <%# DataBinder.Eval(Container.DataItem, "LastName")%></div>
-                <div>State: <%# DataBinder.Eval(Container.DataItem, "State")%></div>
+                <div>Name:  <%# DataBinder.Eval(Container.DataItem, "Name")%></div>
+                <div>State: <%# DataBinder.Eval(Container.DataItem, "ImageLocation")%></div>
                 <br />
           </ItemTemplate>
 
