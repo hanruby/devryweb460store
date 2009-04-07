@@ -1,36 +1,31 @@
-<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="ShoppingCart.aspx.cs" Inherits="ShoppingCart" Title="Shopping Cart" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="headPH" Runat="Server">
+<%@ Page Language="C#" MasterPageFile="~/MasterPage2.master" AutoEventWireup="true" CodeFile="ShoppingCart.aspx.cs" Inherits="ShoppingCart" Title="Shopping Cart" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+     <script src="../Scripts/jquery-1.3.2.js" type="text/javascript"></script>
+    <script src="../Scripts/jquery-ui-personalized-1.6rc6.js" type="text/javascript"></script>
+    <script src="../Scripts/MyPetStore.js" type="text/javascript"></script>
+    <script src="../Scripts/tablesorter.js" type="text/javascript"></script>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="headerPH" Runat="Server">
-</asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="navMenuPH" Runat="Server">
-</asp:Content>
-<asp:Content ID="Content4" ContentPlaceHolderID="leftColumnPH" Runat="Server">
-</asp:Content>
-<asp:Content ID="Content5" ContentPlaceHolderID="PagePhotoPH" Runat="Server">
-</asp:Content>
-<asp:Content ID="Content6" ContentPlaceHolderID="mainContentPH" Runat="Server">
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent2" Runat="Server">
 
-
+<!-- script manager for the page -->
+    <asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>
 
 <!-- top div -->
-<div style="font-family:@Arial Unicode MS; background-color:Beige;">
-<h1>Shopping Cart</h1>
+<div style="font-family:@Arial Unicode MS; background-color:Gray;">
+<h1 style="font-size:40pt">Shopping Cart</h1>
 
 </div>
 
 <!-- div for displaying item prices and quantity -->
-<div style="font-family:Andalus; background-color:Red;" >
+<div style="font-family:Andalus; background-color:Olive;" >
 <!-- GridView to display items -->
 <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" AllowPaging="True" CssClass="tablesorter">
 <Columns>
+
 <asp:TemplateField HeaderText="Quantity">
 <ItemTemplate>
-<asp:Label ID="lblQuantity" runat="server" Visible='<%# !(bool) IsInEditMode %>' Text='<%# Eval("Quantity")%>' ></asp:Label>
-<asp:TextBox ID="txtQuantity" runat="server" Visible='<%# IsInEditMode %>' Width="40" Text='<%# Eval("Quantity")%>' ></asp:TextBox>
-<br />
-<a href="ShoppingCart.aspx?Delete=true&OID=<%# Eval("OrderID") %>&IID=<%# Eval("ItemID") %>&VID=<%# Eval("VendorID") %>" >Delete Item</a>
-
+<asp:TextBox ID="txtQuantity" runat="server" Width="50" Text='<%# Eval("Quantity")%>' ></asp:TextBox>
 </ItemTemplate>
 </asp:TemplateField>
 
@@ -66,21 +61,44 @@
 </ItemTemplate>
 </asp:TemplateField>
 
+<asp:TemplateField HeaderText="Delete">
+<ItemTemplate>
+    <asp:CheckBox ID="ItemSelector" runat="server" />
+</ItemTemplate>
+</asp:TemplateField>
+
 </Columns>
 <EmptyDataTemplate>
 Your Shopping Cart is empty.
 </EmptyDataTemplate>
 </asp:GridView>
 <!-- ddl for state selection -->
-    
+
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
+    <ContentTemplate>
+   
     <asp:Label ID="lblState" runat="server" Text="Shipping State: " Font-Size="X-Large"></asp:Label>
  <asp:DropDownList runat="server" ID="ddlState">
+
     </asp:DropDownList>
+    <br />
+   </ContentTemplate>
+    </asp:UpdatePanel>
+    
+    <!-- displays errors -->
+<asp:Label ID="lblError" runat="server" Text="" ForeColor="Red" Font-Size="10pt"></asp:Label>
+<asp:Label ID="lblQuantityError" runat="server" Text=" " ForeColor="Red" Font-Size="10pt"></asp:Label>
+<br />
+    <asp:RegularExpressionValidator ID="RegularExpressionValidator1" Display="Dynamic" runat="server" ErrorMessage="Please select a state in order to calculate your gross total with tax." ControlToValidate="ddlState" ValidationExpression="[A-Z]{2}"></asp:RegularExpressionValidator>
+
 
 </div>
+
+
 <!-- div for displaying total price and tax -->
 <div style="font-family:@Arial Unicode MS; background-color:Gray; height:auto" id="viewOrder">
 
+ 
 <!-- repeater for total price, tax, grosstotal, shipping? -->
 <asp:Repeater runat="server" ID="rptOne">
 
@@ -96,7 +114,7 @@ Your Shopping Cart is empty.
 </ItemTemplate>
 
 </asp:Repeater>
-
+ 
 <br />
 
 </div>
@@ -116,13 +134,12 @@ Your Shopping Cart is empty.
 
 <!-- buttons -->
 <br />
-<asp:Button ID="btnUpdateQuantity" runat="server" Text="Update Quantity" OnClick="btnUpdateQuantity_Click" />
-<asp:Button ID="btnEditQuantity" runat="server" Text="Edit Quantity" OnClick="btnEditQuantity_Click" />
-<asp:Button ID="btnProceed" runat="server" Text="Proceed" OnClick="btnProceed_Click" />
+<asp:Button ID="btnUpdateQuantity" runat="server" Text="Update Cart" OnClick="btnUpdateQuantity_Click" />
+<asp:Button ID="btnContinueShopping" runat="server" Text="Continue Shopping" OnClick="btnContinueShopping_Click" />
+<asp:Button ID="btnProceed" runat="server" Text="Proceed To CheckOut" OnClick="btnProceed_Click" />
 
 
 
 
 </asp:Content>
-<asp:Content ID="Content7" ContentPlaceHolderID="footerPH" Runat="Server">
-</asp:Content>
+

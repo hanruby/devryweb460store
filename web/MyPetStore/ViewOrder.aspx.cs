@@ -14,14 +14,14 @@ public partial class ViewOrder : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack && Request.QueryString["OrderID"] != "" && Request.QueryString["OrderID"] != null)
-        { lblNoOrder.Visible = false;
+        {
+            lblNoOrder.Text = "There is no Order for that ID";
+            lblNoOrder.Visible = false;
 
             string s1;
             string s2;
             string[] p1 = { "@OrderID" };
-            string oid;
-
-            oid = Request.QueryString["OrderID"];
+            string oid = Request.QueryString["OrderID"];
 
             DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
             DataSet ds = new DataSet();
@@ -63,8 +63,11 @@ public partial class ViewOrder : System.Web.UI.Page
     {
         string s1;
         string s2;
+        string s3;
         string[] p1 = {"@OrderID"};
+        string customers_username = "";
 
+        lblNoOrder.Text = "There is no Order for that ID";
         lblNoOrder.Visible = false;
 
         DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
@@ -81,25 +84,58 @@ public partial class ViewOrder : System.Web.UI.Page
             "LEFT OUTER JOIN dbo.OrderTracking ot on oi.OrderID = ot.OrderID and oi.ItemID = ot.ItemID and oi.VendorID = ot.VendorID " +
             "INNER JOIN dbo.Items i on i.ItemID = oi.ItemID and i.VendorID = oi.VendorID " +
             "WHERE o.OrderID = @OrderID";
+        
+        s3 = "SELECT DISTINCT c.UserName FROM dbo.ORDERS o " +
+            "INNER JOIN dbo.Customer c on o.CustomerID = c.CustomerID " +
+            "WHERE o.OrderID = @OrderID";
 
         string[] v1 = { txtOrderID.Text };
 
-        ds = da.ExecuteQuery(s1, p1, v1);
-        
-        FormView1.DataSource = ds.Tables[0];
-        if (ds.Tables[0].Rows.Count == 0)
+        ds = da.ExecuteQuery(s3, p1, v1);
+        if (ds.Tables[0].Rows.Count > 0)
         {
-            lblNoOrder.Visible = true;
+            customers_username = ds.Tables[0].Rows[0]["UserName"].ToString();
+        }
+
+        if (CheckAuth(customers_username) == true)
+        {
+            ds = da.ExecuteQuery(s1, p1, v1);
+
+            FormView1.DataSource = ds.Tables[0];
+            if (ds.Tables[0].Rows.Count == 0)
+            {
+                lblNoOrder.Visible = true;
+            }
+            else
+            {
+                FormView1.DataBind();
+            }
+            FormView1.DataBind();
+
+            ds = da.ExecuteQuery(s2, p1, v1);
+            Repeater1.DataSource = ds.Tables[0];
+            Repeater1.DataBind();
         }
         else
         {
-            FormView1.DataBind();
+            lblNoOrder.Text = "You are not authorized to view this order";
+            lblNoOrder.Visible = true;
         }
-        FormView1.DataBind();
+    }
 
-        ds = da.ExecuteQuery(s2, p1, v1);
-        Repeater1.DataSource = ds.Tables[0];
-        Repeater1.DataBind();
-       
+    private bool CheckAuth(string p_CustomerUserNameOfOrder)
+    {
+        bool auth = false;
+        
+        if (User.IsInRole("Administrator"))
+        {
+            auth = true;
+        }
+        else if (User.ToString() == p_CustomerUserNameOfOrder)
+        {
+            auth = true;
+        }
+
+        return auth;
     }
 }
