@@ -13,7 +13,7 @@
     </p>
     <!-- <a href="#" class="popup">CLICK ME</a> -->
     <div class="myCart">
-        <a href="~/ViewProfile.aspx">My Account</a> | 
+        <a href="ViewProfile.aspx">My Account</a> | 
         <a href="#">Cart Contents</a> | 
         <a href="#">Checkout</a>
     </div>

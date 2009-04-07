@@ -1,23 +1,19 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="EditProfile.aspx.cs" Inherits="EditProfile" Title="Edit Profile" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="EditProfile.aspx.cs" Inherits="EditProfile" Title="Edit Profile" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="headPH" Runat="Server">
-</asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="headerPH" Runat="Server">
-</asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="navMenuPH" Runat="Server">
-</asp:Content>
-<asp:Content ID="Content4" ContentPlaceHolderID="leftColumnPH" Runat="Server">
-</asp:Content>
-<asp:Content ID="Content5" ContentPlaceHolderID="PagePhotoPH" Runat="Server">
-</asp:Content>
-<asp:Content ID="Content6" ContentPlaceHolderID="mainContentPH" Runat="Server">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Edit Profile</title>
+</head>
+
+<body>
+<form id="editProfile" runat="server">
     <p>Editing your profile . . .</p>
     <br />
-    <table border="0" cellpadding="1" cellspacing="0" 
-                style="border-collapse:collapse;">
+    <table border="0" cellpadding="1" cellspacing="0">
         <tr>
             <td align="right">
-                <asp:Label ID="lblFirstName" runat="server" Text="First Name:"></asp:Label>         
+                <asp:Label ID="lblFirstName" runat="server" Text="First Name:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
                 <asp:TextBox ID="txtFirstName" runat="server" 
@@ -26,7 +22,7 @@
         </tr>
         <tr>
             <td align="right">
-                <asp:Label ID="lblLastName" runat="server" Text="Last Name:"></asp:Label>         
+                <asp:Label ID="lblLastName" runat="server" Text="Last Name:" Font-Bold="true"></asp:Label>         
             </td>
             <td>   
                 <asp:TextBox ID="txtLastName" runat="server" 
@@ -35,7 +31,7 @@
         </tr>
         <tr>
             <td align="right">
-                <asp:Label ID="lblAddress" runat="server" Text="Address:"></asp:Label>         
+                <asp:Label ID="lblAddress" runat="server" Text="Address:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
                 <asp:TextBox ID="txtAddress" runat="server" 
@@ -44,7 +40,7 @@
         </tr>
         <tr>
             <td align="right">
-                <asp:Label ID="lblAddress2" runat="server" Text="Address2:"></asp:Label>         
+                <asp:Label ID="lblAddress2" runat="server" Text="Address2:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
                 <asp:TextBox ID="txtAddress2" runat="server" 
@@ -53,7 +49,7 @@
         </tr>
         <tr>
             <td align="right">
-                <asp:Label ID="lblCity" runat="server" Text="City:"></asp:Label>         
+                <asp:Label ID="lblCity" runat="server" Text="City:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
                 <asp:TextBox ID="txtCity" runat="server" ontextchanged="txtCity_TextChanged"
@@ -62,7 +58,7 @@
         </tr>
         <tr>
             <td align="right">
-                <asp:Label ID="lblState" runat="server" Text="State:"></asp:Label>         
+                <asp:Label ID="lblState" runat="server" Text="State:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
                 <asp:DropDownList ID="cboState" runat="server">
@@ -71,7 +67,7 @@
         </tr>
         <tr>
             <td align="right">
-                <asp:Label ID="lblZip" runat="server" Text="Zip:"></asp:Label>         
+                <asp:Label ID="lblZip" runat="server" Text="Zip:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
                 <asp:TextBox ID="txtZip" runat="server" Columns="5" MaxLength="5" 
@@ -80,7 +76,7 @@
         </tr>
         <tr>
             <td align="right">
-                <asp:Label ID="lblCountry" runat="server" Text="Country:"></asp:Label>         
+                <asp:Label ID="lblCountry" runat="server" Text="Country:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
                 <asp:DropDownList ID="cboCountry" runat="server"></asp:DropDownList>
@@ -88,7 +84,7 @@
         </tr>
         <tr>
             <td align="right">
-                <asp:Label ID="lblEmail" runat="server" Text="E-mail:"></asp:Label>         
+                <asp:Label ID="lblEmail" runat="server" Text="E-mail:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
                 <asp:TextBox ID="txtEmail" runat="server" ontextchanged="txtEmail_TextChanged"
@@ -107,7 +103,6 @@
             </td>
         </tr>
     </table>
-</asp:Content>
-<asp:Content ID="Content7" ContentPlaceHolderID="footerPH" Runat="Server">
-</asp:Content>
-
+</form>
+</body>
+</html>
