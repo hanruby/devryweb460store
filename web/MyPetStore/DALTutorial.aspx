@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="TestDal.aspx.cs" Inherits="TestDal" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="DALTutorial.aspx.cs" Inherits="TestDal" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -16,9 +16,9 @@
         </HeaderTemplate>
 
         <ItemTemplate>
-                <div>Id:  <%# DataBinder.Eval(Container.DataItem, "Id")%> 
-                <div>Name:  <%# DataBinder.Eval(Container.DataItem, "Name")%></div>
-                <div>State: <%# DataBinder.Eval(Container.DataItem, "ImageLocation")%></div>
+                <div><b>Id:</b>  <%# DataBinder.Eval(Container.DataItem, "Id")%> 
+                <div><b>Name:</b>  <%# DataBinder.Eval(Container.DataItem, "Name")%></div>
+                <div><b>State:</b> <%# DataBinder.Eval(Container.DataItem, "ImageLocation")%></div>
                 <br />
           </ItemTemplate>
 
@@ -27,7 +27,7 @@
 
     </asp:Repeater>
     
-    <br /><br /><br />
+    <br /><br />
     
     <asp:GridView ID="GridView1" runat="server">
     </asp:GridView>

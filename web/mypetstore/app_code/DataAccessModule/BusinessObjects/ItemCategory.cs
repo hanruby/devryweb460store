@@ -15,8 +15,15 @@ namespace DataAccessModule
     public class ItemCategory
     {
         private int? itemId;
+        private Item item;//foreign table
+
         private int? vendorId;
+        private Vendor vendor;//foreign table
+
         private int? categoryId;
+        private Category category;//foreign table
+
+
 
         public ItemCategory()
         {
@@ -45,6 +52,24 @@ namespace DataAccessModule
         {
             get { return categoryId; }
             set { categoryId = value; }
+        }
+
+        public Item Item
+        {
+            get { return item; }
+            set { item = value; }
+        }
+
+        public Vendor Vendor
+        {
+            get { return vendor; }
+            set { vendor = value; }
+        }
+
+        public Category Category
+        {
+            get { return category; }
+            set { category = value; }
         }
     }
 }

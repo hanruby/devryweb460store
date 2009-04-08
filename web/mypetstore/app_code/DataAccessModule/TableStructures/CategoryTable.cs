@@ -27,31 +27,5 @@ public static class CategoryTable
     public const string IdParam = "@CategoryID";
     public const string NameParam = "@CategoryName";
     public const string ImageParam = "@CategoryPhoto";
-
-    //SQL Statements
-    public const string Insert = "INSERT INTO " + TableName + "("
-                                 + IdColumn + ", "
-                                 + NameColumn + ", "
-                                 + ImageColumn + ")"
-                                 
-                                 + " Values("
-                                 + IdParam + ", "
-                                 + NameParam + ", "
-                                 + ImageParam + ")";
-
-    
-    public const string Update = "UPDATE " + TableName + " SET ";
-    public const string UpdateById = "UPDATE " + TableName + " SET "
-                                     + IdColumn + "=" + IdParam + ", "
-                                     + NameColumn + "=" + NameParam + ", "
-                                     + ImageColumn + "=" + ImageParam
-                                     + " WHERE " + IdColumn + "=" + IdParam;
-
- 
-    public const string Delete = "DELETE FROM " + TableName + " ";
-    public const string DeleteById = "DELETE FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
-    public const string Select = "SELECT * FROM " + TableName + " ";
-    public const string SelectById = "SELECT * FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
 }
 

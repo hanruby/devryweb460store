@@ -33,40 +33,4 @@ public static class OrderTable
     public const string TaxParam = "@Tax";
     public const string NetTotalParam = "@NetTotal";
     public const string TXNIDParam = "@TXNID";//what is this?
-
-    //SQL Statements
-    public const string Insert = "INSERT INTO " + TableName + "("
-                                 + IdColumn + ", "
-                                 + CustomerIdColumn + ", "
-                                 + GrossTotalColumn + ", "
-                                 + TaxColumn + ", "
-                                 + NetTotalColumn + ", "
-                                 + TXNIDColumn + ")"
-
-                                 + " VALUES("
-                                 + IdParam + ", "
-                                 + CustomerIdParam + ", "
-                                 + GrossTotalParam + ", "
-                                 + TaxParam + ", "
-                                 + NetTotalParam + ", "
-                                 + TXNIDParam + ")";
-
-    public const string Update = "UPDATE " + TableName + " SET ";
-    public const string UpdateById = "UPDATE " + TableName + " SET "
-                                     + IdColumn + "=" + IdParam + ", "
-                                     + CustomerIdColumn + "=" + CustomerIdParam + ", "
-                                     + GrossTotalColumn + "=" + GrossTotalParam + ", "
-                                     + TaxColumn + "=" + TaxParam + ", "
-                                     + NetTotalColumn + "=" + NetTotalParam + ", "
-                                     + TXNIDColumn + "=" + TXNIDParam
-                                     + " WHERE " + IdColumn + "=" + IdParam;
-
-
-    public const string Delete = "DELETE FROM " + TableName + " ";
-    public const string DeleteById = "DELETE FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
-    public const string Select = "SELECT * FROM " + TableName + " ";
-    public const string SelectById = "SELECT * FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
-
 }

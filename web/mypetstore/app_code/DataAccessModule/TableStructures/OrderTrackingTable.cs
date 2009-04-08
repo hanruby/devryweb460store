@@ -35,41 +35,4 @@ public static class OrderTrackingTable
     public const string ShipDateParam = "ShipDate";
     public const string EstimatedArrivalParam = "EstArrival";
     public const string UrlParam = "TrackingUrl";
-
-    //SQL Statements
-    public const string Insert = "INSERT INTO " + TableName + "("
-                                 + IdColumn + ", "
-                                 + OrderIdColumn + ", "
-                                 + ItemIdColumn + ", "
-                                 + VendorIdColumn + ", "
-                                 + ShipDateColumn + ", "
-                                 + EstimatedArrivalColumn + ", "
-                                 + UrlColumn + ")"
-
-                                 + " VALUES("
-                                 + IdParam + ", "
-                                 + OrderIdParam + ", "
-                                 + ItemIdParam + ", "
-                                 + VendorIdParam + ", "
-                                 + ShipDateParam + ", "
-                                 + EstimatedArrivalParam + ", "
-                                 + UrlParam + ")";
-
-    public const string Update = "UPDATE " + TableName + " SET ";
-    public const string UpdateById = "UPDATE " + TableName + " SET "
-                                     + IdColumn + "=" + IdParam + ", "
-                                     + OrderIdColumn + "=" + OrderIdParam + ", "
-                                     + ItemIdColumn + "=" + ItemIdParam + ", "
-                                     + VendorIdColumn + "=" + VendorIdParam + ", "
-                                     + ShipDateColumn + "=" + ShipDateParam + ", "
-                                     + EstimatedArrivalColumn + "=" + EstimatedArrivalParam + ", "
-                                     + UrlColumn + "=" + UrlParam
-                                     + " WHERE " + IdColumn + "=" + IdParam;
-
-    public const string Delete = "DELETE FROM " + TableName + " ";
-    public const string DeleteById = "DELETE FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
-    public const string Select = "SELECT * FROM " + TableName + " ";
-    public const string SelectById = "SELECT * FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
 }

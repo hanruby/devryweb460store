@@ -15,11 +15,14 @@ namespace DataAccessModule
     public class Order
     {
         private int? id;
+        
         private int? customerId;
+        private Customer customer; //foreign table
+
         private decimal? grossTotal;
         private decimal? tax;
         private decimal? netTotal;
-        private int? txnId; //wtf is this field?
+        private int? txnId;
 
 
         public Order()

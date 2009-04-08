@@ -19,15 +19,17 @@ namespace DataAccessModule
         private string description;
         private string size;
 
-        private string code; //code vs upc?
+        private string code;
         private string upc;
 
         private int? vendorId;
-        private bool? isActive;
+        private Vendor vendor; //foreign key relationship
 
+
+        private bool? isActive;
         private int? quantityAvailable;
         private int? minQuantity;
-        //private int? maxQuantity;
+        
 
         private decimal? price;
         private decimal? costPrice;
@@ -152,5 +154,13 @@ namespace DataAccessModule
             get { return imageLocation; }
             set { imageLocation = value; }
         }
+
+        public Vendor Vendor
+        {
+            get { return vendor; }
+            set { vendor = value; }
+        }
+
+
     }
 }

@@ -27,75 +27,130 @@ namespace DataAccessModule
         }
         #endregion
 
-        #region Overridden Methods
-       
+        #region Implemented DataAccessBase Methods
 
-        #region Save & Get
+        protected override Collection<Category> GetBase(Category category, string whereSeperator, string whereOperator)
+        {
+            //return all rows if no object was given (SELECT * FROM TableName)
+            if (category == null)
+                return ExecuteQuery(null, BuildSQLSelectText(CategoryTable.TableName, null, "", ""));
+
+            //Build Parameters for base query
+            DbParameter[] parameters = CreateAllParameters(category);
+
+            //Build a SELECT CommandText
+            string selectQuery = base.BuildSQLSelectText(CategoryTable.TableName, parameters, whereSeperator, whereOperator);
+            return ExecuteQuery(parameters, selectQuery);
+        }
+
         /// <summary>
-        /// Saves an Item object to a Database
+        /// Performs SELECT Query against Database based on the Values in the Business Object
         /// </summary>
-        /// <param name="category">Item to be saved in to the database(INSERTed or UPDATEd)</param>
-        /// <returns></returns>
+        /// <param name="category">business object used to form SELECT Query (null will return all rows in the Table)</param>
+        /// <returns>Collection of business objects matching the SELECT Query</returns>
+        /// <remarks></remarks>
+        public override Collection<Category> Get(Category category)
+        {
+            return GetBase(category, "AND", "=");
+        }
+
+        /// <summary>
+        /// Performs SELECT Query against Database based on the Values in the Business Object
+        /// </summary>
+        /// <param name="category">business object used to form SELECT Query (null will return all rows in the Table)</param>
+        /// <returns>Collection of business objects matching the SELECT Query</returns>
+        /// <remarks></remarks>
+        public override Collection<Category> GetLike(Category category)
+        {
+            return GetBase(category, "AND", "LIKE");
+        }
+
         public override int Save(Category category)
         {
             //Check for the objects existsence in the database using the Primary key
             var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(CategoryTable.IdParam, category.Id);
-            Collection<Category> categoryCheck = ExecuteQuery(checkParam, CategoryTable.SelectById);
+            checkParam[0] = CreateParameter(CategoryTable.IdParam, category.Id, CategoryTable.IdColumn);
+            string commandText = base.BuildSQLSelectText(CategoryTable.TableName, checkParam, "", "=");
+            Collection<Category> categoryCheck = ExecuteQuery(checkParam, commandText);
 
-            //Add parameters
-            List<DbParameter> parameters = new List<DbParameter>();
-            parameters.Add(CreateParameter(CategoryTable.IdParam, category.Id));
-            parameters.Add(CreateParameter(CategoryTable.NameParam, category.Name));
-            parameters.Add(CreateParameter(CategoryTable.ImageParam, category.ImageLocation));
 
+            //Build Parameters for base query
+            DbParameter[] parameters = CreateAllParameters(category);
+            
 
             if (categoryCheck.Count == 0)
-                //does not exist, do INSERT
-                return base.ExecuteNonQuery(parameters.ToArray(), CategoryTable.Insert);
+            {
+                //Row does not exist, do INSERT
+                string insertCommandText = base.BuildSQLInsertText(CategoryTable.TableName, parameters);
+                return base.ExecuteNonQuery(parameters, insertCommandText);
+            }
             else
-                //exists, do UPDATE
-                return base.ExecuteNonQuery(parameters.ToArray(), CategoryTable.UpdateById);
+            {   //Row exists, do UPDATE
+                
+                //Build Parameters for WHERE clause using Primary Key
+                List<DbParameter> whereParameters = new List<DbParameter>();
+                whereParameters.Add(CreateParameter(CategoryTable.IdParam, category.Id, CategoryTable.IdColumn));
+
+                string updateCommandText = base.BuildSQLUpdateText(CategoryTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
+                return base.ExecuteNonQuery(parameters, updateCommandText);
+            }
         }
 
         /// <summary>
         /// Saves a Collection of Item objects to a Database
         /// </summary>
         /// <param name="items"></param>
-        public override void Save(Collection<Category> items)
+        public override int Save(Collection<Category> items)
         {
+            int rowsAffected = 0;
+
             foreach (var item in items)
             {
-                Save(item);
+                rowsAffected += Save(item);
             }
+
+            return rowsAffected;
+        }
+
+        public override int Delete(Category category)
+        {
+            //Build DELETE statement using Primary Key
+            DbParameter[] whereParameters = new DbParameter[1];
+            whereParameters[0] = (CreateParameter(CategoryTable.IdParam, category.Id, CategoryTable.IdColumn));
+
+            string updateCommandText = base.BuildSQLDeleteText(CategoryTable.TableName, whereParameters, "AND", "=");
+            return base.ExecuteNonQuery(whereParameters, updateCommandText);
+        }
+        public override int Delete(Collection<Category> categories)
+        {
+            int rowsDeleted = 0;
+            
+            foreach (var category in categories)
+            {
+                rowsDeleted += Delete(category);
+            }
+            
+            return rowsDeleted;
         }
 
 
-        public override Collection<Category> Get(Category category)
+        protected override DbParameter[] CreateAllParameters(Category category)
         {
-            var parameters = new List<DbParameter>();
-
-            #region Check each Property for a value, Add a parameter a value exists
+            //Build Parameters from Properties with Values
+            List<DbParameter> parameters = new List<DbParameter>();
 
             //Id
-            if(category.Id != null)
+            if (category.Id != null)
                 parameters.Add(CreateParameter(CategoryTable.IdParam, category.Id, CategoryTable.IdColumn));
             //Name
             if (category.Name != null)
-            parameters.Add(CreateParameter(CategoryTable.NameParam, category.Name, CategoryTable.NameColumn ));
+                parameters.Add(CreateParameter(CategoryTable.NameParam, category.Name, CategoryTable.NameColumn));
             //ImageLocation
             if (category.ImageLocation != null)
-            parameters.Add(CreateParameter(CategoryTable.ImageParam, category.ImageLocation, CategoryTable.ImageColumn));
-            #endregion
+                parameters.Add(CreateParameter(CategoryTable.ImageParam, category.ImageLocation, CategoryTable.ImageColumn));
 
-            //Build a WHERE Clause using AND
-            string commandText = BuildSQLTextWhereAND(CategoryTable.Select, parameters.ToArray());
-            return ExecuteQuery(parameters.ToArray(), commandText);
+            return parameters.ToArray();
         }
-
-        #endregion
-
-
 
         #endregion
     }

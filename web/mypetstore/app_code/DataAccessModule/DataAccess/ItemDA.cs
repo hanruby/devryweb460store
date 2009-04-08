@@ -4,25 +4,20 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Configuration;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
+
 
 namespace DataAccessModule
 {
+
     /// <summary>
     /// Summary description for ItemDA
     /// </summary>
     public class ItemDA : DataAccessBase<Item>
     {
-        public ItemDA()
+        #region Constructors
+        public ItemDA() : base()
         {
+            //use the Item mapper
             mapper = new ItemMapper();
         }
 
@@ -30,64 +25,120 @@ namespace DataAccessModule
         {
             mapper = new ItemMapper();
         }
+        #endregion
 
-        #region Save & Get
+        #region Implemented DataAccessBase Methods
+
+        protected override Collection<Item> GetBase(Item item, string whereSeperator, string whereOperator)
+        {
+            //return all rows if no object was given (SELECT * FROM TableName)
+            if (item == null)
+                return ExecuteQuery(null, BuildSQLSelectText(ItemTable.TableName, null, "", ""));
+
+            //Build Parameters for base query
+            DbParameter[] parameters = CreateAllParameters(item);
+
+            //Build a SELECT CommandText
+            string selectQuery = base.BuildSQLSelectText(ItemTable.TableName, parameters, whereSeperator, whereOperator);
+            return ExecuteQuery(parameters, selectQuery);
+        }
+
         /// <summary>
-        /// Saves an Item object to a Database
+        /// Performs SELECT Query against Database based on the Values in the Business Object
         /// </summary>
-        /// <param name="item">Item to be saved in to the database(INSERTed or UPDATEd)</param>
-        /// <returns></returns>
+        /// <param name="item">business object used to form SELECT Query (null will return all rows in the Table)</param>
+        /// <returns>Collection of business objects matching the SELECT Query</returns>
+        /// <remarks></remarks>
+        public override Collection<Item> Get(Item item)
+        {
+            return GetBase(item, "AND", "=");
+        }
+
+        /// <summary>
+        /// Performs SELECT Query against Database based on the Values in the Business Object
+        /// </summary>
+        /// <param name="item">business object used to form SELECT Query (null will return all rows in the Table)</param>
+        /// <returns>Collection of business objects matching the SELECT Query</returns>
+        /// <remarks></remarks>
+        public override Collection<Item> GetLike(Item item)
+        {
+            return GetBase(item, "AND", "LIKE");
+        }
+
         public override int Save(Item item)
         {
             //Check for the objects existsence in the database using the Primary key
             var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(ItemTable.IdParam, item.Id);
-            Collection<Item> categoryCheck = ExecuteQuery(checkParam, ItemTable.SelectById);
+            checkParam[0] = CreateParameter(ItemTable.IdParam, item.Id, ItemTable.IdColumn);
+            string commandText = base.BuildSQLSelectText(ItemTable.TableName, checkParam, "", "=");
+            Collection<Item> itemCheck = ExecuteQuery(checkParam, commandText);
 
-            //Add parameters
-            var parameters = new List<DbParameter>();
-            parameters.Add(CreateParameter(ItemTable.IdParam, item.Id));
-            parameters.Add(CreateParameter(ItemTable.VendorIdParam, item.VendorId));
-            parameters.Add(CreateParameter(ItemTable.IsActiveParam, item.IsActive));
-            parameters.Add(CreateParameter(ItemTable.DescriptionParam, item.Description));
-            parameters.Add(CreateParameter(ItemTable.QuantityAvailableParam, item.QuantityAvailable));
-            parameters.Add(CreateParameter(ItemTable.PriceParam, item.Price));
-            parameters.Add(CreateParameter(ItemTable.ImageNameParam, item.ImageName));
-            parameters.Add(CreateParameter(ItemTable.ImageLocationParam, item.ImageLocation));
-            parameters.Add(CreateParameter(ItemTable.MinQuantityParam, item.MinQuantity));
-            parameters.Add(CreateParameter(ItemTable.CostPriceParam, item.CostPrice));
-            parameters.Add(CreateParameter(ItemTable.RecommendedPriceParam, item.RecommendPrice));
-            parameters.Add(CreateParameter(ItemTable.UPCParam, item.Upc));
-            parameters.Add(CreateParameter(ItemTable.NameParam, item.Name));
-            parameters.Add(CreateParameter(ItemTable.CodeParam, item.Code));
-            parameters.Add(CreateParameter(ItemTable.SizeParam, item.Size));
 
-            if (categoryCheck.Count == 0)
-                //does not exist, do INSERT
-                return base.ExecuteNonQuery(parameters.ToArray(), ItemTable.Insert);
+            //Build Parameters for base query
+            DbParameter[] parameters = CreateAllParameters(item);
+            
+
+            if (itemCheck.Count == 0)
+            {
+                //Row does not exist, do INSERT
+                string insertCommandText = base.BuildSQLInsertText(ItemTable.TableName, parameters);
+                return base.ExecuteNonQuery(parameters, insertCommandText);
+            }
             else
-                //exists, do UPDATE
-                return base.ExecuteNonQuery(parameters.ToArray(), ItemTable.UpdateById);
+            {   //Row exists, do UPDATE
+                
+                //Build Parameters for WHERE clause using Primary Key
+                List<DbParameter> whereParameters = new List<DbParameter>();
+                whereParameters.Add(CreateParameter(ItemTable.IdParam, item.Id, ItemTable.IdColumn));
+
+                string updateCommandText = base.BuildSQLUpdateText(ItemTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
+                return base.ExecuteNonQuery(parameters, updateCommandText);
+            }
         }
 
         /// <summary>
         /// Saves a Collection of Item objects to a Database
         /// </summary>
         /// <param name="items"></param>
-        public override void Save(Collection<Item> items)
+        public override int Save(Collection<Item> items)
         {
+            int rowsAffected = 0;
+
             foreach (var item in items)
             {
-                Save(item);
+                rowsAffected += Save(item);
             }
+
+            return rowsAffected;
+        }
+
+        public override int Delete(Item item)
+        {
+            //Build DELETE statement using Primary Key
+            DbParameter[] whereParameters = new DbParameter[1];
+            whereParameters[0] = (CreateParameter(ItemTable.IdParam, item.Id, ItemTable.IdColumn));
+
+            string updateCommandText = base.BuildSQLDeleteText(ItemTable.TableName, whereParameters, "AND", "=");
+            return base.ExecuteNonQuery(whereParameters, updateCommandText);
+        }
+        public override int Delete(Collection<Item> categories)
+        {
+            int rowsDeleted = 0;
+            
+            foreach (var item in categories)
+            {
+                rowsDeleted += Delete(item);
+            }
+            
+            return rowsDeleted;
         }
 
 
-        public override Collection<Item> Get(Item item)
+        protected override DbParameter[] CreateAllParameters(Item item)
         {
-            var parameters = new List<DbParameter>();
+            //Build Parameters from Properties with Values
+            List<DbParameter> parameters = new List<DbParameter>();
 
-            #region Check each Property for a value, Add a parameter a value exists
             //Id
             if (item.Id != null)
                 parameters.Add(CreateParameter(ItemTable.IdParam, item.Id, ItemTable.IdColumn));
@@ -133,13 +184,10 @@ namespace DataAccessModule
             //Size
             if (item.Size != null)
                 parameters.Add(CreateParameter(ItemTable.SizeParam, item.Size, ItemTable.SizeColumn));
-            #endregion
 
-            //Build a WHERE Clause using AND
-            string commandText = BuildSQLTextWhereAND(ItemTable.Select, parameters.ToArray());
-            return ExecuteQuery(parameters.ToArray(), commandText);
+            return parameters.ToArray();
         }
-        #endregion
 
+        #endregion
     }
 }

@@ -16,7 +16,7 @@ using System.Xml.Linq;
 public static class ItemVideoTable
 {
     //Table Name
-    public const string TableName = "IteamVideo";
+    public const string TableName = "IteamVideos";
 
     //Columns
     public const string IdColumn = "VideoID";
@@ -35,41 +35,4 @@ public static class ItemVideoTable
     public const string DescriptionParam = "@VideoDescription";
     public const string UrlParam = "@Link";
     public const string SourceParam = "@VideoSource";
-
-    //SQL Statements
-    public const string Insert = "INSERT INTO " + TableName + "("
-                                 + IdColumn + ", "
-                                 + ItemIdColumn + ", "
-                                 + VendorIdColumn + ", "
-                                 + NameColumn + ", "
-                                 + DescriptionColumn + ", "
-                                 + UrlColumn + ", "
-                                 + SourceColumn + ")"
-
-                                 + " VALUES("
-                                 + IdParam + ", "
-                                 + ItemIdParam + ", "
-                                 + VendorIdParam + ", "
-                                 + NameParam + ", "
-                                 + DescriptionParam + ", "
-                                 + UrlParam + ", "
-                                 + SourceParam + ")";
-
-    public const string Update = "UPDATE " + TableName + " SET ";
-    public const string UpdateById = "UPDATE " + TableName + " SET "
-                                     + IdColumn + "=" + IdParam + ", "
-                                     + ItemIdColumn + "=" + ItemIdParam + ", "
-                                     + VendorIdColumn + "=" + VendorIdParam + ", "
-                                     + NameColumn + "=" + NameParam + ", "
-                                     + DescriptionColumn + "=" + DescriptionParam + ", "
-                                     + UrlColumn + "=" + UrlParam + ", "
-                                     + SourceColumn + "=" + SourceParam
-                                     + " WHERE " + IdColumn + "=" + IdParam;
-
-    public const string Delete = "DELETE FROM " + TableName + " ";
-    public const string DeleteById = "DELETE FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
-    public const string Select = "SELECT * FROM " + TableName + " ";
-    public const string SelectById = "SELECT * FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
-    
 }

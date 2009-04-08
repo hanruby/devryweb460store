@@ -4,25 +4,20 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Configuration;
 using System.Data.Common;
-using System.Linq;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
+
 
 namespace DataAccessModule
 {
+
     /// <summary>
     /// Summary description for ItemVideoDA
     /// </summary>
     public class ItemVideoDA : DataAccessBase<ItemVideo>
     {
         #region Constructors
-        public ItemVideoDA()
+        public ItemVideoDA() : base()
         {
+            //use the ItemVideo mapper
             mapper = new ItemVideoMapper();
         }
 
@@ -32,68 +27,136 @@ namespace DataAccessModule
         }
         #endregion
 
+        #region Implemented DataAccessBase Methods
 
-        #region Save & Get
+        protected override Collection<ItemVideo> GetBase(ItemVideo itemVideo, string whereSeperator, string whereOperator)
+        {
+            //return all rows if no object was given (SELECT * FROM TableName)
+            if (itemVideo == null)
+                return ExecuteQuery(null, BuildSQLSelectText(ItemVideoTable.TableName, null, "", ""));
+
+            //Build Parameters for base query
+            DbParameter[] parameters = CreateAllParameters(itemVideo);
+
+            //Build a SELECT CommandText
+            string selectQuery = base.BuildSQLSelectText(ItemVideoTable.TableName, parameters, whereSeperator, whereOperator);
+            return ExecuteQuery(parameters, selectQuery);
+        }
+
+        /// <summary>
+        /// Performs SELECT Query against Database based on the Values in the Business Object
+        /// </summary>
+        /// <param name="itemVideo">business object used to form SELECT Query (null will return all rows in the Table)</param>
+        /// <returns>Collection of business objects matching the SELECT Query</returns>
+        /// <remarks></remarks>
+        public override Collection<ItemVideo> Get(ItemVideo itemVideo)
+        {
+            return GetBase(itemVideo, "AND", "=");
+        }
+
+        /// <summary>
+        /// Performs SELECT Query against Database based on the Values in the Business Object
+        /// </summary>
+        /// <param name="itemVideo">business object used to form SELECT Query (null will return all rows in the Table)</param>
+        /// <returns>Collection of business objects matching the SELECT Query</returns>
+        /// <remarks></remarks>
+        public override Collection<ItemVideo> GetLike(ItemVideo itemVideo)
+        {
+            return GetBase(itemVideo, "AND", "LIKE");
+        }
+
         public override int Save(ItemVideo itemVideo)
         {
             //Check for the objects existsence in the database using the Primary key
             var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(ItemVideoTable.IdParam, itemVideo.Id);
-            Collection<ItemVideo> itemVideoCheck = ExecuteQuery(checkParam, ItemVideoTable.SelectById);
+            checkParam[0] = CreateParameter(ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn);
+            string commandText = base.BuildSQLSelectText(ItemVideoTable.TableName, checkParam, "", "=");
+            Collection<ItemVideo> itemVideoCheck = ExecuteQuery(checkParam, commandText);
 
-            //Add parameters
-            List<DbParameter> parameters = new List<DbParameter>();
-            parameters.Add(CreateParameter(ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn ));
-            parameters.Add(CreateParameter(ItemVideoTable.ItemIdParam, itemVideo.ItemId, ItemVideoTable.ItemIdColumn));
-            parameters.Add(CreateParameter(ItemVideoTable.VendorIdParam, itemVideo.VendorId, ItemVideoTable.VendorIdColumn));
-            parameters.Add(CreateParameter(ItemVideoTable.NameParam, itemVideo.VideoName, ItemVideoTable.NameColumn));
-            parameters.Add(CreateParameter(ItemVideoTable.DescriptionParam, itemVideo.Description, ItemVideoTable.DescriptionColumn));
-            parameters.Add(CreateParameter(ItemVideoTable.UrlParam, itemVideo.Url, ItemVideoTable.UrlColumn));
-            parameters.Add(CreateParameter(ItemVideoTable.SourceParam, itemVideo.Source, ItemVideoTable.SourceColumn));
 
+            //Build Parameters for base query
+            DbParameter[] parameters = CreateAllParameters(itemVideo);
+            
 
             if (itemVideoCheck.Count == 0)
-                //does not exist, do INSERT
-                return base.ExecuteNonQuery(parameters.ToArray(), ItemVideoTable.Insert);
-            else
-                //exists, do UPDATE
-                return base.ExecuteNonQuery(parameters.ToArray(), ItemVideoTable.UpdateById);
-        }
-
-        public override void Save(Collection<ItemVideo> itemVideos)
-        {
-            foreach (var video in itemVideos)
             {
-                Save(video);
+                //Row does not exist, do INSERT
+                string insertCommandText = base.BuildSQLInsertText(ItemVideoTable.TableName, parameters);
+                return base.ExecuteNonQuery(parameters, insertCommandText);
+            }
+            else
+            {   //Row exists, do UPDATE
+                
+                //Build Parameters for WHERE clause using Primary Key
+                List<DbParameter> whereParameters = new List<DbParameter>();
+                whereParameters.Add(CreateParameter(ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn));
+
+                string updateCommandText = base.BuildSQLUpdateText(ItemVideoTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
+                return base.ExecuteNonQuery(parameters, updateCommandText);
             }
         }
 
-         public override Collection<ItemVideo> Get(ItemVideo itemVideo)
-         {
-             var parameters = new List<DbParameter>();
+        /// <summary>
+        /// Saves a Collection of Item objects to a Database
+        /// </summary>
+        /// <param name="items"></param>
+        public override int Save(Collection<ItemVideo> items)
+        {
+            int rowsAffected = 0;
 
-             #region Check each Property for a value, Add a parameter a value exists
-             if (itemVideo.Id != null)
-                 parameters.Add(CreateParameter(ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn));
-             if(itemVideo.ItemId != null)
+            foreach (var item in items)
+            {
+                rowsAffected += Save(item);
+            }
+
+            return rowsAffected;
+        }
+
+        public override int Delete(ItemVideo itemVideo)
+        {
+            //Build DELETE statement using Primary Key
+            DbParameter[] whereParameters = new DbParameter[1];
+            whereParameters[0] = (CreateParameter(ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn));
+
+            string updateCommandText = base.BuildSQLDeleteText(ItemVideoTable.TableName, whereParameters, "AND", "=");
+            return base.ExecuteNonQuery(whereParameters, updateCommandText);
+        }
+        public override int Delete(Collection<ItemVideo> categories)
+        {
+            int rowsDeleted = 0;
+            
+            foreach (var itemVideo in categories)
+            {
+                rowsDeleted += Delete(itemVideo);
+            }
+            
+            return rowsDeleted;
+        }
+
+
+        protected override DbParameter[] CreateAllParameters(ItemVideo itemVideo)
+        {
+            //Build Parameters from Properties with Values
+            List<DbParameter> parameters = new List<DbParameter>();
+
+            if (itemVideo.Id != null)
+                parameters.Add(CreateParameter(ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn));
+            if (itemVideo.ItemId != null)
                 parameters.Add(CreateParameter(ItemVideoTable.ItemIdParam, itemVideo.ItemId, ItemVideoTable.ItemIdColumn));
-             if(itemVideo.VendorId != null)
-                parameters.Add(CreateParameter(ItemVideoTable.VendorIdParam, itemVideo.VendorId,ItemVideoTable.VendorIdColumn));
-             if(itemVideo.VideoName != null)
+            if (itemVideo.VendorId != null)
+                parameters.Add(CreateParameter(ItemVideoTable.VendorIdParam, itemVideo.VendorId, ItemVideoTable.VendorIdColumn));
+            if (itemVideo.VideoName != null)
                 parameters.Add(CreateParameter(ItemVideoTable.NameParam, itemVideo.VideoName, ItemVideoTable.NameColumn));
-             if(itemVideo.Description != null)
-                parameters.Add(CreateParameter(ItemVideoTable.DescriptionParam, itemVideo.Description,ItemVideoTable.DescriptionColumn));
-             if(itemVideo.Url != null)
+            if (itemVideo.Description != null)
+                parameters.Add(CreateParameter(ItemVideoTable.DescriptionParam, itemVideo.Description, ItemVideoTable.DescriptionColumn));
+            if (itemVideo.Url != null)
                 parameters.Add(CreateParameter(ItemVideoTable.UrlParam, itemVideo.Url, ItemVideoTable.UrlColumn));
-             if(itemVideo.Source != null)
+            if (itemVideo.Source != null)
                 parameters.Add(CreateParameter(ItemVideoTable.SourceParam, itemVideo.Source, ItemVideoTable.SourceColumn));
-             #endregion
 
-             //Build a WHERE Clause using AND
-             string commandText = BuildSQLTextWhereAND(ItemVideoTable.Select, parameters.ToArray());
-             return ExecuteQuery(parameters.ToArray(), commandText);
-         }
+            return parameters.ToArray();
+        }
+
         #endregion
-
     }
 }

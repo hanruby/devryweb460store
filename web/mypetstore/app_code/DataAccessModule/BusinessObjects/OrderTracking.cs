@@ -16,8 +16,14 @@ namespace DataAccessModule
     {
         private int? id;
         private int? orderId;
+        private Order order; //foreign table
+
         private int? itemId;
+        private Item item; //foreign table
+        
         private int? vendorId;
+        private Vendor vendor; //foreign table
+
         private DateTime? shipDate;
         private DateTime? estimatedArrival;
         private string url;
@@ -80,6 +86,24 @@ namespace DataAccessModule
         {
             get { return url; }
             set { url = value; }
+        }
+
+        public Order Order
+        {
+            get { return order; }
+            set { order = value; }
+        }
+
+        public Item Item
+        {
+            get { return item; }
+            set { item = value; }
+        }
+
+        public Vendor Vendor
+        {
+            get { return vendor; }
+            set { vendor = value; }
         }
     }
 }

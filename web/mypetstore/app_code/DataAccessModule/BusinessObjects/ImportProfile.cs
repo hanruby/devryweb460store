@@ -15,11 +15,15 @@ namespace DataAccessModule
     public class ImportProfile
     {
         private int? id;
+        
         private int? vendorId;
+        private Vendor vendor;//foreign table
+
         private string ftpServer;
         private string ftpUsername;
         private string ftpPassword;
         private string ftpPath;
+        
         private string fileName;
         private string delimiter;
 
@@ -88,6 +92,12 @@ namespace DataAccessModule
         {
             get { return delimiter; }
             set { delimiter = value; }
+        }
+
+        public Vendor Vendor
+        {
+            get { return vendor; }
+            set { vendor = value; }
         }
     }
 }
