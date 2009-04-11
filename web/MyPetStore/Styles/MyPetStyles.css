@@ -185,6 +185,16 @@ body {
     border:0;
 }
 
+#error {
+    padding:50px;
+    text-align:center;
+    font-size:12pt;
+}
+#error a{
+    text-decoration:none;
+    border:0;
+}
+
 #mainContent2 {
     width: 980px;
     background-color:#ccc;
