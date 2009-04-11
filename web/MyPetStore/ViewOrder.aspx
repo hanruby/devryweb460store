@@ -7,7 +7,7 @@
     <asp:TextBox ID="txtOrderID" runat="server"></asp:TextBox><br />
     
     <asp:Button ID="btnLookUp" runat="server" Text="Look Up" OnClick="btnLookUp_Click" /><br /><br />
-    <asp:Label ID="lblNoOrder" runat="server" Text="There is no Order for that ID"></asp:Label>
+    <asp:Label ID="lblNoOrder" runat="server" Text="There is no Order for that ID" Visible="false"></asp:Label>
     <asp:FormView ID="FormView1" runat="server">
         <ItemTemplate>
             <table>

@@ -7,8 +7,8 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent2" Runat="Server">
     <div align="center">
         <input id="txtFile" type="file" runat="server" name="txtFile" /><br /><br />
-        <asp:Button ID="cmdImport" runat="server" Text="Import" /><br />
+        <asp:Button ID="cmdImport" runat="server" Text="Import" 
+            onclick="cmdImport_Click" /><br />
         <asp:Label ID="lblError" runat="server" />
     </div>
 </asp:Content>
-
