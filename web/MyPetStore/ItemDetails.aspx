@@ -7,6 +7,11 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent2" Runat="Server">
 
+<!-- script manager for page -->
+    <asp:ScriptManager ID="ScriptManager1" runat="server">
+    </asp:ScriptManager>
+
+
     <asp:FormView ID="FormView1" runat="server" DataKeyNames="ItemID,VendorID" DataSourceID="SqlDataSource1">
       
       
@@ -116,10 +121,11 @@
             <asp:QueryStringParameter Name="ItemID" QueryStringField="ItemID" Type="String" />
         </SelectParameters>
     </asp:SqlDataSource>
-    
-    <!-- labels to show status of adding to cart and errors -->
+   
+       <!-- labels to show status of adding to cart and errors -->
      <asp:Label runat="server" ID="lblSuccessful" Text="" Visible="false" ForeColor="Green"></asp:Label>
-     <asp:Label runat="server" ID="lblError" Text="" Visible="false" ForeColor="Red" ></asp:Label>     
+     <asp:Label runat="server" ID="lblError" Text="" Visible="false" ForeColor="Red" ></asp:Label> 
+   
 
 </asp:Content>
   

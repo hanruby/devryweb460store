@@ -13,14 +13,14 @@
     </p>
     <!-- <a href="#" class="popup">CLICK ME</a> -->
     <div class="myCart">
-        <a href="ViewProfile.aspx">My Account</a> | 
-        <a href="ShoppingCart.aspx">View Cart</a> (<asp:Label ID="lblItemsInCart" runat="server" Text=""></asp:Label>) | 
-        <a href="#">Checkout</a>
+        <a href="~/ViewProfile.aspx" runat="server">My Account</a> | 
+        <a href="~/ShoppingCart.aspx" runat="server">View Cart</a> (<asp:Label ID="lblItemsInCart" runat="server" Text=""></asp:Label>) | 
+        <a href="~/CheckOut.aspx?CheckOut=true" runat="server">Checkout</a>
     </div>
     <div class="search">
         SEARCH TOOL CAN GO HERE
     </div>
     
-    <img src="~/Images/headerLogo01.png" alt="" runat="server"/>
-    <img class="headerText" src="~/Images/headerText.png" alt="" runat="server" />
+    <img id="Img1" src="~/Images/headerLogo01.png" alt="" runat="server"/>
+    <img id="Img2" class="headerText" src="~/Images/headerText.png" alt="" runat="server" />
 </div>

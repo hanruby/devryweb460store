@@ -241,6 +241,10 @@ public partial class ItemDetails : System.Web.UI.Page
                         //// tell user the item was added to their cart successfully
                         lblSuccessful.Visible = true;
                         lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                        // refresh page
+                        // Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+                        Response.Redirect(Request.RawUrl);
                     }
 
 
@@ -293,6 +297,9 @@ public partial class ItemDetails : System.Web.UI.Page
                         // tell user the item was added to their cart successfully
                         lblSuccessful.Visible = true;
                         lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                        // refresh page
+                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                     }
                     else
                     {
@@ -316,6 +323,10 @@ public partial class ItemDetails : System.Web.UI.Page
                         // tell user the item was added to their cart successfully
                         lblSuccessful.Visible = true;
                         lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                        // refresh page
+                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+
                     }
 
 
@@ -507,6 +518,9 @@ public partial class ItemDetails : System.Web.UI.Page
                         // tell anonymous the item was added to their cart successfully
                         lblSuccessful.Visible = true;
                         lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                        // refresh page
+                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                     }
                     else
                     {
@@ -539,6 +553,9 @@ public partial class ItemDetails : System.Web.UI.Page
                         // tell anonymous the item was added to their cart successfully
                         lblSuccessful.Visible = true;
                         lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                        // refresh page
+                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                     }
 
 
@@ -624,7 +641,7 @@ public partial class ItemDetails : System.Web.UI.Page
                         // make arrays for paramaters and input
                         string[] s20 = { "@username" };
                         string[] v20 = { Session["AnonymousUserName"].ToString() };
-                        ds19 = da20.ExecuteQuery(comm20, s20, v20);
+                        ds20 = da20.ExecuteQuery(comm20, s20, v20);
 
 
                         customerID = ds20.Tables[0].Rows[0].ItemArray[0];
@@ -717,6 +734,9 @@ public partial class ItemDetails : System.Web.UI.Page
                             // tell user the item was added to their cart successfully
                             lblSuccessful.Visible = true;
                             lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                            // refresh page
+                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                         }
                         else
                         {
@@ -749,6 +769,9 @@ public partial class ItemDetails : System.Web.UI.Page
                             // tell user the item was added to their cart successfully
                             lblSuccessful.Visible = true;
                             lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                            // refresh page
+                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                         }
 
                     }
@@ -828,6 +851,9 @@ public partial class ItemDetails : System.Web.UI.Page
                             // tell user the item was added to their cart successfully
                             lblSuccessful.Visible = true;
                             lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                            // refresh page
+                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                         }
                         else
                         {
@@ -851,6 +877,9 @@ public partial class ItemDetails : System.Web.UI.Page
                             // tell user the item was added to their cart successfully
                             lblSuccessful.Visible = true;
                             lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                            // refresh page
+                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                         }
 
 
