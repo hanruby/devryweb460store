@@ -627,7 +627,7 @@
                                 Response.Write(" <input type='hidden' name='cmd' value='_cart' />");
                                 Response.Write(" <input type='hidden' name='upload' value='1' />");
                                 Response.Write(" <input type='hidden' name='business' value='akagon_1236919720_biz@yahoo.com' />");
-                                Response.Write(" <input type='hidden' name='return' value='http://www.mypetsfavoritewebsite.com/PurchaseComplete.aspx' />");
+                                Response.Write(" <input type='hidden' name='return' value='http://localhost:58821/MyPetStore/PurchaseCompleted.aspx' />");
                                 Response.Write(" <input type='hidden' name='cancel_return' value='http://www.mypetsfavoritewebsite.com/PurchaseCancelled.aspx' />");
                                 Response.Write(" <input type='hidden' name='custom' value='" + orderID.ToString() + "' />");
 
@@ -778,7 +778,7 @@
                             Response.Write(" <input type='hidden' name='cmd' value='_cart' />");
                             Response.Write(" <input type='hidden' name='upload' value='1' />");
                             Response.Write(" <input type='hidden' name='business' value='akagon_1236919720_biz@yahoo.com' />");
-                            Response.Write(" <input type='hidden' name='return' value='http://www.mypetsfavoritewebsite.com/PurchaseComplete.aspx' />");
+                            Response.Write(" <input type='hidden' name='return' value='http://localhost:58821/MyPetStore/PurchaseCompleted.aspx' />");
                             Response.Write(" <input type='hidden' name='cancel_return' value='http://www.mypetsfavoritewebsite.com/PurchaseCancelled.aspx' />");
                             Response.Write(" <input type='hidden' name='custom' value='" + orderID + "' />");
 
