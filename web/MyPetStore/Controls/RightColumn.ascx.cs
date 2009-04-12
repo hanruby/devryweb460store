@@ -8,6 +8,10 @@ using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+/**
+ * Author: Daniel Aguayo
+ * 
+ */
 public partial class RightColumn : System.Web.UI.UserControl
 {
     private object customerID;
@@ -27,9 +31,38 @@ public partial class RightColumn : System.Web.UI.UserControl
             //}
             //end
 
-            // bind grid view
-            BindGridRepeater();
         }
+
+
+        // bind grid view
+        BindGridRepeater();
+
+
+
+        // delete item with specific item ID and CustomerID 
+        if (Request.QueryString["Delete"] == "true" && Request.QueryString["Delete"] != null)
+        {
+            // deletes orderItem from shopping cart
+            DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+
+            string comm = "Delete FROM OrderItem WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
+
+            // array with itemID, orderID, and vendorID
+            string[] p = { "@itemID", "@orderID", "@vendorID" };
+            string[] v = { Request.QueryString["IID"], Request.QueryString["OID"], Request.QueryString["VID"] };
+
+
+            da.ExecuteNonQuery(comm, p, v);
+
+            // clear
+            p = null;
+            v = null;
+
+            // redirects back to previous page
+            Response.Redirect(Request.UrlReferrer.ToString());
+        }
+
+
     }
 
     private void BindGridRepeater()
@@ -75,6 +108,7 @@ public partial class RightColumn : System.Web.UI.UserControl
         }
 
 
+
     }
 
     // get customerID
@@ -101,16 +135,7 @@ public partial class RightColumn : System.Web.UI.UserControl
 
 
             // returns one item
-            //customerID = ds5.Tables[0].Rows[0].ItemArray[0];
-            // if statement added by Ethan, will set customerID = 0 if no rows returned.
-            if (ds5.Tables[0].Rows.Count > 0)
-            {
-                customerID = ds5.Tables[0].Rows[0].ItemArray[0];
-            }
-            else
-            {
-                customerID = 0;
-            }
+            customerID = ds5.Tables[0].Rows[0].ItemArray[0];
 
 
             //clear

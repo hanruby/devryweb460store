@@ -6,6 +6,7 @@
   <asp:Repeater ID="rpShoppingCartItems" runat="server" >
 <ItemTemplate>
 
+<a href="<%= Request.Url %>?Delete=true&IID=<%# Eval("ItemID") %>&OID=<%# Eval("OrderID") %>&VID=<%# Eval("VendorID") %>">Delete</a>
 <br />
 <asp:Label ID="lblItemName" runat="server" Text="Item Name: " ></asp:Label>
 <br />
@@ -21,9 +22,8 @@
 <br />
 
 </ItemTemplate>
-            
-         </asp:Repeater>
-    
+</asp:Repeater>
+   
   
     <br />
   

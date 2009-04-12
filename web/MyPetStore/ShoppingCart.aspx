@@ -28,6 +28,7 @@
 
 <!-- GridView to display items -->
 <br />
+
 <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" AllowPaging="True" CssClass="tablesorter">
 <Columns>
 
@@ -110,7 +111,8 @@ Your Shopping Cart is empty.
 </asp:Repeater>
  
 <br />
-
+<!-- label for tell using that tax and shipping information is calculating during check out and paypal -->
+<asp:Label runat="server" ID="lbltax" ForeColor="Brown" Font-Size="Medium" Text="*Tax is calculated during check out. Shipping is calculated at PayPal."></asp:Label>
 </div>
 
 
