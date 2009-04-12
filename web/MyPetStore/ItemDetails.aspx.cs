@@ -385,17 +385,18 @@ public partial class ItemDetails : System.Web.UI.Page
 
 
                     // insert the anonymousCustomerID into the customer table with the username of
+                    // and the usernameID/customerID
                     // mypetsfw.com + customerID
                     DAL.DataAccess da10 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
                     // make command statement 
                     // make command statement 
-                    string comm10 = "INSERT INTO Customer VALUES (@isActive, @userName, @fName, @lName, @address, @address2, @city, @state, @zip, @country)";
+                    string comm10 = "INSERT INTO Customer VALUES (@customerID, @isActive, @userName, @fName, @lName, @address, @address2, @city, @state, @zip, @country)";
 
-                    string[] s10 = { "@isActive", "@userName", "@fName", "@lName", "@address", "@address2", "@city", "@state", "@zip", "@country" };
+                    string[] s10 = { "@customerID", "@isActive", "@userName", "@fName", "@lName", "@address", "@address2", "@city", "@state", "@zip", "@country" };
 
 
-                    string[] v10 = { "True", anonymousUserName, "Anonymous", "Anonymous", "Anonymous", "Anonymous", "Anonymous", "", "", "Anonymous" };
+                    string[] v10 = { usernameID.ToString(), "True", anonymousUserName, "Fill In", "Fill In", "Fill In", "Fill In", "Fill In", "", "Fill In", "" };
 
                     DataSet ds10 = new DataSet();
 
@@ -564,7 +565,7 @@ public partial class ItemDetails : System.Web.UI.Page
 
 
                 }
-                // if the session doesn't == null
+                // if the session doesn't != null
                 else
                 {
                     // get the customerID of the user that I just created 

@@ -596,7 +596,7 @@ public partial class CheckOut : System.Web.UI.Page
 
             ds2 = da2.ExecuteQuery(comm2, p2, v2);
 
-            object getOrder = customerID = ds2.Tables[0].Rows[0].ItemArray[0];
+            object getOrder = ds2.Tables[0].Rows[0].ItemArray[0];
 
             // clear
             p2 = null;
@@ -748,7 +748,7 @@ public partial class CheckOut : System.Web.UI.Page
 
 
 
-                // update the customerid of the order to the customer of the user who just logged on
+                // update the customerid of the anonymous order to the customer, of the user who just logged on
 
                 DAL.DataAccess da4 =
                     new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
@@ -770,10 +770,77 @@ public partial class CheckOut : System.Web.UI.Page
                 v4 = null;
 
 
-                // clear session and abonden it
+                // clear session and abandon it
                 Session.Clear();
                 Session.Abandon();
 
+            }
+            // if user doesn't have an on going order just
+            // change the customer ID on the order
+            else
+            {
+                // get cusotmerID of anonymous user
+                //Instantiate our Category specific DataAccess Class
+                CustomerDA customerDA2 = new CustomerDA();
+
+                // check to see if user has items in their cart
+                //Create an Object that specifies what we want to Get
+                Customer customer2 = new Customer();
+
+                //gets customer info based on customer username
+
+                customer2.Username = Session["AnonymousUserName"].ToString();
+
+                //We will be returned a collection so lets Declare that and fill it using Get()
+                Collection<Customer> getCustomer2 = customerDA2.Get(customer2);
+
+                //for (int i = 0; i < getCustomer2.Count; i++)
+                //{
+                //    getCustomer2[i].Id;
+                //}
+
+
+                // get orderID of anonymous user based on customerID
+                OrderDA orderDA = new OrderDA();
+
+
+                //Create an Object that specifies what we want to Get
+                Order order = new Order();
+
+                //gets order info based on customerID
+
+                order.CustomerId = getCustomer2[0].Id;
+
+                // deletes the order with that customerID
+                Collection<Order> getOrder2 = orderDA.Get(order);
+
+
+
+                // update the customerid of the anonymous order to the customer, of the user who just logged on
+
+                DAL.DataAccess da4 =
+                    new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                       "System.Data.SqlClient");
+
+                string comm4 =
+                    "UPDATE Orders SET CustomerID = @customerID WHERE OrderID = @orderID  AND TXNID = @txnID";
+
+
+                // empty array
+                string[] p4 = { "@customerID", "@orderID", "@txnID" };
+                string[] v4 = { getCustomer[0].Id.ToString(), getOrder2[0].Id.ToString(), "" };
+                // new cus old get order
+
+                da4.ExecuteNonQuery(comm4, p4, v4);
+
+                // clear
+                p4 = null;
+                v4 = null;
+
+
+                // clear session and abandon it
+                Session.Clear();
+                Session.Abandon();
             }
 
         }
@@ -933,7 +1000,6 @@ public partial class CheckOut : System.Web.UI.Page
 
     // on user created
     // get the customerid of the user who is making an account
-    // check to see if they have any orders
     // register user using the customerID
     // redirect user to shipping
     protected void ReconfigureOrder(object sender, EventArgs e)

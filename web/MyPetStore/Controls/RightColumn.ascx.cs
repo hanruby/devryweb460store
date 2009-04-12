@@ -19,6 +19,7 @@ public partial class RightColumn : System.Web.UI.UserControl
     protected void Page_Load(object sender, EventArgs e)
     {
 
+
         if (!Page.IsPostBack)
         {
             ////code for tablesorter ready gridviews
@@ -31,36 +32,52 @@ public partial class RightColumn : System.Web.UI.UserControl
             //}
             //end
 
+            // bind grid view
+            BindGridRepeater();
+
+            if (rpShoppingCartItems.Items.Count > 0)
+            {
+
+                // clear shoppingcartitems label
+                lblNoShoppingCartItems.Text = "";
+
+                // delete item with specific itemID, orderID, and VendorID 
+                if (Request.QueryString["Delete"] == "true" && Request.QueryString["Delete"] != null && System.Web.HttpContext.Current.User.Identity.IsAuthenticated || Session["AnonymousUserName"] != null)
+                {
+                    // deletes orderItem from shopping cart
+                    DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+
+                    string comm = "Delete FROM OrderItem WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
+
+                    // array with itemID, orderID, and vendorID
+                    string[] p = { "@itemID", "@orderID", "@vendorID" };
+                    string[] v = { Request.QueryString["IID"], Request.QueryString["OID"], Request.QueryString["VID"] };
+
+
+                    da.ExecuteNonQuery(comm, p, v);
+
+                    // clear
+                    p = null;
+                    v = null;
+
+                    // redirects back to previous page
+                    Response.Redirect(Request.UrlReferrer.ToString());
+                }
+            }
+            else
+            {
+                lblNoShoppingCartItems.Text = "Your shopping cart is empty.";
+            }
         }
 
 
-        // bind grid view
-        BindGridRepeater();
 
 
 
-        // delete item with specific item ID and CustomerID 
-        if (Request.QueryString["Delete"] == "true" && Request.QueryString["Delete"] != null)
-        {
-            // deletes orderItem from shopping cart
-            DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-            string comm = "Delete FROM OrderItem WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
-
-            // array with itemID, orderID, and vendorID
-            string[] p = { "@itemID", "@orderID", "@vendorID" };
-            string[] v = { Request.QueryString["IID"], Request.QueryString["OID"], Request.QueryString["VID"] };
 
 
-            da.ExecuteNonQuery(comm, p, v);
 
-            // clear
-            p = null;
-            v = null;
 
-            // redirects back to previous page
-            Response.Redirect(Request.UrlReferrer.ToString());
-        }
 
 
     }
@@ -102,10 +119,7 @@ public partial class RightColumn : System.Web.UI.UserControl
 
 
         }
-        else
-        {
-            lblNoShoppingCartItems.Text = "Your shopping cart is empty.";
-        }
+
 
 
 

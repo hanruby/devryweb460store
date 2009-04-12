@@ -250,6 +250,21 @@
         
         <!-- start of table -->
         <table>
+          <tr>
+          
+                <td colspan="2">
+                <h1>Shipping Information</h2>
+                <br />
+                </td>
+               
+            </tr>
+          <tr>
+          
+                <th colspan="2">
+                Please make sure your shipping information is correct. Thank you!
+                </th>
+               
+            </tr>
             <tr>
                 <td>
                     First Name:
@@ -401,7 +416,7 @@
                     Country:
                 </td>
                 <td>
-                    <!-- regular expression field validator -->
+                
                     <asp:DropDownList ID="ddlCountry" runat="server">
                         <asp:ListItem Value="-1">Select</asp:ListItem>
                         <asp:ListItem>United States Of America</asp:ListItem>
