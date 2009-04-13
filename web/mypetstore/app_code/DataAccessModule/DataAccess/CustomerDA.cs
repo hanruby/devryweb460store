@@ -139,7 +139,7 @@ namespace DataAccessModule
             //Build Parameters from Properties with Values
             List<DbParameter> parameters = new List<DbParameter>();
 
-            if(customer.Id != null)
+            if (customer.Id != null)
                 parameters.Add(CreateParameter(CustomerTable.IdParam, customer.Id, CustomerTable.IdColumn));
             if (customer.IsActive != null)
                 parameters.Add(CreateParameter(CustomerTable.IsActiveParam, customer.IsActive, CustomerTable.IsActiveColumn));

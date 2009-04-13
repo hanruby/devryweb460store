@@ -40,7 +40,7 @@ namespace DataAccessModule
             this.country = null;
         }
 
-        public Customer(int id, bool isActive, string username, string firstName, string lastName, string address, string address2, string city, string state, string zip, string country)
+        public Customer(int? id, bool? isActive, string username, string firstName, string lastName, string address, string address2, string city, string state, string zip, string country)
         {
             this.id = id;
             this.isActive = isActive;

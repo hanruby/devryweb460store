@@ -6,6 +6,8 @@
   <asp:Repeater ID="rpShoppingCartItems" runat="server" >
 <ItemTemplate>
 
+<div class="rpShoppingCartItems">
+<br />
 <a href="<%= Request.RawUrl %>?Delete=true&IID=<%# Eval("ItemID") %>&OID=<%# Eval("OrderID") %>&VID=<%# Eval("VendorID") %>">Delete</a>
 <br />
 <asp:Label ID="lblProductName" runat="server" Text='<%# Eval("ProductName")%>'  ></asp:Label>
@@ -20,9 +22,7 @@
 <br />
 <asp:Label ID="lblSinglePrice" runat="server" Text="Single Item Price: " ></asp:Label>
 <asp:Label ID="lblPrice" runat="server" Text='<%# Eval("Price",  "{0:C}")%>' ></asp:Label>
-
-<br />
-    <br />
+</div>
 </ItemTemplate>
 </asp:Repeater>
    

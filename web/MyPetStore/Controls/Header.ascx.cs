@@ -15,9 +15,6 @@ public partial class Controls_Header : System.Web.UI.UserControl
     private object orderID;
     protected void Page_Load(object sender, EventArgs e)
     {
-
-
-
         lblItemsInCart.Text = "0";
 
         if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
@@ -139,12 +136,6 @@ public partial class Controls_Header : System.Web.UI.UserControl
                 // display answer on label       
                 lblItemsInCart.Text = items.ToString();
             }
-
-
-
-
-
-
         }
         else
         {

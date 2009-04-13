@@ -139,6 +139,16 @@ public partial class EditProfile : System.Web.UI.Page
     }
 
     /// <summary>
+    /// Returns user back to ViewProfile
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void btnCancel_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("ViewProfile.aspx");
+    }
+
+    /// <summary>
     /// TextChanged event changes text to a default value if blank
     /// </summary>
     /// <param name="sender"></param>
