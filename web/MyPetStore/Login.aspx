@@ -8,7 +8,7 @@
 <body>
 <form id="login" runat="server">
     <!--Richard Crouch - User login form-->
-    <asp:Login ID="UserLogin" runat="server" CreateUserText="Not a member? Click here." 
+    <asp:Login ID="UserLogin" runat="server" OnLoggedIn="LoggedIn" CreateUserText="Not a member? Click here." 
         CreateUserUrl="../UserRegistration.aspx" PasswordRecoveryUrl="~/ForgotPassword.aspx"
          PasswordRecoveryText="ForgotPassword?">
     </asp:Login>
