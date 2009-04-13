@@ -279,49 +279,58 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 background-color: #8dbdd8;
 }
 
-/* -- Daniel Edit, For ListView1 in Items.aspx */
+
+/* -- Daniel Edit, For ListView1 in Items.aspx -- */
 .listViewItemTemplate:hover
 {
 	background-color:Yellow;
 }
 .listViewItemTemplate
 {
-	background-color:Gray;
-	width:250px;
-	height:200px;
+	
+	padding: 0px 10px 0px 20px;
 }
-.listViewAlternativeItemTemplate:hover
+.listViewItemTemplateBackground
 {
-	background-color:Orange;
+    background-image: url(images/itemsBackground.png);
+	background-repeat: no-repeat;
+	width:150px;
+	height:150px;
 }
-.listViewAlternativeItemTemplate
-{
-	background-color:Gray;
-	width:250px;
-	height:200px;
+.listViewItemTemplateSpacing
+{  
+   
+    color:White;
+    text-align:center;
+    margin:0px 0px 0px 0px;
 }
 
-/* -- Daniel Edit, For ListView1 in Items.aspx */
-.listViewItemTemplate:hover
-{
-	background-color:Yellow;
-}
-.listViewItemTemplate
-{
-	background-color:Gray;
-	width:250px;
-	height:200px;
-}
 .listViewAlternativeItemTemplate:hover
 {
-	background-color:Orange;
+ 
+	background-color:Yellow;
 }
 .listViewAlternativeItemTemplate
 {
-	background-color:Gray;
-	width:250px;
-	height:200px;
+    padding: 0px 20px 0px 20px;
+	
+	background-repeat: no-repeat;
+	
 }
+.listViewAlternativeTemplateBackground
+{
+    background-image: url(images/itemsBackground.png);
+	background-repeat: no-repeat;
+	width:150px;
+	height:150px;
+}
+.listViewAlternativeTemplateSpacing
+{
+    color:White;
+    text-align:center;
+    margin:0px 0px 0px 0px;
+}
+
 
 /* -- for ShoppingCart.aspx -- */
 .shoppingCartProductImage
@@ -329,6 +338,17 @@ background-color: #8dbdd8;
 	width:50px;
 	height:50px;
 	float:left;
+}
+
+/* -- for RightColumn.ascx shoppingcart -- */
+.rpShoppingCartItems
+{
+    background-image: url(images/categoriesBackground.png);
+    background-repeat: no-repeat;
+    width:180px;
+    height:180px;  
+    text-align:center;
+    color:Brown;
 }
 
 /*-jquery ui styles---*/
