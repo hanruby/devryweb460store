@@ -11,10 +11,11 @@
     <asp:FormView ID="FormView1" runat="server">
         <ItemTemplate>
             <table>
-                <tr><td align="right"><b>Name: </b></td><td><%# Eval("FName")%> <%# Eval("LName")%></td></tr>
+<%--                <tr><td align="right"><b>Name: </b></td><td><%# Eval("FName")%> <%# Eval("LName")%></td></tr>
                 <tr><td align="right"><b>Sub Total: </b></td><td><%# Eval("GrossTotal")%></td></tr>
                 <tr><td align="right"><b>Tax: </b></td><td><%# Eval("Tax")%></td></tr>
-                <tr><td align="right"><b>Net Total: </b></td><td><%# Eval("NetTotal")%></td></tr>
+                <tr><td align="right"><b>Net Total: </b></td><td><%# Eval("NetTotal")%></td></tr>--%>
+                <tr><td align="right"><b>Name:&nbsp</b></td><td><%# Eval("FirstName")%> <%# Eval("LastName")%></td></tr>
             </table>
         </ItemTemplate>
     </asp:FormView>
