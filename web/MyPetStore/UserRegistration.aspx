@@ -10,7 +10,8 @@
     <div id="userRegistration" >
         <!--Richard Crouch - User registration form-->
         <asp:CreateUserWizard ID="userRegistrationWizard" runat="server" 
-            OnContinueButtonClick="UserRegistrationWizard_ContinueButtonClick" OnCreatedUser="ReconfigureOrder">
+            OnContinueButtonClick="UserRegistrationWizard_ContinueButtonClick" 
+            oncreateduser="userRegistrationWizard_CreatedUser">
             <WizardSteps>
 <asp:CreateUserWizardStep runat="server">
     <ContentTemplate>
