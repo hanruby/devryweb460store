@@ -8,6 +8,13 @@ $(document).ready(function() {
     //nav menu tabs
     $("#tabs").tabs({ event: 'mouseover' });
 
+    //intercept the default behavior of the aspnet login link
+    $("a:contains('Login')").attr({
+        href: "Login.aspx?height=140&width=215&modal=true",
+        title: "Login"
+    }).addClass('thickbox');
+
+
     //call tablesorter plugin on all gv's with tablesorter class
     $(".tablesorter").tablesorter();
 
@@ -23,7 +30,7 @@ $(document).ready(function() {
 
 
 
-});    //end of doc.ready
+});     //end of doc.ready
 
 //-----------------------------Misc Functions----------------------------------------------
 //i often call functions from doc ready events, they'll go here

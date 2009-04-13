@@ -25,12 +25,12 @@
             <HeaderStyle BackColor="#666666" BorderColor="#133463" BorderStyle="Solid" 
                 BorderWidth="2px" Font-Bold="True" Font-Size="0.9em" ForeColor="White" 
                 HorizontalAlign="Center" />
-            <CreateUserButtonStyle BackColor="White" BorderColor="#133463" 
+            <CreateUserButtonStyle BackColor="#efefef" BorderColor="#133463" 
                 BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" 
-                ForeColor="#1C5E55" />
-            <CancelButtonStyle BackColor="White" BorderColor="#133463" 
+                ForeColor="#000000" />
+            <CancelButtonStyle BackColor="#efefef" BorderColor="#133463" 
                 BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" 
-                ForeColor="#1C5E55" />
+                ForeColor="#000000" />
             <TitleTextStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
             <StepStyle BorderWidth="0px" />
             <WizardSteps>
