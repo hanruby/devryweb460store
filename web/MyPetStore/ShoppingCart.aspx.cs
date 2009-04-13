@@ -77,7 +77,7 @@ public partial class ShoppingCart : System.Web.UI.Page
                 GridView1.UseAccessibleHeader = true;
                 GridView1.HeaderRow.TableSection = TableRowSection.TableHeader;
                 rptOne.Visible = true;
-
+                lbltax.Visible = true;
                 btnUpdateQuantity.Visible = true;
                 btnContinueShopping.Visible = true;
                 btnProceed.Visible = true;
@@ -91,9 +91,9 @@ public partial class ShoppingCart : System.Web.UI.Page
             {
 
                 rptOne.Visible = false;
-
+                lbltax.Visible = false;
                 btnUpdateQuantity.Visible = false;
-                btnContinueShopping.Visible = false;
+                //   btnContinueShopping.Visible = false;
                 btnProceed.Visible = false;
             }
             //end
@@ -102,39 +102,6 @@ public partial class ShoppingCart : System.Web.UI.Page
 
 
         }
-
-
-
-        //// delete item with specific item ID and CustomerID 
-        //if (Request.QueryString["Delete"] == "true" && Request.QueryString["Delete"] != null)
-        //{
-        //    // deletes orderItem from shopping cart
-        //    DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-        //    string comm = "Delete FROM OrderItem WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
-
-        //    // array with itemID, orderID, and vendorID
-        //    string[] p = { "@itemID", "@orderID", "@vendorID" };
-        //    string[] v = { Request.QueryString["IID"], Request.QueryString["OID"], Request.QueryString["VID"] };
-
-
-        //    da.ExecuteNonQuery(comm, p, v);
-
-        //    // clear
-        //    p = null;
-        //    v = null;
-
-        //    // call method to update the entire cart
-        //    UpdateQuantity();
-
-        //    Response.Redirect("ShoppingCart.aspx");
-        //}
-
-
-
-
-
-
 
     }
 
@@ -186,16 +153,16 @@ public partial class ShoppingCart : System.Web.UI.Page
                 // call method to validate quantity amount
                 ValidateQuantity(minQuantityInt, quantityAvailableInt, quantityInt);
 
-                if (quantityInt < minQuantityInt || quantityInt > quantityAvailableInt || quantityInt < 1)
-                {
-                    quantity.BackColor = Color.Red;
+                //if (quantityInt < minQuantityInt || quantityInt > quantityAvailableInt || quantityInt < 1)
+                //{
+                //    quantity.BackColor = Color.Red;
 
-                }
-                else
-                {
-                    // set quantity color back to original color
-                    quantity.BackColor = Color.White;
-                }
+                //}
+                //else
+                //{
+                //    // set quantity color back to original color
+                //    quantity.BackColor = Color.White;
+                //}
 
 
                 if (totalCount < 1)
@@ -389,57 +356,6 @@ public partial class ShoppingCart : System.Web.UI.Page
     }
 
 
-    //// calculates total plus tax
-    //private string CalculateTotal(double total, double tax)
-    //{
-
-
-
-    //    if (tax == 0.0)
-    //    {
-    //        return total.ToString("n2");
-    //    }
-
-
-    //    return (tax + total).ToString("n2");
-
-
-
-    //}
-
-    //// calculates tax only
-    //private double CalculateTax(double total, double tax)
-    //{
-    //    //// check to see what state user is in
-    //    //DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-    //    //string comm = "SELECT Customer.CustomerID, aspnet_Users.UserName, Customer.UserName FROM Customer INNER JOIN Customer ON aspnet_Users.UserName = Customer.UserName WHERE UserName = @userName";
-
-    //    //// empty array
-    //    //string[] p = { "@UserName" };
-    //    //string[] v = { "usernamegoeshere" };
-
-    //    //da.ExecuteNonQuery(comm, p, v);
-
-    //    //// clear
-    //    //p = null;
-    //    //v = null;
-
-    //    double totalTax;
-
-    //    if (ddlState.SelectedItem.Text == "AZ")
-    //    {
-    //        totalTax = total * 0.08;
-
-    //    }
-    //    else
-    //    {
-    //        totalTax = 0.00;
-    //    }
-
-    //    return totalTax;
-    //}
-
     private void ValidateQuantity(int minQuantityInt, int quantityAvailableInt, int quantityInt)
     {
 
@@ -470,25 +386,7 @@ public partial class ShoppingCart : System.Web.UI.Page
         Response.Redirect("CheckOut.aspx?CheckOut=true");
     }
 
-    // validate state dropdown box
-    //protected void valState(object source, ServerValidateEventArgs args)
-    //{
-    //    // check to see if customer/user has
-    //    // selected a state
-    //    if (IsValid)
-    //    {
-    //        if (ddlState.SelectedItem.Text == "Select")
-    //        {
-    //            ddlState.BackColor = Color.Red;
-    //            args.IsValid = false;
-    //        }
-    //        else
-    //        {
-    //            ddlState.BackColor = Color.White;
 
-    //        }
-    //    }
-    //}
 
     private string GetCustomerID()
     {

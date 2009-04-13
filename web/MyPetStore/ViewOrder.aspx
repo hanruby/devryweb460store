@@ -19,7 +19,7 @@
         </ItemTemplate>
     </asp:FormView>
     <br /><br /><br />
-    <asp:Repeater ID="Repeater1" runat="server">
+<%--    <asp:Repeater ID="Repeater1" runat="server">
         <HeaderTemplate>
             <table style="text-align: center;">
             <tr>
@@ -37,6 +37,18 @@
             </tr>
             </table>
         </ItemTemplate>
+    </asp:Repeater>--%>
+    <asp:Repeater ID="Repeater1" runat="server">
+    <HeaderTemplate></HeaderTemplate>
+    <ItemTemplate>
+        <div><%#DataBinder.Eval(Container.DataItem, "Id") %></div>
+        <div><%#DataBinder.Eval(Container.DataItem, "CustomerId") %></div>
+        <div><%#DataBinder.Eval(Container.DataItem, "GrossTotal") %></div>
+        <div><%#DataBinder.Eval(Container.DataItem, "Tax") %></div>
+        <div><%#DataBinder.Eval(Container.DataItem, "NetTotal") %></div>
+        <div><%#DataBinder.Eval(Container.DataItem, "TxnId") %></div>
+    </ItemTemplate>
+    <FooterTemplate></FooterTemplate>
     </asp:Repeater>
     
     <%--<uc1:ViewOrders ID="ViewOrders1" runat="server" />--%>

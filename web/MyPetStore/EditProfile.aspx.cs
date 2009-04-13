@@ -19,9 +19,9 @@ public partial class EditProfile : System.Web.UI.Page
             cboState.DataBind();
 
             // set the abbreviated name for the country to prevent the user from typing it in
-            string[] countries = CountryArrays.Abbreviations;
-            cboCountry.DataSource = countries;
-            cboCountry.DataBind();
+            // string[] countries = CountryArrays.Abbreviations;
+            //  cboCountry.DataSource = countries;
+            // cboCountry.DataBind();
 
             // get user information from database
             var dbConnect = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
@@ -64,7 +64,7 @@ public partial class EditProfile : System.Web.UI.Page
         else
         {
             // user not logged in, redirect user to login page
-            if(!Page.IsPostBack)
+            if (!Page.IsPostBack)
                 Response.Redirect("Login.aspx");
         }
     }
@@ -82,27 +82,27 @@ public partial class EditProfile : System.Web.UI.Page
 
         // check values of the textboxes, displaying the appropriate values, then
         // commit changes to the DB
-        if(txtFirstName.Text == "" || txtFirstName.Text == "First Name")
+        if (txtFirstName.Text == "" || txtFirstName.Text == "First Name")
         {
             ErrorText.Text = "First name required";
         }
-        else if(txtLastName.Text == "" || txtLastName.Text == "Last Name")
+        else if (txtLastName.Text == "" || txtLastName.Text == "Last Name")
         {
             ErrorText.Text = "Last name required";
         }
-        else if(txtAddress.Text == "" || txtAddress.Text == "Address 1")
+        else if (txtAddress.Text == "" || txtAddress.Text == "Address 1")
         {
             ErrorText.Text = "Address 1 required";
         }
-        else if(txtCity.Text == "" || txtCity.Text == "City")
+        else if (txtCity.Text == "" || txtCity.Text == "City")
         {
             ErrorText.Text = "City name required";
         }
-        else if(!int.TryParse(txtZip.Text,out result))
+        else if (!int.TryParse(txtZip.Text, out result))
         {
             ErrorText.Text = "Invalid Zip";
         }
-        else if(txtEmail.Text == "" || txtEmail.Text == "E-Mail")
+        else if (txtEmail.Text == "" || txtEmail.Text == "E-Mail")
         {
             ErrorText.Text = "E-Mail required";
         }

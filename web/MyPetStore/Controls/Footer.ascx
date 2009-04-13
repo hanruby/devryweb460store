@@ -2,12 +2,12 @@
 
 
         <a href="~/Default.aspx" runat="server">Home</a> | 
-        <a href="#">About Us</a> |
+        <%--<a href="#">About Us</a> |--%>
         <a href="~/rss.xml" runat="server">RSS Feed</a> |  
-        <a href="#">Testimonials</a> | 
+        <%--<a href="#">Testimonials</a> | 
         <a href="#">Privacy policy</a> | 
         <a href="#">FAQ</a> | 
-        <a href="#">Terms of Sale</a> | 
+        <a href="#">Terms of Sale</a> | --%>
         <a href="~/contact.aspx" runat="server">Contact Us</a>
         
         

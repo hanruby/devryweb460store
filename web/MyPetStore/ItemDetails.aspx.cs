@@ -241,6 +241,10 @@ public partial class ItemDetails : System.Web.UI.Page
                         //// tell user the item was added to their cart successfully
                         lblSuccessful.Visible = true;
                         lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                        // refresh page
+                        // Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+                        Response.Redirect(Request.RawUrl);
                     }
 
 
@@ -293,6 +297,9 @@ public partial class ItemDetails : System.Web.UI.Page
                         // tell user the item was added to their cart successfully
                         lblSuccessful.Visible = true;
                         lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                        // refresh page
+                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                     }
                     else
                     {
@@ -316,6 +323,10 @@ public partial class ItemDetails : System.Web.UI.Page
                         // tell user the item was added to their cart successfully
                         lblSuccessful.Visible = true;
                         lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                        // refresh page
+                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+
                     }
 
 
@@ -374,17 +385,18 @@ public partial class ItemDetails : System.Web.UI.Page
 
 
                     // insert the anonymousCustomerID into the customer table with the username of
+                    // and the usernameID/customerID
                     // mypetsfw.com + customerID
                     DAL.DataAccess da10 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
                     // make command statement 
                     // make command statement 
-                    string comm10 = "INSERT INTO Customer VALUES (@isActive, @userName, @fName, @lName, @address, @address2, @city, @state, @zip, @country)";
+                    string comm10 = "INSERT INTO Customer VALUES (@customerID, @isActive, @userName, @fName, @lName, @address, @address2, @city, @state, @zip, @country)";
 
-                    string[] s10 = { "@isActive", "@userName", "@fName", "@lName", "@address", "@address2", "@city", "@state", "@zip", "@country" };
+                    string[] s10 = { "@customerID", "@isActive", "@userName", "@fName", "@lName", "@address", "@address2", "@city", "@state", "@zip", "@country" };
 
 
-                    string[] v10 = { "True", anonymousUserName, "Anonymous", "Anonymous", "Anonymous", "Anonymous", "Anonymous", "", "", "Anonymous" };
+                    string[] v10 = { usernameID.ToString(), "True", anonymousUserName, "Fill In", "Fill In", "Fill In", "Fill In", "Fill In", "", "Fill In", "" };
 
                     DataSet ds10 = new DataSet();
 
@@ -507,6 +519,9 @@ public partial class ItemDetails : System.Web.UI.Page
                         // tell anonymous the item was added to their cart successfully
                         lblSuccessful.Visible = true;
                         lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                        // refresh page
+                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                     }
                     else
                     {
@@ -539,6 +554,9 @@ public partial class ItemDetails : System.Web.UI.Page
                         // tell anonymous the item was added to their cart successfully
                         lblSuccessful.Visible = true;
                         lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                        // refresh page
+                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                     }
 
 
@@ -547,7 +565,7 @@ public partial class ItemDetails : System.Web.UI.Page
 
 
                 }
-                // if the session doesn't == null
+                // if the session doesn't != null
                 else
                 {
                     // get the customerID of the user that I just created 
@@ -624,7 +642,7 @@ public partial class ItemDetails : System.Web.UI.Page
                         // make arrays for paramaters and input
                         string[] s20 = { "@username" };
                         string[] v20 = { Session["AnonymousUserName"].ToString() };
-                        ds19 = da20.ExecuteQuery(comm20, s20, v20);
+                        ds20 = da20.ExecuteQuery(comm20, s20, v20);
 
 
                         customerID = ds20.Tables[0].Rows[0].ItemArray[0];
@@ -717,6 +735,9 @@ public partial class ItemDetails : System.Web.UI.Page
                             // tell user the item was added to their cart successfully
                             lblSuccessful.Visible = true;
                             lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                            // refresh page
+                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                         }
                         else
                         {
@@ -749,6 +770,9 @@ public partial class ItemDetails : System.Web.UI.Page
                             // tell user the item was added to their cart successfully
                             lblSuccessful.Visible = true;
                             lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                            // refresh page
+                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                         }
 
                     }
@@ -828,6 +852,9 @@ public partial class ItemDetails : System.Web.UI.Page
                             // tell user the item was added to their cart successfully
                             lblSuccessful.Visible = true;
                             lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                            // refresh page
+                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                         }
                         else
                         {
@@ -851,6 +878,9 @@ public partial class ItemDetails : System.Web.UI.Page
                             // tell user the item was added to their cart successfully
                             lblSuccessful.Visible = true;
                             lblSuccessful.Text = "Added to shopping cart successfully!";
+
+                            // refresh page
+                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
                         }
 
 

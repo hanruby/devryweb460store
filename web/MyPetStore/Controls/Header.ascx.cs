@@ -36,7 +36,17 @@ public partial class Controls_Header : System.Web.UI.UserControl
 
 
             // returns one item
-            customerID = ds5.Tables[0].Rows[0].ItemArray[0];
+            // customerID = ds5.Tables[0].Rows[0].ItemArray[0];
+            // if statement added by Ethan, will set customerID = 0 if no rows returned.
+            if (ds5.Tables[0].Rows.Count > 0)
+            {
+                customerID = ds5.Tables[0].Rows[0].ItemArray[0];
+            }
+            else
+            {
+                customerID = 0;
+            }
+
 
 
             //clear
