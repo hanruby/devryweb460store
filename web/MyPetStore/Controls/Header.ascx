@@ -9,8 +9,7 @@
         <LoggedInTemplate>
             Welcome, <asp:LoginName ID="loginName" runat="server" />! | <asp:LoginStatus ID="loginStatus1" runat="server" />
         </LoggedInTemplate> 
-    </asp:LoginView>
-    </p>
+    </asp:LoginView></p>
     <!-- <a href="#" class="popup">CLICK ME</a> -->
     <div class="myCart">
         <a href="ViewProfile.aspx">My Account</a> | 

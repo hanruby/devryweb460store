@@ -100,6 +100,8 @@
             <td colspan="2" align="center">
                 <asp:Button ID="btnSubmitChanges" runat="server" Text="Submit Changes" 
                     onclick="btnSubmitChanges_Click" />
+                <asp:Button ID="btnCancel" runat="server" Text="Cancel" 
+                    onclick="btnCancel_Click"/>
             </td>
         </tr>
     </table>
