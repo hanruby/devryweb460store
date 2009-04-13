@@ -18,7 +18,8 @@
         <a href="~/CheckOut.aspx?CheckOut=true" runat="server">Checkout</a>
     </div>
     <div class="search">
-        SEARCH TOOL CAN GO HERE
+        <asp:TextBox ID="txtSearch" runat="server"></asp:TextBox>
+        <asp:Button ID="btnSearch" runat="server" Text="Search" />
     </div>
     
     <img id="Img1" src="~/Images/headerLogo01.png" alt="" runat="server"/>

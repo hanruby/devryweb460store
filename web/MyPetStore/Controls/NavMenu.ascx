@@ -64,7 +64,6 @@
             <li><a href="~/contact.aspx" runat="server">Contact</a></li>
             <li><a href="~/dbtest.aspx" runat="server">DatabaseTest</a></li>
             <li><a href="~/ForgotPassword.aspx" runat="server">ForgotPassword</a></li>
-            <li><a href="~/IPN.aspx" runat="server">IPN</a></li>
             <li><a href="~/Login.aspx" runat="server">Login</a></li>
             <li><a href="~/PasswordSuccess.aspx" runat="server">PasswordSuccess</a></li>
             <li><a href="~/ResetPassword.aspx" runat="server">ResetPassword</a></li>
