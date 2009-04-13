@@ -106,13 +106,13 @@ public partial class ViewOrder : System.Web.UI.Page
         //i.Id = col_oi[0].ItemId; // Get first item id
         //Collection<Item> col_i = iDA.Get(i); // Add item to collection
 
-        Collection<Item> col_i;
+       /* Collection<Item> col_i;
         for (int x = 0; x <= col_oi.Count; x++)
         {
             i.Id = col_oi[x].ItemId;
             col_i.Add(iDA.Get(i)); //Error: cannot convert from 'System.Collections.ObjectmOdel.Collection<DataAccessModule.Item>' to 'DataAccessModule.Item>'
         }
-
+        */
 
 
 

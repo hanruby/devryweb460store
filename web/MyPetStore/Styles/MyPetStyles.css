@@ -23,6 +23,10 @@ body {
 .clearer {
     clear:both;
 }
+.padded td {
+    padding:2px;
+    
+}
 
 /*----------header and footer------------*/
 .popup {
