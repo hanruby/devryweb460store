@@ -50,7 +50,7 @@ namespace DataAccessModule
 
             //TXNID
             if (record[OrderTable.TXNIDColumn] != DBNull.Value)
-                order.TxnId = (int)record[OrderTable.TXNIDColumn];
+                order.TxnId = (string)record[OrderTable.TXNIDColumn];
 
 
             return order;
