@@ -103,25 +103,16 @@ public partial class ViewOrder : System.Web.UI.Page
         oi.OrderId = oid;
         Collection<OrderItem> col_oi = oiDA.Get(oi);
 
-        i.Id = col_oi[0].ItemId; // Get first item id
-        Collection<Item> col_i = iDA.Get(i); // Add item to collection
+        //i.Id = col_oi[0].ItemId; // Get first item id
+        //Collection<Item> col_i = iDA.Get(i); // Add item to collection
 
-        if (col_oi.Count > 1) //check for more than one element
+        for (int x = 0; x <= col_oi.Count; x++)
         {
-            int x = 1; // start with second element
-
-            while (x <= col_oi.Count)
-            {
-                i.Id = col_oi[x].ItemId;
-                //col_i.Add(iDA.Get(i)); //Error: cannot convert from 'System.Collections.ObjectmOdel.Collection<DataAccessModule.Item>' to 'DataAccessModule.Item>'
-                x++;
-            }
+            i.Id = col_oi[x].ItemId;
+            //col_i.Add(iDA.Get(i)); //Error: cannot convert from 'System.Collections.ObjectmOdel.Collection<DataAccessModule.Item>' to 'DataAccessModule.Item>'
         }
-        
-        
-        
 
-        //i.Id = (oi.ItemId);
+
 
 
         FormView1.DataSource = col_c;
