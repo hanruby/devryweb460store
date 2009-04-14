@@ -15,8 +15,13 @@ namespace DataAccessModule
     public class ItemVideo
     {
         private int? id;
+        
         private int? itemId;
+        private Item item; //foreign table
+
         private int? vendorId;
+        private Vendor vendor; //foreign table
+
         private string videoName;
         private string description;
         private string url;
@@ -82,6 +87,18 @@ namespace DataAccessModule
         {
             get { return source; }
             set { source = value; }
+        }
+
+        public Item Item
+        {
+            get { return item; }
+            set { item = value; }
+        }
+
+        public Vendor Vendor
+        {
+            get { return vendor; }
+            set { vendor = value; }
         }
     }
 }

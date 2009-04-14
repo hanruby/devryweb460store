@@ -79,7 +79,30 @@
                 <asp:Label ID="lblCountry" runat="server" Text="Country:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
-                <asp:DropDownList ID="cboCountry" runat="server"></asp:DropDownList>
+                <asp:DropDownList ID="cboCountry" runat="server">
+                <asp:ListItem>United States Of America</asp:ListItem>
+                        <asp:ListItem>Antigua and Barbuda</asp:ListItem>
+                        <asp:ListItem>The Bahamas</asp:ListItem>
+                        <asp:ListItem>Barbados</asp:ListItem>
+                        <asp:ListItem>Belize</asp:ListItem>
+                        <asp:ListItem>Canada</asp:ListItem>
+                        <asp:ListItem>Costa Rica</asp:ListItem>
+                        <asp:ListItem>Cuba</asp:ListItem>
+                        <asp:ListItem>Dominica</asp:ListItem>
+                        <asp:ListItem>Dominican-Republic</asp:ListItem>
+                        <asp:ListItem>Greenland</asp:ListItem>
+                        <asp:ListItem>Grenada</asp:ListItem>
+                        <asp:ListItem>Guatemala</asp:ListItem>
+                        <asp:ListItem>Haiti</asp:ListItem>
+                        <asp:ListItem>Jamaica</asp:ListItem>
+                        <asp:ListItem>Mexico</asp:ListItem>
+                        <asp:ListItem>Nicaragua</asp:ListItem>
+                        <asp:ListItem>Panama</asp:ListItem>
+                        <asp:ListItem>Saint Kitts and Nevis</asp:ListItem>
+                        <asp:ListItem>Saint Lucia</asp:ListItem>
+                        <asp:ListItem>Saint Vincent and the Grenadines</asp:ListItem>
+                        <asp:ListItem>Trinidad and Tobago</asp:ListItem>
+                </asp:DropDownList>
             </td>
         </tr>
         <tr>
@@ -100,6 +123,8 @@
             <td colspan="2" align="center">
                 <asp:Button ID="btnSubmitChanges" runat="server" Text="Submit Changes" 
                     onclick="btnSubmitChanges_Click" />
+                <asp:Button ID="btnCancel" runat="server" Text="Cancel" 
+                    onclick="btnCancel_Click"/>
             </td>
         </tr>
     </table>

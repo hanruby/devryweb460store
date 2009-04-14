@@ -37,48 +37,4 @@ public static class ImportProfileTable
     public const string FtpPathParam = "@FTPPath";
     public const string FilenameParam = "@FileName";
     public const string DelimiterParam = "@Delimiter";
-
-    //SQL Statements
-    public const string Insert = "INSERT INTO " + TableName + "("
-                                 + IdColumn + ", "
-                                 + VendorIdColumn + ", "
-                                 + FtpServerColumn + ", "
-                                 + FtpUsernameColumn + ", "
-                                 + FtpPasswordColumn + ", "
-                                 + FtpPathColumn + ", "
-                                 + FilenameColumn + ", "
-                                 + DelimiterColumn + ")"
-
-                                 + " VALUES("
-                                 + IdParam + ", "
-                                 + VendorIdParam + ", "
-                                 + FtpServerParam + ", "
-                                 + FtpUsernameParam + ", "
-                                 + FtpPasswordParam + ", "
-                                 + FtpPathParam + ", "
-                                 + FilenameParam + ", "
-                                 + DelimiterParam + ")";
-
-    public const string Update = "UPDATE " + TableName + " SET ";
-    public const string UpdateById = "UPDATE " + TableName + " SET "
-                                     + IdColumn + "=" + IdParam + ", "
-                                     + VendorIdColumn + "=" + VendorIdParam + ", "
-                                     + FtpServerColumn + "=" + FtpServerParam + ", "
-                                     + FtpUsernameColumn + "=" + FtpUsernameParam + ", "
-                                     + FtpPasswordColumn + "=" + FtpPasswordParam + ", "
-                                     + FtpPathColumn + "=" + FtpPathParam + ", "
-                                     + FilenameColumn + "=" + FilenameParam + ", "
-                                     + DelimiterColumn + "=" + DelimiterParam
-                                     + " WHERE " + IdColumn + "=" + IdParam;
-
-
-    public const string Delete = "DELETE FROM " + TableName + " ";
-    public const string DeleteById = "DELETE FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
-    public const string Select = "SELECT * FROM " + TableName + " ";
-    public const string SelectById = "SELECT * FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
-
-
-
 }

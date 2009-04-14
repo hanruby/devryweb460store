@@ -34,40 +34,4 @@ public static class OrderItemTable
     public const string PriceParam = "@Price";
     public const string TotalPriceParam = "@TotalPrice";
     public const string QuantityParam = "@Quantity";
-    
-    //SQL Statements
-    public const string Insert = "INSERT INTO " + TableName + "("
-                                 + OrderIdColumn + ", "
-                                 + ItemIdColumn + ", "
-                                 + VendorIdColumn + ", "
-                                 + PriceColumn + ", "
-                                 + TotalPriceColumn + ", "
-                                 + QuantityColumn + ")"
-
-                                 + " VALUES("
-                                 + OrderIdParam + ", "
-                                 + ItemIdParam + ", "
-                                 + VendorIdParam + ", "
-                                 + PriceParam + ", "
-                                 + TotalPriceParam + ", "
-                                 + QuantityParam + ")";
-
-    public const string Update = "UPDATE " + TableName + " SET ";
-    public const string UpdateById = "UPDATE " + TableName + " SET "
-                                     + OrderIdColumn + "=" + OrderIdParam + ", "
-                                     + ItemIdColumn + "=" + ItemIdParam + ", "
-                                     + VendorIdColumn + "=" + VendorIdParam + ", "
-                                     + PriceColumn + "=" + PriceParam + ", "
-                                     + TotalPriceColumn + "=" + TotalPriceParam + ", "
-                                     + QuantityColumn + "=" + QuantityParam
-                                     + " WHERE "; //what do I use for the pkey???
-                                     
-
-
-    public const string Delete = "DELETE FROM " + TableName + " ";
-    //public const string DeleteById = "DELETE FROM" + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
-    public const string Select = "SELECT * FROM " + TableName + " ";
-    //public const string SelectById = "SELECT * FROM" + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
 }

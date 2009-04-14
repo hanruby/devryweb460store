@@ -4,25 +4,20 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Configuration;
 using System.Data.Common;
-using System.Linq;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
+
 
 namespace DataAccessModule
 {
+
     /// <summary>
     /// Summary description for OrderDA
     /// </summary>
     public class OrderDA : DataAccessBase<Order>
     {
         #region Constructors
-        public OrderDA()
+        public OrderDA() : base()
         {
+            //use the Order mapper
             mapper = new OrderMapper();
         }
 
@@ -32,57 +27,119 @@ namespace DataAccessModule
         }
         #endregion
 
-        #region Save & Get
+        #region Implemented DataAccessBase Methods
+
+        protected override Collection<Order> GetBase(Order order, string whereSeperator, string whereOperator)
+        {
+            //return all rows if no object was given (SELECT * FROM TableName)
+            if (order == null)
+                return ExecuteQuery(null, BuildSQLSelectText(OrderTable.TableName, null, "", ""));
+
+            //Build Parameters for base query
+            DbParameter[] parameters = CreateAllParameters(order);
+
+            //Build a SELECT CommandText
+            string selectQuery = base.BuildSQLSelectText(OrderTable.TableName, parameters, whereSeperator, whereOperator);
+            return ExecuteQuery(parameters, selectQuery);
+        }
+
         /// <summary>
-        /// Saves an Item object to a Database
+        /// Performs SELECT Query against Database based on the Values in the Business Object
         /// </summary>
-        /// <param name="order">Order to be saved in to the database(INSERTed or UPDATEd)</param>
-        /// <returns></returns>
+        /// <param name="order">business object used to form SELECT Query (null will return all rows in the Table)</param>
+        /// <returns>Collection of business objects matching the SELECT Query</returns>
+        /// <remarks></remarks>
+        public override Collection<Order> Get(Order order)
+        {
+            return GetBase(order, "AND", "=");
+        }
+
+        /// <summary>
+        /// Performs SELECT Query against Database based on the Values in the Business Object
+        /// </summary>
+        /// <param name="order">business object used to form SELECT Query (null will return all rows in the Table)</param>
+        /// <returns>Collection of business objects matching the SELECT Query</returns>
+        /// <remarks></remarks>
+        public override Collection<Order> GetLike(Order order)
+        {
+            return GetBase(order, "AND", "LIKE");
+        }
 
         public override int Save(Order order)
         {
             //Check for the objects existsence in the database using the Primary key
             var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(OrderTable.IdParam, order.Id);
-            Collection<Order> categoryCheck = ExecuteQuery(checkParam, OrderTable.SelectById);
+            checkParam[0] = CreateParameter(OrderTable.IdParam, order.Id, OrderTable.IdColumn);
+            string commandText = base.BuildSQLSelectText(OrderTable.TableName, checkParam, "", "=");
+            Collection<Order> orderCheck = ExecuteQuery(checkParam, commandText);
 
-            //Add parameters
-            List<DbParameter> parameters = new List<DbParameter>();
-            parameters.Add(CreateParameter(OrderTable.IdParam, order.Id, OrderTable.IdColumn));
-            parameters.Add(CreateParameter(OrderTable.CustomerIdParam, order.CustomerId, OrderTable.CustomerIdColumn));
-            parameters.Add(CreateParameter(OrderTable.GrossTotalParam, order.GrossTotal, OrderTable.GrossTotalColumn));
-            parameters.Add(CreateParameter(OrderTable.TaxParam, order.Tax, OrderTable.TaxColumn));
-            parameters.Add(CreateParameter(OrderTable.NetTotalParam, order.NetTotal, OrderTable.NetTotalColumn));
-            parameters.Add(CreateParameter(OrderTable.TXNIDParam, order.TxnId, OrderTable.TXNIDColumn));
 
-            if (categoryCheck.Count == 0)
-                //does not exist, do INSERT
-                return base.ExecuteNonQuery(parameters.ToArray(), OrderTable.Insert);
-            else
-                //exists, do UPDATE
-                return base.ExecuteNonQuery(parameters.ToArray(), OrderTable.UpdateById);
-        }
+            //Build Parameters for base query
+            DbParameter[] parameters = CreateAllParameters(order);
+            
 
-        /// <summary>
-        /// Saves a Collection of Order objects to a Database
-        /// </summary>
-        /// <param name="orders"></param>
-        public override void Save(Collection<Order> orders)
-        {
-            foreach (var order in orders)
+            if (orderCheck.Count == 0)
             {
-                Save(order);
+                //Row does not exist, do INSERT
+                string insertCommandText = base.BuildSQLInsertText(OrderTable.TableName, parameters);
+                return base.ExecuteNonQuery(parameters, insertCommandText);
+            }
+            else
+            {   //Row exists, do UPDATE
+                
+                //Build Parameters for WHERE clause using Primary Key
+                List<DbParameter> whereParameters = new List<DbParameter>();
+                whereParameters.Add(CreateParameter(OrderTable.IdParam, order.Id, OrderTable.IdColumn));
+
+                string updateCommandText = base.BuildSQLUpdateText(OrderTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
+                return base.ExecuteNonQuery(parameters, updateCommandText);
             }
         }
 
-
-        public override Collection<Order> Get(Order order)
+        /// <summary>
+        /// Saves a Collection of Item objects to a Database
+        /// </summary>
+        /// <param name="items"></param>
+        public override int Save(Collection<Order> items)
         {
-            var parameters = new List<DbParameter>();
+            int rowsAffected = 0;
 
-            #region Check each Property for a value, Add a parameter a value exists
+            foreach (var item in items)
+            {
+                rowsAffected += Save(item);
+            }
 
-            if(order.Id != null)
+            return rowsAffected;
+        }
+
+        public override int Delete(Order order)
+        {
+            //Build DELETE statement using Primary Key
+            DbParameter[] whereParameters = new DbParameter[1];
+            whereParameters[0] = (CreateParameter(OrderTable.IdParam, order.Id, OrderTable.IdColumn));
+
+            string updateCommandText = base.BuildSQLDeleteText(OrderTable.TableName, whereParameters, "AND", "=");
+            return base.ExecuteNonQuery(whereParameters, updateCommandText);
+        }
+        public override int Delete(Collection<Order> categories)
+        {
+            int rowsDeleted = 0;
+            
+            foreach (var order in categories)
+            {
+                rowsDeleted += Delete(order);
+            }
+            
+            return rowsDeleted;
+        }
+
+
+        protected override DbParameter[] CreateAllParameters(Order order)
+        {
+            //Build Parameters from Properties with Values
+            List<DbParameter> parameters = new List<DbParameter>();
+
+            if (order.Id != null)
                 parameters.Add(CreateParameter(OrderTable.IdParam, order.Id, OrderTable.IdColumn));
             if (order.CustomerId != null)
                 parameters.Add(CreateParameter(OrderTable.CustomerIdParam, order.CustomerId, OrderTable.CustomerIdColumn));
@@ -94,15 +151,10 @@ namespace DataAccessModule
                 parameters.Add(CreateParameter(OrderTable.NetTotalParam, order.NetTotal, OrderTable.NetTotalColumn));
             if (order.TxnId != null)
                 parameters.Add(CreateParameter(OrderTable.TXNIDParam, order.TxnId, OrderTable.TXNIDColumn));
-            #endregion
 
-            //Build a WHERE Clause using AND
-            string commandText = BuildSQLTextWhereAND(OrderTable.Select, parameters.ToArray());
-            return ExecuteQuery(parameters.ToArray(), commandText);
+            return parameters.ToArray();
         }
 
         #endregion
-
-
     }
 }

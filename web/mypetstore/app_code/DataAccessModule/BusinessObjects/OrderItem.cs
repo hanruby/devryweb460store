@@ -15,8 +15,14 @@ namespace DataAccessModule
     public class OrderItem
     {
         private int? orderId;
-        private int? itemId;
+        private Order order; //foreign table
+
+        private string itemId;
+        private Item item; //foreign table
+
         private int? vendorId;
+        private Vendor vendor; //foreign table
+
         private decimal? price;
         private decimal? totalPrice;
         private int? quantity;
@@ -28,7 +34,7 @@ namespace DataAccessModule
             //
         }
 
-        public OrderItem(int orderId, int itemId, int vendorId, decimal price, decimal totalPrice, int quantity)
+        public OrderItem(int orderId, string itemId, int vendorId, decimal price, decimal totalPrice, int quantity)
         {
             this.orderId = orderId;
             this.itemId = itemId;
@@ -44,7 +50,7 @@ namespace DataAccessModule
             set { orderId = value; }
         }
 
-        public int? ItemId
+        public string ItemId
         {
             get { return itemId; }
             set { itemId = value; }
@@ -72,6 +78,24 @@ namespace DataAccessModule
         {
             get { return quantity; }
             set { quantity = value; }
+        }
+
+        public Order Order
+        {
+            get { return order; }
+            set { order = value; }
+        }
+
+        public Item Item
+        {
+            get { return item; }
+            set { item = value; }
+        }
+
+        public Vendor Vendor
+        {
+            get { return vendor; }
+            set { vendor = value; }
         }
     }
 }

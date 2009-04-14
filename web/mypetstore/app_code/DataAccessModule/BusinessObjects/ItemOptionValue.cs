@@ -18,9 +18,16 @@ namespace DataAccessModule
     public class ItemOptionValue
     {
         private int? id;
+        
         private int? itemOptionId;
+        private ItemOption itemOption;//foreign table
+
         private int? itemId;
+        private Item item; //foreign table
+
         private int? vendorId;
+        private Vendor vendor;//foreign table
+
         private string optionValue;
 
         public ItemOptionValue()
@@ -64,6 +71,24 @@ namespace DataAccessModule
         {
             get { return optionValue; }
             set { optionValue = value; }
+        }
+
+        public ItemOption ItemOption
+        {
+            get { return itemOption; }
+            set { itemOption = value; }
+        }
+
+        public Item Item
+        {
+            get { return item; }
+            set { item = value; }
+        }
+
+        public Vendor Vendor
+        {
+            get { return vendor; }
+            set { vendor = value; }
         }
     }
 }

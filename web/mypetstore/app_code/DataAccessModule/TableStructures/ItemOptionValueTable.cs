@@ -34,37 +34,5 @@ namespace DataAccessModule
         public const string ItemIdParam = "@ItemID";
         public const string VendorIdParam = "@VendorID";
         public const string OptionValueParam = "@OptionValue";
-
-        //SQL Statements
-        public const string Insert = "INSERT INTO " + TableName + "("
-                                     + IdColumn + ", "
-                                     + ItemOptionIdColumn + ", "
-                                     + ItemIdColumn + ", "
-                                     + VendorIdColumn + ", "
-                                     + OptionValueColumn + ")"
-
-                                     + " Values("
-                                     + IdParam + ", "
-                                     + ItemOptionIdParam + ", "
-                                     + ItemIdParam + ", "
-                                     + VendorIdParam + ", "
-                                     + OptionValueParam + ")";
-
-
-        public const string Update = "UPDATE " + TableName + " SET ";
-        public const string UpdateById = "UPDATE " + TableName + " SET "
-                                         + IdColumn + "=" + IdParam + ", "
-                                         + ItemOptionIdColumn + "=" + ItemOptionIdParam + ", "
-                                         + ItemIdColumn + "=" + ItemIdParam + ", "
-                                         + VendorIdColumn + "=" + VendorIdParam + ", "
-                                         + OptionValueColumn + "=" + OptionValueParam
-                                         + " WHERE " + IdColumn + "=" + IdParam;
-
-
-        public const string Delete = "DELETE FROM " + TableName + " ";
-        public const string DeleteById = "DELETE FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
-
-        public const string Select = "SELECT * FROM " + TableName + " ";
-        public const string SelectById = "SELECT * FROM " + TableName + " WHERE " + IdColumn + "=" + IdParam;
     }
 }

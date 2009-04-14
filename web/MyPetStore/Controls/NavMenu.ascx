@@ -64,17 +64,15 @@
             <li><a href="~/contact.aspx" runat="server">Contact</a></li>
             <li><a href="~/dbtest.aspx" runat="server">DatabaseTest</a></li>
             <li><a href="~/ForgotPassword.aspx" runat="server">ForgotPassword</a></li>
-            <li><a href="~/IPN.aspx" runat="server">IPN</a></li>
             <li><a href="~/Login.aspx" runat="server">Login</a></li>
             <li><a href="~/PasswordSuccess.aspx" runat="server">PasswordSuccess</a></li>
             <li><a href="~/ResetPassword.aspx" runat="server">ResetPassword</a></li>
             <li><a href="~/TwitterUpdate.aspx" runat="server">TwitterUpdate</a></li>
             <li><a href="~/UserRegistration.aspx" runat="server">UserRegistration</a></li>
+            <br /><br />
             <li><a href="ViewCustomers.ascx" runat="server">View Customers</a></li>
             <li><a href="~/ViewOrder.aspx" runat="server">View Orders</a></li>
-            <br />
             <li><a id="A1" href="~/ItemDetails.aspx?ItemID=1" runat="server">Item Details</a></li>
-            <br />
             <li><a href="~/rss.xml" runat="server">RSS Feed</a></li>
         </ul>
 	</div>

@@ -4,25 +4,20 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Configuration;
 using System.Data.Common;
-using System.Linq;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
+
 
 namespace DataAccessModule
 {
+
     /// <summary>
     /// Summary description for VendorDA
     /// </summary>
     public class VendorDA : DataAccessBase<Vendor>
     {
         #region Constructors
-        public VendorDA()
+        public VendorDA() : base()
         {
+            //use the Vendor mapper
             mapper = new VendorMapper();
         }
 
@@ -32,70 +27,124 @@ namespace DataAccessModule
         }
         #endregion
 
-        #region Save & Get
+        #region Implemented DataAccessBase Methods
+
+        protected override Collection<Vendor> GetBase(Vendor vendor, string whereSeperator, string whereOperator)
+        {
+            //return all rows if no object was given (SELECT * FROM TableName)
+            if (vendor == null)
+                return ExecuteQuery(null, BuildSQLSelectText(VendorTable.TableName, null, "", ""));
+
+            //Build Parameters for base query
+            DbParameter[] parameters = CreateAllParameters(vendor);
+
+            //Build a SELECT CommandText
+            string selectQuery = base.BuildSQLSelectText(VendorTable.TableName, parameters, whereSeperator, whereOperator);
+            return ExecuteQuery(parameters, selectQuery);
+        }
+
         /// <summary>
-        /// Saves an Item object to a Database
+        /// Performs SELECT Query against Database based on the Values in the Business Object
         /// </summary>
-        /// <param name="item">Item to be saved in to the database(INSERTed or UPDATEd)</param>
-        /// <returns></returns>
+        /// <param name="vendor">business object used to form SELECT Query (null will return all rows in the Table)</param>
+        /// <returns>Collection of business objects matching the SELECT Query</returns>
+        /// <remarks></remarks>
+        public override Collection<Vendor> Get(Vendor vendor)
+        {
+            return GetBase(vendor, "AND", "=");
+        }
+
+        /// <summary>
+        /// Performs SELECT Query against Database based on the Values in the Business Object
+        /// </summary>
+        /// <param name="vendor">business object used to form SELECT Query (null will return all rows in the Table)</param>
+        /// <returns>Collection of business objects matching the SELECT Query</returns>
+        /// <remarks></remarks>
+        public override Collection<Vendor> GetLike(Vendor vendor)
+        {
+            return GetBase(vendor, "AND", "LIKE");
+        }
+
         public override int Save(Vendor vendor)
         {
             //Check for the objects existsence in the database using the Primary key
             var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(VendorTable.IdParam, vendor.Id);
-            Collection<Vendor> categoryCheck = ExecuteQuery(checkParam, VendorTable.SelectById);
-
-            //Add parameters
-            var parameters = new List<DbParameter>();
-            parameters.Add(CreateParameter(VendorTable.IdParam, vendor.Id, VendorTable.IdColumn));
-            parameters.Add(CreateParameter(VendorTable.IsActiveParam, vendor.IsActive, VendorTable.IsActiveColumn));
-            parameters.Add(CreateParameter(VendorTable.NameParam, vendor.Name, VendorTable.NameColumn));
-            parameters.Add(CreateParameter(VendorTable.MainPhoneParam, vendor.MainPhone, VendorTable.MainPhoneColumn));
-            parameters.Add(CreateParameter(VendorTable.ContactNameParam, vendor.ContactName, VendorTable.ContactNameColumn));
-            parameters.Add(CreateParameter(VendorTable.EmailParam, vendor.Email, VendorTable.EmailColumn));
-            parameters.Add(CreateParameter(VendorTable.PhoneParam, vendor.Phone, VendorTable.PhoneColumn));
-            parameters.Add(CreateParameter(VendorTable.WebsiteParam, vendor.Website, VendorTable.WebsiteColumn));
-            parameters.Add(CreateParameter(VendorTable.AddressParam, vendor.Address, VendorTable.AddressColumn));
-            parameters.Add(CreateParameter(VendorTable.Address2Param, vendor.Address2, VendorTable.Address2Column));
-            parameters.Add(CreateParameter(VendorTable.CityParam, vendor.City, VendorTable.CityColumn));
-            parameters.Add(CreateParameter(VendorTable.StateParam, vendor.State, VendorTable.StateColumn));
-            parameters.Add(CreateParameter(VendorTable.ZipParam, vendor.Zip, VendorTable.ZipColumn));
-            parameters.Add(CreateParameter(VendorTable.CountryParam, vendor.Country, VendorTable.CountryColumn));
+            checkParam[0] = CreateParameter(VendorTable.IdParam, vendor.Id, VendorTable.IdColumn);
+            string commandText = base.BuildSQLSelectText(VendorTable.TableName, checkParam, "", "=");
+            Collection<Vendor> vendorCheck = ExecuteQuery(checkParam, commandText);
 
 
-            if (categoryCheck.Count == 0)
-                //does not exist, do INSERT
-                return base.ExecuteNonQuery(parameters.ToArray(), VendorTable.Insert);
+            //Build Parameters for base query
+            DbParameter[] parameters = CreateAllParameters(vendor);
+            
+
+            if (vendorCheck.Count == 0)
+            {
+                //Row does not exist, do INSERT
+                string insertCommandText = base.BuildSQLInsertText(VendorTable.TableName, parameters);
+                return base.ExecuteNonQuery(parameters, insertCommandText);
+            }
             else
-                //exists, do UPDATE
-                return base.ExecuteNonQuery(parameters.ToArray(), VendorTable.UpdateById);
+            {   //Row exists, do UPDATE
+                
+                //Build Parameters for WHERE clause using Primary Key
+                List<DbParameter> whereParameters = new List<DbParameter>();
+                whereParameters.Add(CreateParameter(VendorTable.IdParam, vendor.Id, VendorTable.IdColumn));
+
+                string updateCommandText = base.BuildSQLUpdateText(VendorTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
+                return base.ExecuteNonQuery(parameters, updateCommandText);
+            }
         }
 
         /// <summary>
         /// Saves a Collection of Item objects to a Database
         /// </summary>
         /// <param name="items"></param>
-        public override void Save(Collection<Vendor> items)
+        public override int Save(Collection<Vendor> items)
         {
+            int rowsAffected = 0;
+
             foreach (var item in items)
             {
-                Save(item);
+                rowsAffected += Save(item);
             }
+
+            return rowsAffected;
+        }
+
+        public override int Delete(Vendor vendor)
+        {
+            //Build DELETE statement using Primary Key
+            DbParameter[] whereParameters = new DbParameter[1];
+            whereParameters[0] = (CreateParameter(VendorTable.IdParam, vendor.Id, VendorTable.IdColumn));
+
+            string updateCommandText = base.BuildSQLDeleteText(VendorTable.TableName, whereParameters, "AND", "=");
+            return base.ExecuteNonQuery(whereParameters, updateCommandText);
+        }
+        public override int Delete(Collection<Vendor> categories)
+        {
+            int rowsDeleted = 0;
+            
+            foreach (var vendor in categories)
+            {
+                rowsDeleted += Delete(vendor);
+            }
+            
+            return rowsDeleted;
         }
 
 
-        public override Collection<Vendor> Get(Vendor vendor)
+        protected override DbParameter[] CreateAllParameters(Vendor vendor)
         {
-            var parameters = new List<DbParameter>();
+            //Build Parameters from Properties with Values
+            List<DbParameter> parameters = new List<DbParameter>();
 
-            #region Check each Property for a value, Add a parameter a value exists
-            
-            if(vendor.Id != null)
+            if (vendor.Id != null)
                 parameters.Add(CreateParameter(VendorTable.IdParam, vendor.Id, VendorTable.IdColumn));
             if (vendor.IsActive != null)
                 parameters.Add(CreateParameter(VendorTable.IsActiveParam, vendor.IsActive, VendorTable.IsActiveColumn));
             if (vendor.Name != null)
-                parameters.Add(CreateParameter(VendorTable.NameParam, vendor.Name, VendorTable.NameColumn));            
+                parameters.Add(CreateParameter(VendorTable.NameParam, vendor.Name, VendorTable.NameColumn));
             if (vendor.MainPhone != null)
                 parameters.Add(CreateParameter(VendorTable.MainPhoneParam, vendor.MainPhone, VendorTable.MainPhoneColumn));
             if (vendor.ContactName != null)
@@ -118,16 +167,10 @@ namespace DataAccessModule
                 parameters.Add(CreateParameter(VendorTable.ZipParam, vendor.Zip, VendorTable.ZipColumn));
             if (vendor.Country != null)
                 parameters.Add(CreateParameter(VendorTable.CountryParam, vendor.Country, VendorTable.CountryColumn));
-            #endregion
 
-            //Build a WHERE Clause using AND
-            string commandText = BuildSQLTextWhereAND(VendorTable.Select, parameters.ToArray());
-            return ExecuteQuery(parameters.ToArray(), commandText);
+            return parameters.ToArray();
         }
 
         #endregion
-
-
-       
     }
 }
