@@ -73,7 +73,7 @@ namespace DataAccessModule
             checkParam[1] = CreateParameter(OrderItemTable.ItemIdParam, orderItem.ItemId, OrderItemTable.ItemIdColumn);
             checkParam[2] = CreateParameter(OrderItemTable.VendorIdParam, orderItem.VendorId, OrderItemTable.VendorIdColumn);
 
-            string commandText = base.BuildSQLSelectText(OrderItemTable.TableName, checkParam, "", "=");
+            string commandText = base.BuildSQLSelectText(OrderItemTable.TableName, checkParam, "AND", "=");
             Collection<OrderItem> orderItemCheck = ExecuteQuery(checkParam, commandText);
 
 
