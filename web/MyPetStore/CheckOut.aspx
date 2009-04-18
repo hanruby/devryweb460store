@@ -238,11 +238,11 @@
         </asp:CreateUserWizard>
     </div>
     <!-- view for inputting in shipping  details -->
-    <div runat="server" id="billingInfo">
+    <div runat="server" id="billingInfo" class="billingInfo">
         <!-- display errors -->
         <asp:ValidationSummary ID="vsBillingInfo" runat="server" DisplayMode="List" />
         <!-- start of table -->
-        <table>
+        <table class="shippingInfoBackground">
             <tr>
                 <td colspan="2">
                     <h1>
