@@ -1,5 +1,5 @@
 using System;
-
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Configuration;
 using System.Drawing;
@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 
 using DAL;
+using DataAccessModule;
 
 /**
  * Author: Daniel Aguayo
@@ -153,16 +154,16 @@ public partial class ShoppingCart : System.Web.UI.Page
                 // call method to validate quantity amount
                 ValidateQuantity(minQuantityInt, quantityAvailableInt, quantityInt);
 
-                //if (quantityInt < minQuantityInt || quantityInt > quantityAvailableInt || quantityInt < 1)
-                //{
-                //    quantity.BackColor = Color.Red;
+                if (quantityInt < minQuantityInt || quantityInt > quantityAvailableInt || quantityInt < 1)
+                {
+                    quantity.BackColor = Color.Red;
 
-                //}
-                //else
-                //{
-                //    // set quantity color back to original color
-                //    quantity.BackColor = Color.White;
-                //}
+                }
+                else
+                {
+                    // set quantity color back to original color
+                    quantity.BackColor = Color.White;
+                }
 
 
                 if (totalCount < 1)
@@ -170,28 +171,47 @@ public partial class ShoppingCart : System.Web.UI.Page
 
 
 
-                    // calculate total price for each individual item
-                    //   double totalPrice = totalIndividualItemPrice*int.Parse((quantity.Text));
+                    // update total price for each individual item
 
-                    DAL.DataAccess da =
-                        new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                           "System.Data.SqlClient");
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.OrderId = int.Parse(orderID.Text);
+                    orderItem.ItemId = itemID.Text;
+                    orderItem.VendorId = int.Parse(vendorID.Text);
+                    orderItem.TotalPrice = decimal.Parse(TotalPrice.ToString("n2"));
+                    orderItem.Quantity = int.Parse(quantity.Text);
 
-                    string comm =
-                        "UPDATE OrderItem SET TotalPrice = @totalPrice, Quantity = @quantity WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
+                    OrderItemDA orderItemDA = new OrderItemDA();
 
-                    // array with quantity, itemID, orderiD, vendorID, and totalPrice
-                    string[] p = { "@quantity", "@itemID", "@orderID", "@vendorID", "@totalPrice" };
-                    string[] v = {
-                                         quantity.Text, itemID.Text, orderID.Text, vendorID.Text, TotalPrice.ToString("n2")
-                                     };
-
-
-                    da.ExecuteNonQuery(comm, p, v);
+                    //Save the Objects to the Database
+                    orderItemDA.Save(orderItem);
 
                     // clear
-                    p = null;
-                    v = null;
+                    orderItem = null;
+                    orderItemDA = null;
+
+
+                    //DAL.DataAccess da =
+                    //new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                    //                "System.Data.SqlClient");
+
+                    //string comm =
+                    //    "UPDATE OrderItem SET TotalPrice = @totalPrice, Quantity = @quantity WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
+
+                    //// array with quantity, itemID, orderiD, vendorID, and totalPrice
+                    //string[] p = { "@quantity", "@itemID", "@orderID", "@vendorID", "@totalPrice" };
+                    //string[] v = {
+                    //                     quantity.Text, itemID.Text, orderID.Text, vendorID.Text, TotalPrice.ToString("n2")
+                    //                 };
+
+
+                    //da.ExecuteNonQuery(comm, p, v);
+
+                    //// clear
+                    //p = null;
+                    //v = null;
+
+
+
 
                     // add to total to calculate total 
                     total += addPrice * Convert.ToDouble(quantity.Text);
@@ -201,7 +221,19 @@ public partial class ShoppingCart : System.Web.UI.Page
                     if (cb != null && cb.Checked)
                     {
 
+                        // delete all checked items
+                        //OrderItem orderItemDelete = new OrderItem();
+                        //orderItemDelete.OrderId = int.Parse(orderID.Text);
+                        //orderItemDelete.ItemId = itemID.Text;             
+                        //orderItemDelete.VendorId = int.Parse(vendorID.Text);
 
+
+                        //OrderItemDA orderItemDeleteDA = new OrderItemDA();
+                        //orderItemDeleteDA.Delete(orderItem);
+
+                        //// clear
+                        //orderItemDelete = null;
+                        //orderItemDeleteDA = null;
 
                         DAL.DataAccess da3 =
                             new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
@@ -225,54 +257,49 @@ public partial class ShoppingCart : System.Web.UI.Page
 
 
                     }
+                    // bind gridview and repeater
                     BindGridRepeater();
                 }
-            }
 
-            if (totalCount < 1)
-            {
-                // update total of orders table for the customer
-                DAL.DataAccess da2 =
-                    new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                       "System.Data.SqlClient");
-
-                string comm2 =
-                    "UPDATE Orders SET  Tax = @tax, NetTotal = @netTotal WHERE OrderID = @orderID AND CustomerID = @customerID AND TXNID = @txnid";
-
-                // string calculateTax = CalculateTax(total, tax).ToString("n2");
-                //  string calculateTotal = CalculateTotal(total, double.Parse(calculateTax));
-
-                // empty array
-                string[] p2 = { "@orderID", "@customerID", "@txnID", "@tax", "@netTotal" };
-                string[] v2 = { orderID.Text, GetCustomerID(), "", "", total.ToString("n2") };
-
-
-                da2.ExecuteNonQuery(comm2, p2, v2);
-
-                // clear
-                p2 = null;
-                v2 = null;
-
-
-
-                // bind gridview and repeater to show changes
-                BindGridRepeater();
-
-                //redirect using if page ispost back so when user deletes
-                //items from shopping cart grosstotal, tax, and nettotal get updated.
-                if (Page.IsPostBack)
+                if (totalCount < 1)
                 {
-                    Response.Redirect(Request.RawUrl);
-                    //  UpdateQuantity();
-                    //  Response.AppendHeader("Refresh", "0;URL=ShoppingCart.aspx");
+
+                    // update total of orders table for the customer
+                    Order orders = new Order();
+                    orders.Id = int.Parse(orderID.Text);
+                    orders.CustomerId = int.Parse(GetCustomerID());
+                    orders.TxnId = "";
+                    orders.Tax = null;
+                    orders.NetTotal = decimal.Parse(total.ToString("n2"));
+
+
+                    OrderDA orderDA = new OrderDA();
+
+                    orderDA.Save(orders);
+
+                    // clear
+                    orders = null;
+                    orderDA = null;
+
+
+
+                    // bind gridview and repeater to show changes
+                    BindGridRepeater();
+
+                    ////redirect using if page ispost back so when user deletes
+                    ////items from shopping cart grosstotal, tax, and nettotal get updated.
+                    //if (Page.IsPostBack)
+                    //{
+                    //    Response.Redirect("ShoppingCart.aspx");
+                    //    //  UpdateQuantity();
+                    //    // Response.AppendHeader("Refresh", "0;URL=ShoppingCart.aspx");
+                    //}
+
+
+
                 }
 
-
-
             }
-
-
-
 
 
         }
@@ -302,7 +329,7 @@ public partial class ShoppingCart : System.Web.UI.Page
 
             // sql command
             string comm =
-                "SELECT Orders.OrderID, Orders.CustomerID, Orders.TXNID, OrderItem.Price, OrderItem.TotalPrice, OrderItem.Quantity, Items.ItemID, Items.ProductName, Items.Description, Items.PhotoLocation, Items.QuantityAvailable, Items.MinQuantity, Items.VendorID FROM Orders, OrderItem, Items WHERE Orders.OrderID = OrderItem.OrderID and OrderItem.ItemID = Items.ItemID and Orders.CustomerID = @customerID AND Orders.TXNID = @txnID";
+                "SELECT Orders.OrderID, Orders.CustomerID, Orders.TXNID, OrderItem.Price, OrderItem.TotalPrice, OrderItem.Quantity, Items.ItemID, Items.ProductName, Items.Description, Items.PhotoLocation, Items.QuantityAvailable, Items.MinQuantity, Items.VendorID FROM Orders, OrderItem, Items WHERE Orders.OrderID = OrderItem.OrderID and OrderItem.ItemID = Items.ItemID AND Orders.CustomerID = @customerID AND Orders.TXNID = @txnID";
 
             // data set
             DataSet ds = new DataSet();
@@ -323,29 +350,21 @@ public partial class ShoppingCart : System.Web.UI.Page
 
             // fill up repeater
             // instantiate class
-            DAL.DataAccess da2 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
+            Order order = new Order();
+            order.CustomerId = int.Parse(GetCustomerID());
+            order.TxnId = "";
 
-            // sql command
-            string comm2 =
-                "SELECT OrderID, CustomerID, GrossTotal, Tax, NetTotal, OrderID FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
+            OrderDA orderDA = new OrderDA();
 
-            // data set
-            DataSet ds2 = new DataSet();
+            Collection<Order> getOrder = orderDA.Get(order);
 
-            // empty array
-            string[] p2 = { "@customerID", "@txnID" };
-            string[] v2 = { GetCustomerID(), "" };
-
-            ds2 = da2.ExecuteQuery(comm2, p2, v2);
-
-            rptOne.DataSource = ds2.Tables[0];
+            rptOne.DataSource = getOrder;
             rptOne.DataBind();
 
             // clear
-            p = null;
-            v = null;
+            order = null;
+            orderDA = null;
+            getOrder = null;
         }
 
         else
@@ -388,65 +407,47 @@ public partial class ShoppingCart : System.Web.UI.Page
 
 
 
-    private string GetCustomerID()
+    public string GetCustomerID()
     {
 
         if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
         {
 
             // get the customerID of the user who is logged on
-            DAL.DataAccess da5 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
+            Customer customerIDID = new Customer();
+            customerIDID.Username = User.Identity.Name;
+            CustomerDA customerIDDA = new CustomerDA();
 
-            // make command statement 
-            string comm5 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
+            Collection<Customer> getCustomers3 = customerIDDA.Get(customerIDID);
 
-            DataSet ds5 = new DataSet();
-
-
-            // make arrays for paramaters and input
-            string[] s5 = { "@username" };
-            string[] v5 = { User.Identity.Name };
-            ds5 = da5.ExecuteQuery(comm5, s5, v5);
+            customerID = getCustomers3[0].Id;
 
 
-            // returns one item
-            customerID = ds5.Tables[0].Rows[0].ItemArray[0];
+            // clear
+            customerIDID = null;
+            customerIDDA = null;
+            getCustomers3 = null;
 
-
-            //clear
-            s5 = null;
-            v5 = null;
 
             return customerID.ToString();
         }
         else
         {
             // get the customerID of the user who is logged on
-            DAL.DataAccess da5 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
+            // get the customerID of the user who is logged on
+            Customer customerIDID = new Customer();
+            customerIDID.Username = Session["AnonymousUserName"].ToString();
 
-            // make command statement 
-            string comm5 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
+            CustomerDA customerIDDA = new CustomerDA();
 
-            DataSet ds5 = new DataSet();
+            Collection<Customer> getCustomers3 = customerIDDA.Get(customerIDID);
 
+            customerID = getCustomers3[0].Id;
 
-            // make arrays for paramaters and input
-            string[] s5 = { "@username" };
-            string[] v5 = { Session["AnonymousUserName"].ToString() };
-            ds5 = da5.ExecuteQuery(comm5, s5, v5);
-
-
-            // returns one item
-            customerID = ds5.Tables[0].Rows[0].ItemArray[0];
-
-
-            //clear
-            s5 = null;
-            v5 = null;
+            // clear
+            customerIDID = null;
+            customerIDDA = null;
+            getCustomers3 = null;
 
             return customerID.ToString();
         }

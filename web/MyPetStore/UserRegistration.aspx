@@ -3,40 +3,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>Login</title>
-    <link href="Styles/MyPetStyles.css" rel="stylesheet" type="text/css" />
 </head>
+
 <body>
 <form id="userRegistrationForm" runat="server">
-    <div id="userRegistration">
+    <div id="userRegistration" >
         <!--Richard Crouch - User registration form-->
         <asp:CreateUserWizard ID="userRegistrationWizard" runat="server" 
-            OnContinueButtonClick="UserRegistrationWizard_ContinueButtonClick" 
-            oncreateduser="userRegistrationWizard_CreatedUser" BackColor="#94b6ff" 
-            BorderColor="#133463" BorderStyle="Solid" BorderWidth="1px" 
-            Font-Names="Verdana" Font-Size="0.8em" DisplayCancelButton="True" CancelDestinationPageUrl="~/Default.aspx">
-            <SideBarStyle BackColor="#1C5E55" Font-Size="0.9em" VerticalAlign="Top" />
-            <SideBarButtonStyle ForeColor="White" />
-            <ContinueButtonStyle BackColor="White" BorderColor="#133463" 
-                BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" 
-                ForeColor="#1C5E55" />
-            <NavigationButtonStyle BackColor="White" BorderColor="#133463" 
-                BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" 
-                ForeColor="#1C5E55" />
-            <HeaderStyle BackColor="#666666" BorderColor="#133463" BorderStyle="Solid" 
-                BorderWidth="2px" Font-Bold="True" Font-Size="0.9em" ForeColor="White" 
-                HorizontalAlign="Center" />
-            <CreateUserButtonStyle BackColor="#efefef" BorderColor="#133463" 
-                BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" 
-                ForeColor="#000000" />
-            <CancelButtonStyle BackColor="#efefef" BorderColor="#133463" 
-                BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" 
-                ForeColor="#000000" />
-            <TitleTextStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-            <StepStyle BorderWidth="0px" />
+            OnContinueButtonClick="UserRegistrationWizard_ContinueButtonClick" OnCreatedUser="ReconfigureOrder">
             <WizardSteps>
-<asp:CreateUserWizardStep runat="server">
+<asp:CreateUserWizardStep ID="CreateUserWizardStep1" runat="server">
     <ContentTemplate>
-        <table border="0" class="padded">
+        <table border="0">
             <tr>
                 <td align="center" colspan="2">
                     Sign Up for Your New Account</td>
@@ -156,7 +134,30 @@
                     <asp:Label ID="lblCountry" runat="server" AssociatedControlID="cboCountry">Country:</asp:Label>
                 </td>
                 <td>
-                    <asp:DropDownList ID="cboCountry" runat="server"></asp:DropDownList>
+                    <asp:DropDownList ID="cboCountry" runat="server">
+                     <asp:ListItem>United States Of America</asp:ListItem>
+                                        <asp:ListItem>Antigua and Barbuda</asp:ListItem>
+                                        <asp:ListItem>The Bahamas</asp:ListItem>
+                                        <asp:ListItem>Barbados</asp:ListItem>
+                                        <asp:ListItem>Belize</asp:ListItem>
+                                        <asp:ListItem>Canada</asp:ListItem>
+                                        <asp:ListItem>Costa Rica</asp:ListItem>
+                                        <asp:ListItem>Cuba</asp:ListItem>
+                                        <asp:ListItem>Dominica</asp:ListItem>
+                                        <asp:ListItem>Dominican-Republic</asp:ListItem>
+                                        <asp:ListItem>Greenland</asp:ListItem>
+                                        <asp:ListItem>Grenada</asp:ListItem>
+                                        <asp:ListItem>Guatemala</asp:ListItem>
+                                        <asp:ListItem>Haiti</asp:ListItem>
+                                        <asp:ListItem>Jamaica</asp:ListItem>
+                                        <asp:ListItem>Mexico</asp:ListItem>
+                                        <asp:ListItem>Nicaragua</asp:ListItem>
+                                        <asp:ListItem>Panama</asp:ListItem>
+                                        <asp:ListItem>Saint Kitts and Nevis</asp:ListItem>
+                                        <asp:ListItem>Saint Lucia</asp:ListItem>
+                                        <asp:ListItem>Saint Vincent and the Grenadines</asp:ListItem>
+                                        <asp:ListItem>Trinidad and Tobago</asp:ListItem>
+                    </asp:DropDownList>
                 </td>
             </tr>
             <tr>
@@ -212,7 +213,7 @@
         </table>
     </ContentTemplate>
                 </asp:CreateUserWizardStep>
-<asp:CompleteWizardStep runat="server"></asp:CompleteWizardStep>
+<asp:CompleteWizardStep ID="CompleteWizardStep1" runat="server"></asp:CompleteWizardStep>
 </WizardSteps>
         </asp:CreateUserWizard>
     </div>

@@ -17,13 +17,14 @@ public partial class Login : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         // focus in the login name textbox
-        var userNameTB = (TextBox) UserLogin.FindControl("UserName");
+        var userNameTB = (TextBox)UserLogin.FindControl("UserName");
         userNameTB.Focus();
     }
 
     // on logged in
     protected void LoggedIn(object sender, EventArgs e)
     {
+
 
         // seeing if there is an order just in case I missed something
         if (Session["AnonymousUserName"] != null)
@@ -47,28 +48,24 @@ public partial class Login : System.Web.UI.Page
 
             // count orders with customerid = @customerid and txtnid = @txnid
             // instantiate class
-            DAL.DataAccess da2 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
+            Order orders = new Order();
+            orders.CustomerId = getCustomer[0].Id;
+            orders.TxnId = "";
 
-            // sql command
-            string comm2 =
-                "SELECT Count(*) FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
+            OrderDA orderDA = new OrderDA();
+            Collection<Order> getOrders = orderDA.Get(orders);
 
-            // data set
-            DataSet ds2 = new DataSet();
 
-            // empty array
-            string[] p2 = { "@customerID", "@txnID" };
-            string[] v2 = { getCustomer[0].Id.ToString(), "" };
 
-            ds2 = da2.ExecuteQuery(comm2, p2, v2);
+            // returns number of orders
+            object getOrder = getOrders.Count;
 
-            object getOrder = ds2.Tables[0].Rows[0].ItemArray[0];
 
-            // clear
-            p2 = null;
-            v2 = null;
+            //clear
+            orders = null;
+            orderDA = null;
+            getOrders = null;
+
 
             // if the user who is logged has items in his cart as an anonymous user
             // delete the items he had previously on his cart and add the new items and order
@@ -82,49 +79,48 @@ public partial class Login : System.Web.UI.Page
 
                 // get the orderID of the customer that he had on going order
                 // instantiate class
-                DAL.DataAccess da3 =
-                    new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                       "System.Data.SqlClient");
+                Order oID = new Order();
+                oID.CustomerId = getCustomer[0].Id;
+                oID.TxnId = "";
 
-                // sql command
-                string comm3 =
-                    "SELECT OrderID FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
-
-                // data set
-                DataSet ds3 = new DataSet();
-
-                // empty array
-                string[] p3 = { "@customerID", "@txnID" };
-                string[] v3 = { getCustomer[0].Id.ToString(), "" };
-
-                ds3 = da3.ExecuteQuery(comm3, p3, v3);
-
-                object getOrderID = ds3.Tables[0].Rows[0].ItemArray[0];
-
-                // clear
-                p3 = null;
-                v3 = null;
+                OrderDA ordersDA = new OrderDA();
+                Collection<Order> getOID = ordersDA.Get(oID);
 
 
 
+                // returns one item
+                object getOrderID = getOID[0].Id;
 
+
+                //clear
+                oID = null;
+                ordersDA = null;
+                getOID = null;
+
+
+
+                // delete the order and items that involve the order above 
                 // delete items from the orderItem table associated with that order if any
-                //Instantiate our Category specific DataAccess Class
-                //OrderDA deleteOrderItemDA = new OrderDA();
 
-                ////Create an Object that specifies what we want to Get
-                //Order deleteOrderItem = new Order();
+                //Create an Object that specifies what we want to Get
+                // OrderItem deleteOrderItem = new OrderItem(); 
+
+                //OrderItemDA deleteOrderItemDA = new OrderItemDA();
 
                 ////gets orderItem info based on customerID
 
-                //deleteOrderItem.Id = int.Parse(getOrderID.ToString());
+                //deleteOrderItem.OrderId = int.Parse(getOrderID.ToString());
 
                 //// deletes the orderItems with that customerID
                 //deleteOrderItemDA.Delete(deleteOrderItem);
+
+                //// clear
+                //deleteOrderItemDA = null;
+                //deleteOrderItem = null;
                 DAL.DataAccess da5 =
-                                              new DAL.DataAccess(
-                                                  ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                                  "System.Data.SqlClient");
+                                            new DAL.DataAccess(
+                                                ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                                "System.Data.SqlClient");
 
                 string comm5 =
                     "Delete FROM OrderItem WHERE OrderID = @orderID";
@@ -143,38 +139,24 @@ public partial class Login : System.Web.UI.Page
 
 
 
+                // delete order
+                //Instantiate our Order specific DataAccess Class
+                OrderDA deleteOrderDA = new OrderDA();
 
-                // delete the order and items that involve the order above 
-                //Instantiate our Category specific DataAccess Class
-                //  OrderDA deleteOrderDA = new OrderDA();
+                //Create an Object that specifies what we want to Get
+                Order deleteOrder = new Order();
 
-                //  //Create an Object that specifies what we want to Get
-                //  Order deleteOrder = new Order();
+                //gets order info based on customerID
 
-                //  //gets order info based on customerID
+                deleteOrder.Id = int.Parse(getOrderID.ToString());
 
-                //  deleteOrder.Id = int.Parse(GetCustomerID());
+                // deletes the order with that customerID
+                deleteOrderDA.Delete(deleteOrder);
 
-                //// deletes the order with that customerID
-                // deleteOrderDA.Delete(deleteOrder);
-                DAL.DataAccess da7 =
-                                                 new DAL.DataAccess(
-                                                         ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                                         "System.Data.SqlClient");
-
-                string comm7 =
-                    "Delete FROM Orders WHERE OrderID = @orderID";
-
-                // array with orderID
-                string[] p7 = { "@orderID" };
-                string[] v7 = { getOrderID.ToString() };
-
-
-                da7.ExecuteNonQuery(comm7, p7, v7);
 
                 // clear
-                p7 = null;
-                v7 = null;
+                deleteOrderDA = null;
+                deleteOrder = null;
 
 
 
@@ -200,24 +182,23 @@ public partial class Login : System.Web.UI.Page
                 //}
 
 
+
                 // get orderID of anonymous user
-                OrderDA orderDA = new OrderDA();
-
-
                 //Create an Object that specifies what we want to Get
-                Order order = new Order();
+                Order ordersID = new Order();
 
                 //gets order info based on customerID
+                ordersID.CustomerId = getCustomer2[0].Id;
 
-                order.CustomerId = getCustomer2[0].Id;
+                OrderDA ordersIDDA = new OrderDA();
+
 
                 // deletes the order with that customerID
-                Collection<Order> getOrder2 = orderDA.Get(order);
+                Collection<Order> getOrder2 = ordersIDDA.Get(ordersID);
 
 
 
                 // update the customerid of the anonymous order to the customer, of the user who just logged on
-
                 DAL.DataAccess da4 =
                     new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
                                        "System.Data.SqlClient");
@@ -238,9 +219,26 @@ public partial class Login : System.Web.UI.Page
                 v4 = null;
 
 
-                // clear session and abandon it
-                Session.Clear();
+
+                // delete anonymous customer from customer table
+                Customer customers = new Customer();
+                customers.Id = getCustomer2[0].Id;
+
+                CustomerDA customersDA = new CustomerDA();
+
+                customersDA.Delete(customers);
+
+                // clear
+                customers = null;
+                customersDA = null;
+
+
+
+
+                //  abandon session
                 Session.Abandon();
+
+
 
             }
             // if user doesn't have an on going order just
@@ -269,19 +267,18 @@ public partial class Login : System.Web.UI.Page
 
 
                 // get orderID of anonymous user based on customerID
-                OrderDA orderDA = new OrderDA();
+                OrderDA ordersIDDA = new OrderDA();
 
 
                 //Create an Object that specifies what we want to Get
-                Order order = new Order();
+                Order ordersID = new Order();
 
                 //gets order info based on customerID
 
-                order.CustomerId = getCustomer2[0].Id;
+                ordersID.CustomerId = getCustomer2[0].Id;
 
                 // deletes the order with that customerID
-                Collection<Order> getOrder2 = orderDA.Get(order);
-
+                Collection<Order> getOrder2 = ordersIDDA.Get(ordersID);
 
 
                 // update the customerid of the anonymous order to the customer, of the user who just logged on
@@ -306,8 +303,39 @@ public partial class Login : System.Web.UI.Page
                 v4 = null;
 
 
-                // clear session and abandon it
-                Session.Clear();
+
+                // delete anonymous customer from customer table
+                Customer customers = new Customer();
+                customers.Id = getCustomer2[0].Id;
+
+                CustomerDA customersDA = new CustomerDA();
+
+                customersDA.Delete(customers);
+
+                // clear
+                customers = null;
+                customersDA = null;
+
+                //DAL.DataAccess da8 =
+                //                                 new DAL.DataAccess(
+                //                                         ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                //                                         "System.Data.SqlClient");
+
+                //string comm8 =
+                //    "Delete FROM Customer WHERE CustomerID = @customerID";
+
+                //// array with customerID
+                //string[] p8 = { "@customerID" };
+                //string[] v8 = { getCustomer2[0].Id.ToString() };
+
+
+                //da8.ExecuteNonQuery(comm8, p8, v8);
+
+                //// clear
+                //p8 = null;
+                //v8 = null;
+
+                // abandon session              
                 Session.Abandon();
             }
 

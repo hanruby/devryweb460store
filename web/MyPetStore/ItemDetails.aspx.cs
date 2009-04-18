@@ -1,16 +1,18 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Configuration;
-using System.Collections;
+using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
+using System.Drawing;
+using DataAccessModule; //IMPORTANT: Remember to add this line.
 /*
- * Authors: Daniel Aguayo and Zach
+ * Authors: Daniel Aguayo 
      // for reference
      // adds a new column to the table
      //  tbl.Columns.Add("CustomerID");
@@ -21,10 +23,8 @@ using System.Web.UI.HtmlControls;
  */
 public partial class ItemDetails : System.Web.UI.Page
 {
-    private Label itemID;
+    //private int itemID;
     private Label vendorID;
-    private Label IsActive;
-    private Label Description;
     private Label QuantityAvailable;
 
     // price2 is label price
@@ -32,13 +32,14 @@ public partial class ItemDetails : System.Web.UI.Page
     // inserted into the database
     private Label price2;
     private double price;
-    private Label photoname;
-    private Label photoLocation;
     private Label minQuantity;
     private Label costPrice;
     private Label recommendedPrice;
+    private Label itemID;
 
     private TextBox quantity;
+    private Label successful;
+    private Label error;
 
     private Label salePriceAnswer;
     private double salePriceAnswerDouble;
@@ -48,25 +49,87 @@ public partial class ItemDetails : System.Web.UI.Page
 
     private object customerID;
     private object orderID;
-    private object countOrderID;
+    private object countOrders;
     private object orders;
     private int usernameID;
     private object max;
     private string anonymousUserName;
-    //  private int anonymousCustomerID;
+    private int countItems;
 
     protected void Page_Load(object sender, EventArgs e)
     {
 
 
-        // set labels to visible = false and text = ""
-        lblSuccessful.Text = "";
-        lblError.Text = "";
-
-
         // method that gets items in controls and
         // checks weather the sales price label is invisible or not
         GetItems();
+
+        try
+        {
+            if (Request.QueryString["ItemID"] != null)
+            {
+
+
+                // get item information based on itemID
+                Item item = new Item();
+                item.Id = Request.QueryString["ItemID"];
+                ItemDA itemDA = new ItemDA();
+                Collection<Item> getItem = itemDA.Get(item);
+
+                RangeValidator range = (RangeValidator)FormView1.FindControl("rvQuantity");
+
+
+
+
+                //  if quantity available is less than minquanitity make txtQuantity and btnAddToCart invisible
+                // and display Item is on Back order message.
+                if (getItem[0].QuantityAvailable < getItem[0].MinQuantity)
+                {
+                    range.MaximumValue = "0";
+
+                    range.MinimumValue = "0";
+
+                    quantity.ReadOnly = true;
+
+                    Button addtocart = (Button)FormView1.FindControl("btnAddToCart");
+
+                    addtocart.Visible = false;
+
+                    error.Text = "Item is on backorder!";
+                    error.Visible = true;
+
+                    quantity.Visible = false;
+
+                    Label lblquantity = (Label)FormView1.FindControl("lblQuantity");
+                    lblquantity.Visible = false;
+
+                }
+                else
+                {
+                    range.MaximumValue = getItem[0].QuantityAvailable.ToString();
+
+                    range.MinimumValue = getItem[0].MinQuantity.ToString();
+                }
+
+
+
+
+                //clear 
+                item = null;
+                itemDA = null;
+                getItem = null;
+            }
+        }
+        catch (HttpException)
+        {
+
+        }
+        catch (SqlException)
+        {
+
+        }
+
+
 
 
     }
@@ -83,67 +146,57 @@ public partial class ItemDetails : System.Web.UI.Page
             // on the formview
             GetItems();
 
+
+
             // check to see if user is logged on
             if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
             {
 
+
+
+
                 // get the customerID of the user who is logged on
-                DAL.DataAccess da4 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+                // get the id of the user that I just created 
+                Customer customer = new Customer();
+                customer.Username = User.Identity.Name;
+                CustomerDA customerIDDA = new CustomerDA();
 
-                // make command statement 
-                string comm4 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
-                //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
+                Collection<Customer> getCustomersID = customerIDDA.Get(customer);
 
-                DataSet ds4 = new DataSet();
-
-
-                // make arrays for paramaters and input
-                string[] s4 = { "@username" };
-                string[] v4 = { User.Identity.Name };
-                ds4 = da4.ExecuteQuery(comm4, s4, v4);
+                customerID = getCustomersID[0].Id;
 
 
-                // returns one item
-                customerID = ds4.Tables[0].Rows[0].ItemArray[0];
+                // clear
+                customer = null;
+                customerIDDA = null;
 
 
-                //clear
-                s4 = null;
-                v4 = null;
+                // count how many orders that have not been verified exist in the orders table
+                Order order = new Order();
+                order.CustomerId = int.Parse(customerID.ToString());
+                order.TxnId = "";
 
+                OrderDA orderDA = new OrderDA();
+                Collection<Order> getOrders = orderDA.Get(order);
 
-
-
-                // count how many orderIDs that have not been verified exist in the orders table
-                DAL.DataAccess da5 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                // make command statement 
-                string comm5 = "SELECT COUNT(OrderID) FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
-                //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
-
-                DataSet ds5 = new DataSet();
-
-
-                // make arrays for paramaters and input
-                string[] s5 = { "@customerID", "@txnID" };
-                string[] v5 = { customerID.ToString(), "" };
-                ds5 = da5.ExecuteQuery(comm5, s5, v5);
 
 
                 // returns one item
-                countOrderID = ds5.Tables[0].Rows[0].ItemArray[0];
+                countOrders = getOrders.Count;
 
 
                 //clear
-                s5 = null;
-                v5 = null;
+                order = null;
+                orderDA = null;
+                getOrders = null;
+
 
                 // if there are no orders with a txnID = "" then add a new order
                 // then get the OrderID of the Order to add items to the shopping
                 // cart using that OrderID
                 // if there are orders with a txnID = "" then select the OrderID
                 // and add orders to the shopping cart using that OrderID
-                if (int.Parse(countOrderID.ToString()) == 0)
+                if (int.Parse(countOrders.ToString()) == 0)
                 {
                     // add a new order to the order table
                     // instantiate class
@@ -166,85 +219,80 @@ public partial class ItemDetails : System.Web.UI.Page
 
 
                     // get the orderID of the order that was just created
-                    DAL.DataAccess da3 =
-                        new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                           "System.Data.SqlClient");
+                    // insert sale price
+                    Order orderIID = new Order();
+                    orderIID.CustomerId = int.Parse(customerID.ToString());
+                    orderIID.TxnId = "";
 
-                    // make command statement 
-                    string comm3 = "SELECT OrderID FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
+                    OrderDA orderIDDA = new OrderDA();
 
-                    DataSet ds3 = new DataSet();
-
-                    // make arrays for paramaters and input
-                    string[] s3 = { "@customerID", "@txnID" };
-                    string[] v3 = { customerID.ToString(), "" };
-                    ds3 = da3.ExecuteQuery(comm3, s3, v3);
-
-                    // returns one item
-                    orderID = ds3.Tables[0].Rows[0].ItemArray[0];
+                    Collection<Order> getOrder = orderIDDA.Get(orderIID);
+                    orderID = getOrder[0].Id;
 
                     //clear
-                    s3 = null;
-                    v3 = null;
+                    orderIID = null;
+                    getOrder = null;
 
                     // see if item is on sale
                     if (isItemOnSale() == true)
                     {
                         // insert item into the database using the OrderID that was created
                         // instantiate class
-                        DAL.DataAccess da2 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+                        // insert sale price
+                        OrderItem orderItem = new OrderItem();
+                        orderItem.OrderId = int.Parse(orderID.ToString());
+                        orderItem.ItemId = itemID.Text;
+                        orderItem.VendorId = int.Parse(vendorID.Text);
+                        orderItem.Price = decimal.Parse(salePriceAnswerDouble.ToString("n2"));
+                        orderItem.TotalPrice = decimal.Parse(salePriceAnswerDouble.ToString("n2"));
+                        orderItem.Quantity = int.Parse(quantity.Text);
 
-                        // make command statement 
-                        string comm2 = "INSERT INTO OrderItem VALUES (@orderID, @itemID, @vendorID, @price,  @totalPrice, @quantity)";
+                        OrderItemDA orderItemDA = new OrderItemDA();
 
-
-
-                        string[] s2 = { "@orderID", "@itemID", "@vendorID", "@price", "@totalPrice",
-                    "@quantity" };
-                        string[] v2 = { orderID.ToString(), itemID.Text, vendorID.Text, salePriceAnswerDouble.ToString(), salePriceAnswerDouble.ToString(), quantity.Text };
-
-                        da2.ExecuteNonQuery(comm2, s2, v2);
+                        //Save the Objects to the Database
+                        orderItemDA.Save(orderItem);
 
                         // clear
-                        s2 = null;
-                        v2 = null;
-
+                        orderItem = null;
+                        orderItemDA = null;
 
 
                         //// tell user the item was added to their cart successfully
-                        lblSuccessful.Visible = true;
-                        lblSuccessful.Text = "Added to shopping cart successfully!";
+                        successful.Text = "Added to shopping cart successfully!";
+                        successful.Visible = true;
+
+
+                        Response.Redirect(Request.RawUrl);
                     }
                     else
                     {
-                        // insert item into the database using the OrderID that was created
-                        // instantiate class
-                        DAL.DataAccess da2 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
-                        // make command statement 
-                        string comm2 = "INSERT INTO OrderItem VALUES (@orderID, @itemID, @vendorID, @price,  @totalPrice, @quantity)";
+                        // insert regular price
+                        OrderItem orderItem = new OrderItem();
+                        orderItem.OrderId = int.Parse(orderID.ToString());
+                        orderItem.ItemId = itemID.Text;
+                        orderItem.VendorId = int.Parse(vendorID.Text);
+                        orderItem.Price = decimal.Parse(price.ToString("n2"));
+                        orderItem.TotalPrice = decimal.Parse(price.ToString("n2"));
+                        orderItem.Quantity = int.Parse(quantity.Text);
 
+                        OrderItemDA orderItemDA = new OrderItemDA();
 
-
-                        string[] s2 = { "@orderID", "@itemID", "@vendorID", "@price", "@totalPrice",
-                    "@quantity" };
-                        string[] v2 = { orderID.ToString(), itemID.Text, vendorID.Text, price.ToString("n2"), price.ToString("n2"), quantity.Text };
-
-                        da2.ExecuteNonQuery(comm2, s2, v2);
+                        //Save the Objects to the Database
+                        orderItemDA.Save(orderItem);
 
                         // clear
-                        s2 = null;
-                        v2 = null;
+                        orderItem = null;
+                        orderItemDA = null;
 
+                        // tell user the item was added to their cart successfully
+                        successful.Text = "Added to shopping cart successfully!";
+                        successful.Visible = true;
 
-
-                        //// tell user the item was added to their cart successfully
-                        lblSuccessful.Visible = true;
-                        lblSuccessful.Text = "Added to shopping cart successfully!";
 
                         // refresh page
-                        // Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
-                        Response.Redirect(Request.RawUrl);
+                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+                        // Response.Redirect(Request.RawUrl);
                     }
 
 
@@ -254,83 +302,97 @@ public partial class ItemDetails : System.Web.UI.Page
 
                     // get the orderID of the user that has a txnID = ""
                     // instantiate class
-                    DAL.DataAccess da3 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+                    Order orderIID = new Order();
+                    orderIID.CustomerId = int.Parse(customerID.ToString());
+                    orderIID.TxnId = "";
 
-                    // make command statement 
-                    string comm3 = "SELECT OrderID FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
-                    //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
+                    OrderDA orderIDDA = new OrderDA();
 
-                    DataSet ds3 = new DataSet();
-
-                    // make arrays for paramaters and input
-                    string[] s3 = { "@customerID", "@txnID" };
-                    string[] v3 = { customerID.ToString(), "" };
-                    ds3 = da3.ExecuteQuery(comm3, s3, v3);
-
-                    // returns one item
-                    orderID = ds3.Tables[0].Rows[0].ItemArray[0];
+                    Collection<Order> getOrder = orderIDDA.Get(orderIID);
+                    orderID = getOrder[0].Id;
 
                     //clear
-                    s3 = null;
-                    v3 = null;
+                    orderIID = null;
+                    getOrder = null;
 
-                    // see if item is on sale
-                    if (isItemOnSale() == true)
+
+                    // check to see if the customer has the item in their cart already.
+                    // if they do, do not insert item into database
+                    OrderItem orderItemExistence = new OrderItem();
+                    orderItemExistence.OrderId = int.Parse(orderID.ToString());
+                    orderItemExistence.ItemId = itemID.Text;
+
+
+                    OrderItemDA orderItemExistenceDA = new OrderItemDA();
+
+                    Collection<OrderItem> getOrderItemExistence = orderItemExistenceDA.Get(orderItemExistence);
+
+                    countItems = getOrderItemExistence.Count;
+
+
+                    if (countItems > 0)
                     {
-                        // insert item into the database using the existing OrdersID
-                        // instantiate class
-                        DAL.DataAccess da7 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                        // make command statement 
-                        string comm7 = "INSERT INTO OrderItem VALUES (@orderID, @itemID, @vendorID, @price, @totalPrice, @quantity)";
-
-                        string[] s7 = { "@orderID", "@itemID", "@vendorID", "@price", "@totalPrice",
-                    "@quantity" };
-                        string[] v7 = { orderID.ToString(), itemID.Text, vendorID.Text, salePriceAnswerDouble.ToString(), salePriceAnswerDouble.ToString(), quantity.Text };
-
-                        da7.ExecuteNonQuery(comm7, s7, v7);
-
-                        // clear
-                        s7 = null;
-                        v7 = null;
-
-                        // tell user the item was added to their cart successfully
-                        lblSuccessful.Visible = true;
-                        lblSuccessful.Text = "Added to shopping cart successfully!";
-
-                        // refresh page
-                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+                        error.Text = "This item is in your shopping cart.";
+                        error.Visible = true;
                     }
                     else
                     {
-                        // insert item into the database using the existing OrdersID
-                        // instantiate class
-                        DAL.DataAccess da7 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+                        // see if item is on sale
+                        if (isItemOnSale() == true)
+                        {
 
-                        // make command statement 
-                        string comm7 = "INSERT INTO OrderItem VALUES (@orderID, @itemID, @vendorID, @price, @totalPrice, @quantity)";
+                            // insert sale price
+                            OrderItem orderItem = new OrderItem();
+                            orderItem.OrderId = int.Parse(orderID.ToString());
+                            orderItem.ItemId = itemID.Text;
+                            orderItem.VendorId = int.Parse(vendorID.Text);
+                            orderItem.Price = decimal.Parse(salePriceAnswerDouble.ToString("n2"));
+                            orderItem.TotalPrice = decimal.Parse(salePriceAnswerDouble.ToString("n2"));
+                            orderItem.Quantity = int.Parse(quantity.Text);
 
-                        string[] s7 = { "@orderID", "@itemID", "@vendorID", "@price", "@totalPrice",
-                    "@quantity" };
-                        string[] v7 = { orderID.ToString(), itemID.Text, vendorID.Text, price.ToString("n2"), price.ToString("n2"), quantity.Text };
+                            OrderItemDA orderItemDA = new OrderItemDA();
 
-                        da7.ExecuteNonQuery(comm7, s7, v7);
+                            //Save the Objects to the Database
+                            orderItemDA.Save(orderItem);
 
-                        // clear
-                        s7 = null;
-                        v7 = null;
+                            // tell user the item was added to their cart successfully
+                            successful.Text = "Added to shopping cart successfully!";
+                            successful.Visible = true;
 
-                        // tell user the item was added to their cart successfully
-                        lblSuccessful.Visible = true;
-                        lblSuccessful.Text = "Added to shopping cart successfully!";
 
-                        // refresh page
-                        Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+                            // refresh page
+                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+                        }
+                        else
+                        {
+
+                            // insert regular price
+                            OrderItem orderItem = new OrderItem();
+                            orderItem.OrderId = int.Parse(orderID.ToString());
+                            orderItem.ItemId = itemID.Text;
+                            orderItem.VendorId = int.Parse(vendorID.Text);
+                            orderItem.Price = decimal.Parse(price.ToString("n2"));
+                            orderItem.TotalPrice = decimal.Parse(price.ToString("n2"));
+                            orderItem.Quantity = int.Parse(quantity.Text);
+
+                            OrderItemDA orderItemDA = new OrderItemDA();
+
+                            //Save the Objects to the Database
+                            orderItemDA.Save(orderItem);
+
+
+                            // tell user the item was added to their cart successfully
+                            successful.Text = "Added to shopping cart successfully!";
+                            successful.Visible = true;
+
+
+                            // refresh page
+                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+
+                        }
+
 
                     }
-
-
-
 
 
 
@@ -349,36 +411,26 @@ public partial class ItemDetails : System.Web.UI.Page
                 {
 
 
-                    // get the max customerID that exists
-                    DAL.DataAccess da4 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
-                    // make command statement 
-                    string comm4 = "SELECT Max(CustomerID) FROM Customer";
-                    //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
+                    // get all rows to get maximum customerID
+                    CustomerDA customerDA = new CustomerDA();
 
-                    DataSet ds4 = new DataSet();
-
-
-                    // make arrays for paramaters and input
-                    string[] s4 = { "" };
-                    string[] v4 = { "" };
-                    ds4 = da4.ExecuteQuery(comm4, s4, v4);
-
+                    //We will be returned a collection so lets Declare that and fill it using Get()
+                    Collection<Customer> getCustomers = customerDA.Get(null);
 
                     // gets max customerID in table 
                     // adds one and combines websites domain name
                     // with the anonymousID
 
-
-                    max = ds4.Tables[0].Rows[0].ItemArray[0];
+                    max = (int)getCustomers[getCustomers.Count - 1].Id;
 
                     usernameID = int.Parse(max.ToString()) + 1;
 
                     anonymousUserName = "mypetsfw.com" + usernameID;
 
-                    //clear
-                    s4 = null;
-                    v4 = null;
+                    //clear           
+                    customerDA = null;
+                    getCustomers = null;
 
 
 
@@ -387,57 +439,20 @@ public partial class ItemDetails : System.Web.UI.Page
                     // insert the anonymousCustomerID into the customer table with the username of
                     // and the usernameID/customerID
                     // mypetsfw.com + customerID
-                    DAL.DataAccess da10 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+                    Customer customer = new Customer(usernameID, true, anonymousUserName, "Fill In", "Fill In", "Fill In", "Fill In", "Fill In", "", "Fill In", "");
 
-                    // make command statement 
-                    // make command statement 
-                    string comm10 = "INSERT INTO Customer VALUES (@customerID, @isActive, @userName, @fName, @lName, @address, @address2, @city, @state, @zip, @country)";
+                    CustomerDA customerDA1 = new CustomerDA();
+                    customerDA1.Save(customer);
 
-                    string[] s10 = { "@customerID", "@isActive", "@userName", "@fName", "@lName", "@address", "@address2", "@city", "@state", "@zip", "@country" };
-
-
-                    string[] v10 = { usernameID.ToString(), "True", anonymousUserName, "Fill In", "Fill In", "Fill In", "Fill In", "Fill In", "", "Fill In", "" };
-
-                    DataSet ds10 = new DataSet();
-
-                    ds10 = da10.ExecuteQuery(comm10, s10, v10);
-
-
-                    //clear
-                    s10 = null;
-                    v10 = null;
+                    // clear
+                    customer = null;
+                    customerDA = null;
 
 
 
 
-                    // put the anonymousCustomerID in a session
+                    // put the anonymoususername in a session
                     Session["AnonymousUserName"] = anonymousUserName.ToString();
-
-
-                    // get the id of the user that I just created and put it
-                    // into the session
-                    DAL.DataAccess da19 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                    // make command statement 
-                    string comm19 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
-                    //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
-
-                    DataSet ds19 = new DataSet();
-
-
-                    // make arrays for paramaters and input
-                    string[] s19 = { "@username" };
-                    string[] v19 = { Session["AnonymousUserName"].ToString() };
-                    ds19 = da19.ExecuteQuery(comm19, s19, v19);
-
-
-                    customerID = ds19.Tables[0].Rows[0].ItemArray[0];
-
-
-
-                    //clear
-                    s19 = null;
-                    v19 = null;
 
 
 
@@ -445,45 +460,54 @@ public partial class ItemDetails : System.Web.UI.Page
                     // create a new order of the anonymous user
                     // add a new order to the order table
                     // instantiate class
-                    DAL.DataAccess da11 =
-                        new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                           "System.Data.SqlClient");
+                    Order oID1 = new Order();
+                    oID1.Id = GetOrderIDPlusOne();
+                    oID1.CustomerId = usernameID;
+                    oID1.GrossTotal = 0;
+                    oID1.Tax = 0;
+                    oID1.NetTotal = 0;
+                    // for payment status
+                    oID1.TxnId = "";
 
-                    // make command statement 
-                    string comm11 = "INSERT INTO Orders VALUES (@customerID, @grossTotal, @tax, @netTotal, @txnID,  @paymentStatus)";
+                    OrderDA orderIDDA1 = new OrderDA();
 
-                    // make arrays for paramaters and input
-                    string[] s11 = { "@customerID", "@grossTotal", "@tax", "@netTotal", "@txnID", "@paymentStatus" };
-                    string[] v11 = { customerID.ToString(), "0", "0", "0", "", "" };
+                    // save
+                    orderIDDA1.Save(oID1);
 
-                    da11.ExecuteNonQuery(comm11, s11, v11);
+                    //DAL.DataAccess da11 =
+                    //    new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                    //                       "System.Data.SqlClient");
+
+                    //// make command statement 
+                    //string comm11 = "INSERT INTO Orders VALUES (@customerID, @grossTotal, @tax, @netTotal, @txnID,  @paymentStatus)";
+
+                    //// make arrays for paramaters and input
+                    //string[] s11 = { "@customerID", "@grossTotal", "@tax", "@netTotal", "@txnID", "@paymentStatus" };
+                    //string[] v11 = { usernameID.ToString(), "0", "0", "0", "", "" };
+
+                    //da11.ExecuteNonQuery(comm11, s11, v11);
 
                     //clear
-                    s11 = null;
-                    v11 = null;
+                    oID1 = null;
+                    orderIDDA1 = null;
 
 
                     // get the orderID of the anonymoususer 
-                    // instantiate class
-                    DAL.DataAccess da13 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+                    // get the id of the user that I just created 
+                    Order oID = new Order();
+                    oID.CustomerId = usernameID;
+                    oID.TxnId = "";
+                    OrderDA orderIDDA = new OrderDA();
 
-                    // make command statement 
-                    string comm13 = "SELECT OrderID FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
-                    //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
+                    Collection<Order> getOrderID = orderIDDA.Get(oID);
 
-                    DataSet ds13 = new DataSet();
+                    orderID = getOrderID[0].Id;
 
-                    // make arrays for paramaters and input
-                    string[] s13 = { "@customerID", "@txnID" };
-                    string[] v13 = { customerID.ToString(), "" };
-                    ds13 = da13.ExecuteQuery(comm13, s13, v13);
 
-                    // returns one item
-                    orderID = ds13.Tables[0].Rows[0].ItemArray[0];
 
                     //clear
-                    s13 = null;
-                    v13 = null;
+                    oID = null;
+                    getOrderID = null;
 
 
 
@@ -492,33 +516,32 @@ public partial class ItemDetails : System.Web.UI.Page
                     {
                         // insert item into the database using the OrderID that was created
                         // instantiate class
-                        DAL.DataAccess da17 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        // make command statement 
-                        string comm17 =
-                            "INSERT INTO OrderItem VALUES (@orderID, @itemID, @vendorID, @price,  @totalPrice, @quantity)";
 
 
-                        string[] s17 = {
-                                       "@orderID", "@itemID", "@vendorID", "@price", "@totalPrice",
-                                       "@quantity"
-                                   };
-                        string[] v17 = {
-                                       orderID.ToString(), itemID.Text, vendorID.Text, salePriceAnswerDouble.ToString(), salePriceAnswerDouble.ToString(),
-                                       quantity.Text
-                                   };
+                        OrderItem orderItem = new OrderItem();
+                        orderItem.OrderId = int.Parse(orderID.ToString());
+                        orderItem.ItemId = itemID.Text;
+                        orderItem.VendorId = int.Parse(vendorID.Text);
+                        orderItem.Price = decimal.Parse(salePriceAnswerDouble.ToString());
+                        orderItem.TotalPrice = decimal.Parse(salePriceAnswerDouble.ToString());
+                        orderItem.Quantity = int.Parse(quantity.Text);
 
-                        da17.ExecuteNonQuery(comm17, s17, v17);
+                        OrderItemDA orderItemDA = new OrderItemDA();
+
+                        //Save the Objects to the Database
+                        orderItemDA.Save(orderItem);
+
+
+
+
 
                         // clear
-                        s17 = null;
-                        v17 = null;
+                        orderItem = null;
+                        orderItemDA = null;
 
                         // tell anonymous the item was added to their cart successfully
-                        lblSuccessful.Visible = true;
-                        lblSuccessful.Text = "Added to shopping cart successfully!";
+                        successful.Text = "Added to shopping cart successfully!";
+                        successful.Visible = true;
 
                         // refresh page
                         Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
@@ -527,33 +550,29 @@ public partial class ItemDetails : System.Web.UI.Page
                     {
                         // insert item into the database using the OrderID that was created
                         // instantiate class
-                        DAL.DataAccess da17 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        // make command statement 
-                        string comm17 =
-                            "INSERT INTO OrderItem VALUES (@orderID, @itemID, @vendorID, @price,  @totalPrice, @quantity)";
 
 
-                        string[] s17 = {
-                                       "@orderID", "@itemID", "@vendorID", "@price", "@totalPrice",
-                                       "@quantity"
-                                   };
-                        string[] v17 = {
-                                       orderID.ToString(), itemID.Text, vendorID.Text, price.ToString(),price.ToString(),
-                                       quantity.Text
-                                   };
+                        OrderItem orderItem = new OrderItem();
+                        orderItem.OrderId = int.Parse(orderID.ToString());
+                        orderItem.ItemId = itemID.Text;
+                        orderItem.VendorId = int.Parse(vendorID.Text);
+                        orderItem.Price = decimal.Parse(price.ToString());
+                        orderItem.TotalPrice = decimal.Parse(price.ToString());
+                        orderItem.Quantity = int.Parse(quantity.Text);
 
-                        da17.ExecuteNonQuery(comm17, s17, v17);
+                        OrderItemDA orderItemDA = new OrderItemDA();
+
+                        //Save the Objects to the Database
+                        orderItemDA.Save(orderItem);
 
                         // clear
-                        s17 = null;
-                        v17 = null;
+                        orderItem = null;
+                        orderItemDA = null;
 
                         // tell anonymous the item was added to their cart successfully
-                        lblSuccessful.Visible = true;
-                        lblSuccessful.Text = "Added to shopping cart successfully!";
+                        successful.Text = "Added to shopping cart successfully!";
+                        successful.Visible = true;
+
 
                         // refresh page
                         Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
@@ -569,172 +588,161 @@ public partial class ItemDetails : System.Web.UI.Page
                 else
                 {
                     // get the customerID of the user that I just created 
-                    DAL.DataAccess da19 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                    // make command statement 
-                    string comm19 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
-                    //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
-
-                    DataSet ds19 = new DataSet();
-
-
-                    // make arrays for paramaters and input
-                    string[] s19 = { "@username" };
-                    string[] v19 = { Session["AnonymousUserName"].ToString() };
-                    ds19 = da19.ExecuteQuery(comm19, s19, v19);
-
-
-                    customerID = ds19.Tables[0].Rows[0].ItemArray[0];
 
 
 
-                    //clear
-                    s19 = null;
-                    v19 = null;
+                    Customer customer2 = new Customer();
+                    customer2.Username = Session["AnonymousUserName"].ToString();
+                    CustomerDA customerDA2 = new CustomerDA();
+
+                    Collection<Customer> getCustomers2 = customerDA2.Get(customer2);
+
+                    customerID = getCustomers2[0].Id;
 
 
+                    // clear
+                    customer2 = null;
+                    customerDA2 = null;
+                    getCustomers2 = null;
 
 
                     // see if an order doesn't already exist for the anonymousUser
-
                     // count how many orderIDs that have not been verified exist in the orders table
-                    DAL.DataAccess da12 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                    // make command statement 
-                    string comm12 = "SELECT COUNT(OrderID) FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
-                    //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
-
-                    DataSet ds12 = new DataSet();
 
 
-                    // make arrays for paramaters and input
-                    string[] s12 = { "@customerID", "@txnID" };
-                    string[] v12 = { customerID.ToString(), "" };
-                    ds12 = da12.ExecuteQuery(comm12, s12, v12);
+                    Order orders = new Order();
+                    orders.CustomerId = int.Parse(customerID.ToString());
+                    orders.TxnId = "";
+
+                    OrderDA orderDA = new OrderDA();
+                    Collection<Order> getOrder = orderDA.Get(orders);
+
 
 
                     // returns one item
-                    countOrderID = ds12.Tables[0].Rows[0].ItemArray[0];
+                    countOrders = getOrder.Count;
 
 
                     //clear
-                    s12 = null;
-                    v12 = null;
+                    orders = null;
+                    orderDA = null;
+                    getOrder = null;
 
                     // if there are no orders with a txnID = "" then add a new order
                     // then get the OrderID of the Order to add items to the shopping
                     // cart using that OrderID
                     // if there are orders with a txnID = "" then select the OrderID
                     // and add orders to the shopping cart using that OrderID
-                    if (int.Parse(countOrderID.ToString()) == 0)
+                    if (int.Parse(countOrders.ToString()) == 0)
                     {
-
                         // get the customerID of the user that I just created 
-                        DAL.DataAccess da20 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                        // make command statement 
-                        string comm20 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
-                        //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
-
-                        DataSet ds20 = new DataSet();
 
 
-                        // make arrays for paramaters and input
-                        string[] s20 = { "@username" };
-                        string[] v20 = { Session["AnonymousUserName"].ToString() };
-                        ds20 = da20.ExecuteQuery(comm20, s20, v20);
+                        Customer customerIDID = new Customer();
+                        customerIDID.Username = Session["AnonymousUserName"].ToString();
+                        CustomerDA customerIDDA = new CustomerDA();
+
+                        Collection<Customer> getCustomers3 = customerIDDA.Get(customerIDID);
+
+                        customerID = getCustomers3[0].Id;
 
 
-                        customerID = ds20.Tables[0].Rows[0].ItemArray[0];
-
-
-
-                        //clear
-                        s20 = null;
-                        v20 = null;
-
+                        // clear
+                        customerIDID = null;
+                        customerIDDA = null;
+                        getCustomers3 = null;
 
 
 
                         // create a new order of the anonymous user
                         // add a new order to the order table
                         // instantiate class
-                        DAL.DataAccess da11 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
+                        Order oID1 = new Order();
+                        oID1.Id = GetOrderIDPlusOne();
+                        oID1.CustomerId = usernameID;
+                        oID1.GrossTotal = 0;
+                        oID1.Tax = 0;
+                        oID1.NetTotal = 0;
+                        // for payment status
+                        oID1.TxnId = "";
 
-                        // make command statement 
-                        string comm11 = "INSERT INTO Orders VALUES (@customerID, @grossTotal, @tax, @netTotal, @txnID, @paymentStatus)";
+                        OrderDA orderIDDA1 = new OrderDA();
 
-                        // make arrays for paramaters and input
-                        string[] s11 = { "@customerID", "@grossTotal", "@tax", "@netTotal", "@txnID", "@paymentStatus" };
-                        string[] v11 = { customerID.ToString(), "0", "0", "0", "", "" };
+                        // save
+                        orderIDDA1.Save(oID1);
 
-                        da11.ExecuteNonQuery(comm11, s11, v11);
+                        //DAL.DataAccess da11 =
+                        //    new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                        //                       "System.Data.SqlClient");
+
+                        //// make command statement 
+                        //string comm11 = "INSERT INTO Orders VALUES (@customerID, @grossTotal, @tax, @netTotal, @txnID, @paymentStatus)";
+
+                        //// make arrays for paramaters and input
+                        //string[] s11 = { "@customerID", "@grossTotal", "@tax", "@netTotal", "@txnID", "@paymentStatus" };
+                        //string[] v11 = { customerID.ToString(), "0", "0", "0", "", "" };
+
+                        //da11.ExecuteNonQuery(comm11, s11, v11);
 
                         //clear
-                        s11 = null;
-                        v11 = null;
+                        oID1 = null;
+                        orderIDDA1 = null;
 
 
 
 
                         // get the orderid for the anonymous users new order
 
-                        // instantiate class
-                        DAL.DataAccess da13 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+                        Order oID = new Order();
+                        oID.CustomerId = int.Parse(customerID.ToString());
+                        oID.TxnId = "";
+                        OrderDA orderIDDA = new OrderDA();
 
-                        // make command statement 
-                        string comm13 = "SELECT OrderID FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
-                        //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
+                        Collection<Order> getOrderID = orderIDDA.Get(oID);
 
-                        DataSet ds13 = new DataSet();
+                        orderID = int.Parse(getOrderID[0].Id.ToString());
 
-                        // make arrays for paramaters and input
-                        string[] s13 = { "@customerID", "@txnID" };
-                        string[] v13 = { customerID.ToString(), "" };
-                        ds13 = da13.ExecuteQuery(comm13, s13, v13);
 
-                        // returns one item
-                        orderID = ds13.Tables[0].Rows[0].ItemArray[0];
 
                         //clear
-                        s13 = null;
-                        v13 = null;
+                        oID = null;
+                        orderIDDA = null;
+                        getOrderID = null;
+
+
+
 
 
                         // see if item is on sale
                         if (isItemOnSale() == true)
                         {
+
+
                             // insert item into the database using the OrderID that was created
                             // instantiate class
-                            DAL.DataAccess da17 =
-                                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                                   "System.Data.SqlClient");
+                            OrderItem orderItem = new OrderItem();
+                            orderItem.OrderId = int.Parse(orderID.ToString());
+                            orderItem.ItemId = itemID.Text;
+                            orderItem.VendorId = int.Parse(vendorID.Text);
+                            orderItem.Price = decimal.Parse(salePriceAnswerDouble.ToString());
+                            orderItem.TotalPrice = decimal.Parse(salePriceAnswerDouble.ToString());
+                            orderItem.Quantity = int.Parse(quantity.Text);
 
-                            // make command statement 
-                            string comm17 =
-                                "INSERT INTO OrderItem VALUES (@orderID, @itemID, @vendorID, @price,  @totalPrice, @quantity)";
+                            OrderItemDA orderItemDA = new OrderItemDA();
+
+                            //Save the Objects to the Database
+                            orderItemDA.Save(orderItem);
 
 
-                            string[] s17 = {
-                                       "@orderID", "@itemID", "@vendorID", "@price", "@totalPrice",
-                                       "@quantity"
-                                   };
-                            string[] v17 = {
-                                       orderID.ToString(), itemID.Text, vendorID.Text, salePriceAnswerDouble.ToString(), salePriceAnswerDouble.ToString(),
-                                       quantity.Text
-                                   };
-
-                            da17.ExecuteNonQuery(comm17, s17, v17);
 
                             // clear
-                            s17 = null;
-                            v17 = null;
+                            orderItem = null;
+                            orderItemDA = null;
+
 
                             // tell user the item was added to their cart successfully
-                            lblSuccessful.Visible = true;
-                            lblSuccessful.Text = "Added to shopping cart successfully!";
+                            successful.Text = "Added to shopping cart successfully!";
+                            successful.Visible = true;
 
                             // refresh page
                             Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
@@ -743,33 +751,30 @@ public partial class ItemDetails : System.Web.UI.Page
                         {
                             // insert item into the database using the OrderID that was created
                             // instantiate class
-                            DAL.DataAccess da17 =
-                                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                                   "System.Data.SqlClient");
 
-                            // make command statement 
-                            string comm17 =
-                                "INSERT INTO OrderItem VALUES (@orderID, @itemID, @vendorID, @price,  @totalPrice, @quantity)";
+                            OrderItem orderItem = new OrderItem();
+                            orderItem.OrderId = int.Parse(orderID.ToString());
+                            orderItem.ItemId = itemID.Text;
+                            orderItem.VendorId = int.Parse(vendorID.Text);
+                            orderItem.Price = decimal.Parse(price.ToString());
+                            orderItem.TotalPrice = decimal.Parse(price.ToString());
+                            orderItem.Quantity = int.Parse(quantity.Text);
+
+                            OrderItemDA orderItemDA = new OrderItemDA();
+
+                            //Save the Objects to the Database
+                            orderItemDA.Save(orderItem);
 
 
-                            string[] s17 = {
-                                       "@orderID", "@itemID", "@vendorID", "@price", "@totalPrice",
-                                       "@quantity"
-                                   };
-                            string[] v17 = {
-                                       orderID.ToString(), itemID.Text, vendorID.Text, price.ToString(), price.ToString(),
-                                       quantity.Text
-                                   };
-
-                            da17.ExecuteNonQuery(comm17, s17, v17);
 
                             // clear
-                            s17 = null;
-                            v17 = null;
+                            orderItem = null;
+                            orderItemDA = null;
 
                             // tell user the item was added to their cart successfully
-                            lblSuccessful.Visible = true;
-                            lblSuccessful.Text = "Added to shopping cart successfully!";
+                            successful.Text = "Added to shopping cart successfully!";
+                            successful.Visible = true;
+
 
                             // refresh page
                             Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
@@ -782,107 +787,128 @@ public partial class ItemDetails : System.Web.UI.Page
 
 
                         // get the customerID of the user that I just created 
-                        DAL.DataAccess da20 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+                        Customer customerIDID = new Customer();
+                        customerIDID.Username = Session["AnonymousUserName"].ToString();
+                        CustomerDA customerIDDA = new CustomerDA();
 
-                        // make command statement 
-                        string comm20 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
-                        //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
+                        Collection<Customer> getCustomers3 = customerIDDA.Get(customerIDID);
 
-                        DataSet ds20 = new DataSet();
-
-
-                        // make arrays for paramaters and input
-                        string[] s20 = { "@username" };
-                        string[] v20 = { Session["AnonymousUserName"].ToString() };
-                        ds20 = da20.ExecuteQuery(comm20, s20, v20);
+                        customerID = getCustomers3[0].Id;
 
 
-                        customerID = ds20.Tables[0].Rows[0].ItemArray[0];
-
-
-
-                        //clear
-                        s20 = null;
-                        v20 = null;
-
+                        // clear
+                        customerIDID = null;
+                        customerIDDA = null;
+                        getCustomers3 = null;
 
 
                         // get the orderID of the anonymoususer that has a txnID = ""
                         // instantiate class
-                        DAL.DataAccess da13 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
-                        // make command statement 
-                        string comm13 = "SELECT OrderID FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
-                        //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
+                        Order oID = new Order();
+                        oID.CustomerId = int.Parse(customerID.ToString());
+                        oID.TxnId = "";
+                        OrderDA orderIDDA = new OrderDA();
 
-                        DataSet ds13 = new DataSet();
+                        Collection<Order> getOrderID = orderIDDA.Get(oID);
 
-                        // make arrays for paramaters and input
-                        string[] s13 = { "@customerID", "@txnID" };
-                        string[] v13 = { customerID.ToString(), "" };
-                        ds13 = da13.ExecuteQuery(comm13, s13, v13);
+                        orderID = getOrderID[0].Id;
 
-                        // returns one item
-                        orderID = ds13.Tables[0].Rows[0].ItemArray[0];
+
 
                         //clear
-                        s13 = null;
-                        v13 = null;
+                        oID = null;
+                        orderIDDA = null;
+                        getOrderID = null;
 
-                        // see if item is on sale
-                        if (isItemOnSale() == true)
+
+                        // check to see if the anonymous user has the item in their cart already.
+                        // if they do, do not insert item into database
+                        OrderItem orderItemExistence = new OrderItem();
+                        orderItemExistence.OrderId = int.Parse(orderID.ToString());
+                        orderItemExistence.ItemId = itemID.Text;
+
+
+                        OrderItemDA orderItemExistenceDA = new OrderItemDA();
+
+                        Collection<OrderItem> getOrderItemExistence = orderItemExistenceDA.Get(orderItemExistence);
+
+                        countItems = getOrderItemExistence.Count;
+
+
+                        if (countItems > 0)
                         {
-                            // insert item into the database using the existing OrdersID
-                            // instantiate class
-                            DAL.DataAccess da14 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                            // make command statement 
-                            string comm14 = "INSERT INTO OrderItem VALUES (@orderID, @itemID, @vendorID, @price, @totalPrice, @quantity)";
-
-                            string[] s14 = { "@orderID", "@itemID", "@vendorID", "@price", "@totalPrice",
-                    "@quantity" };
-                            string[] v14 = { orderID.ToString(), itemID.Text, vendorID.Text, salePriceAnswerDouble.ToString(), salePriceAnswerDouble.ToString(), quantity.Text };
-
-                            da14.ExecuteNonQuery(comm14, s14, v14);
-
-                            // clear
-                            s14 = null;
-                            v14 = null;
-
-                            // tell user the item was added to their cart successfully
-                            lblSuccessful.Visible = true;
-                            lblSuccessful.Text = "Added to shopping cart successfully!";
-
-                            // refresh page
-                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+                            error.Text = "This item is in your shopping cart.";
+                            error.Visible = true;
                         }
                         else
                         {
-                            // insert item into the database using the existing OrdersID
-                            // instantiate class
-                            DAL.DataAccess da14 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
-                            // make command statement 
-                            string comm14 = "INSERT INTO OrderItem VALUES (@orderID, @itemID, @vendorID, @price, @totalPrice, @quantity)";
 
-                            string[] s14 = { "@orderID", "@itemID", "@vendorID", "@price", "@totalPrice",
-                    "@quantity" };
-                            string[] v14 = { orderID.ToString(), itemID.Text, vendorID.Text, price.ToString(), price.ToString(), quantity.Text };
 
-                            da14.ExecuteNonQuery(comm14, s14, v14);
 
-                            // clear
-                            s14 = null;
-                            v14 = null;
 
-                            // tell user the item was added to their cart successfully
-                            lblSuccessful.Visible = true;
-                            lblSuccessful.Text = "Added to shopping cart successfully!";
+                            // see if item is on sale
+                            if (isItemOnSale() == true)
+                            {
+                                // insert item into the database using the existing OrdersID
+                                // instantiate class
+                                OrderItem orderItem = new OrderItem();
+                                orderItem.OrderId = int.Parse(orderID.ToString());
+                                orderItem.ItemId = itemID.Text;
+                                orderItem.VendorId = int.Parse(vendorID.Text);
+                                orderItem.Price = decimal.Parse(salePriceAnswerDouble.ToString());
+                                orderItem.TotalPrice = decimal.Parse(salePriceAnswerDouble.ToString());
+                                orderItem.Quantity = int.Parse(quantity.Text);
 
-                            // refresh page
-                            Response.AppendHeader("Refresh", "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+                                OrderItemDA orderItemDA = new OrderItemDA();
+
+                                //Save the Objects to the Database
+                                orderItemDA.Save(orderItem);
+
+
+
+                                // clear
+                                orderItem = null;
+                                orderItemDA = null;
+
+
+                                // tell user the item was added to their cart successfully
+                                successful.Text = "Added to shopping cart successfully!";
+                                successful.Visible = true;
+
+
+                                // refresh page
+                                Response.AppendHeader("Refresh",
+                                                      "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+                            }
+                            else
+                            {
+                                // insert item into the database using the existing OrdersID
+                                // instantiate class
+                                OrderItem orderItem = new OrderItem();
+                                orderItem.OrderId = int.Parse(orderID.ToString());
+                                orderItem.ItemId = itemID.Text;
+                                orderItem.VendorId = int.Parse(vendorID.Text);
+                                orderItem.Price = decimal.Parse(price.ToString());
+                                orderItem.TotalPrice = decimal.Parse(price.ToString());
+                                orderItem.Quantity = int.Parse(quantity.Text);
+
+                                OrderItemDA orderItemDA = new OrderItemDA();
+
+                                //Save the Objects to the Database
+                                orderItemDA.Save(orderItem);
+
+                                // tell user the item was added to their cart successfully
+                                successful.Text = "Added to shopping cart successfully!";
+                                successful.Visible = true;
+
+
+                                // refresh page
+                                Response.AppendHeader("Refresh",
+                                                      "0;URL=ItemDetails.aspx?ItemID=" + Request.QueryString["ItemID"]);
+                            }
                         }
-
 
                     }
                 }
@@ -891,8 +917,11 @@ public partial class ItemDetails : System.Web.UI.Page
         }
         catch (SqlException)
         {
-            lblError.Visible = true;
-            lblError.Text = "The item is in your shopping cart already.";
+            // error.Text = "The item is in your shopping cart already.";
+            // error.Visible = true;
+        }
+        catch (Exception)
+        {
 
         }
     }
@@ -902,25 +931,33 @@ public partial class ItemDetails : System.Web.UI.Page
     {
         try
         {
+            successful = (Label)FormView1.FindControl("lblSuccessful");
+            error = (Label)FormView1.FindControl("lblError");
             itemID = (Label)FormView1.FindControl("lblItemID");
             vendorID = (Label)FormView1.FindControl("lblVendorID");
-            IsActive = (Label)FormView1.FindControl("lblIsActive");
-            Description = (Label)FormView1.FindControl("lblDescription");
             QuantityAvailable = (Label)FormView1.FindControl("lblQuantityAvailable");
             price2 = (Label)FormView1.FindControl("lblPrice");
-            photoname = (Label)FormView1.FindControl("lblPhotoName");
-            photoLocation = (Label)FormView1.FindControl("lblPhotoLocation");
             minQuantity = (Label)FormView1.FindControl("lblMinQuantity");
             costPrice = (Label)FormView1.FindControl("lblCostPrice");
             recommendedPrice = (Label)FormView1.FindControl("lblRecommendedPrice");
             quantity = (TextBox)FormView1.FindControl("txtQuantity");
 
+            // make sure price is not empty
+            if (price2.Text == "")
+            {
+            }
+            else
+            {
+                price = double.Parse(price2.Text, System.Globalization.NumberStyles.Currency);
+                //itemID = int.Parse(itemIDLabel.Text, System.Globalization.NumberStyles.Integer);
+            }
 
-            price = double.Parse(price2.Text, System.Globalization.NumberStyles.Currency);
 
             salePriceAnswer = (Label)FormView1.FindControl("lblSalePriceAnswer");
             salePrice = (Label)FormView1.FindControl("lblSalePrice");
             salePriceAnswerDouble = double.Parse(salePriceAnswer.Text, System.Globalization.NumberStyles.Currency);
+
+
 
             // makes labels invisible if the item is not on sale
             if (salePriceAnswerDouble > 0)
@@ -933,6 +970,7 @@ public partial class ItemDetails : System.Web.UI.Page
             }
             else
             {
+
                 salePrice.Visible = false;
 
                 salePriceAnswer.Visible = false;
@@ -940,14 +978,23 @@ public partial class ItemDetails : System.Web.UI.Page
 
 
         }
-        catch (FormatException)
+        catch (NullReferenceException)
         {
-            salePrice.Visible = false;
-            salePriceAnswer.Visible = false;
-
-
 
         }
+        catch (FormatException)
+        {
+            try
+            {
+                salePrice.Visible = false;
+                salePriceAnswer.Visible = false;
+            }
+            catch (NullReferenceException)
+            {
+
+            }
+        }
+
         catch (Exception)
         {
             // nothing
@@ -995,5 +1042,26 @@ public partial class ItemDetails : System.Web.UI.Page
         return true;
     }
 
+    // gets orderID plus one to enter a new order
+    private int GetOrderIDPlusOne()
+    {
+
+        // get orderID + 1
+        Order orderID = new Order();
+
+        OrderDA orderIDDA = new OrderDA();
+
+        Collection<Order> getOrderID = orderIDDA.Get(null);
+
+        int orderIDPlusOne = (int)getOrderID[getOrderID.Count - 1].Id + 1;
+
+        // clear
+        orderID = null;
+        orderIDDA = null;
+        getOrderID = null;
+
+
+        return orderIDPlusOne;
+    }
 
 }
