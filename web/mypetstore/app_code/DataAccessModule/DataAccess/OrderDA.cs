@@ -151,6 +151,8 @@ namespace DataAccessModule
                 parameters.Add(CreateParameter(OrderTable.NetTotalParam, order.NetTotal, OrderTable.NetTotalColumn));
             if (order.TxnId != null)
                 parameters.Add(CreateParameter(OrderTable.TXNIDParam, order.TxnId, OrderTable.TXNIDColumn));
+            if (order.Date != null)
+                parameters.Add(CreateParameter(OrderTable.DateParam, order.Date, OrderTable.DateColumn));
 
             return parameters.ToArray();
         }

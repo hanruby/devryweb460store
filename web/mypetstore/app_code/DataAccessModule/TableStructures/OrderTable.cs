@@ -24,7 +24,8 @@ public static class OrderTable
     public const string GrossTotalColumn = "GrossTotal";
     public const string TaxColumn = "Tax";
     public const string NetTotalColumn = "NetTotal";
-    public const string TXNIDColumn = "TXNID";//what is this?
+    public const string TXNIDColumn = "TXNID";
+    public const string DateColumn = "Date";
 
     //Parameters
     public const string IdParam = "@OrderID";
@@ -32,5 +33,6 @@ public static class OrderTable
     public const string GrossTotalParam = "@GrossTotal";
     public const string TaxParam = "@Tax";
     public const string NetTotalParam = "@NetTotal";
-    public const string TXNIDParam = "@TXNID";//what is this?
+    public const string TXNIDParam = "@TXNID";
+    public const string DateParam = "@Date";
 }
