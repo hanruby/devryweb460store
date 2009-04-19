@@ -18,27 +18,7 @@ public partial class UserRegistration : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!Page.IsPostBack)
-        {
-            // create dropdownbox controls
-            var cboState = (DropDownList)userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("cboState");
-            var cboCountry = (DropDownList)userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("cboCountry");
-
-            // set the abbreviated name for the states to prevent the user from typing it in
-            string[] states = {"AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC",               
-                              "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY",               
-                              "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC",               
-                              "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR",               
-                              "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", 
-                              "WI", "WV", "WY"};
-            cboState.DataSource = states;
-            cboState.DataBind();
-
-            // set the abbreviated name for the country to prevent the user from typing it in
-            string[] countries = CountryArrays.Abbreviations;
-            cboCountry.DataSource = countries;
-            cboCountry.DataBind();
-        }
+        
     }
 
     /// <summary>
@@ -78,11 +58,6 @@ public partial class UserRegistration : System.Web.UI.Page
             (TextBox)userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("txtZip");
         var cboCountry =
             (DropDownList)userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("cboCountry");
-        var txtEmail =
-            (TextBox)userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("txtEmail");
-
-        // get access to the database
-        DataAccess dataAccess = new DAL.DataAccess();
 
         // create a customer dataaccess object
         CustomerDA customerDA = new CustomerDA();
@@ -105,9 +80,6 @@ public partial class UserRegistration : System.Web.UI.Page
         {
             // there was an error creating the users account, delete the users account
             Membership.DeleteUser(newUser.UserName);
-        }finally
-        {
-            // user should be redirected to an error page
         }
     }
 }

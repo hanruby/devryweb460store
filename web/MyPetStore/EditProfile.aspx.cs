@@ -1,65 +1,40 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Web.Security;
+using DataAccessModule;
 
 public partial class EditProfile : System.Web.UI.Page
 {
+    // private attributes
+    private int customerID;
+
     protected void Page_LoadComplete(object sender, EventArgs e)
     {
         if (Membership.GetUser() != null && !Page.IsPostBack)
         {
-            // set the abbreviated name for the states to prevent the user from typing it in
-            string[] states = {"AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC",               
-                              "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY",               
-                              "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC",               
-                              "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR",               
-                              "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", 
-                              "WI", "WV", "WY"};
-            cboState.DataSource = states;
-            cboState.DataBind();
+            // create customer object to search for
+            Customer customerSearchObject = new Customer(null,null,Membership.GetUser().UserName,null,null,null,
+                null,null,null,null,null);
 
-            // set the abbreviated name for the country to prevent the user from typing it in
-            // string[] countries = CountryArrays.Abbreviations;
-            //  cboCountry.DataSource = countries;
-            // cboCountry.DataBind();
+            // get current user customer account information from the database
+            CustomerDA customerDA = new CustomerDA();
+            Collection<Customer> customerInfo = customerDA.GetLike(customerSearchObject);
 
-            // get user information from database
-            var dbConnect = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                "System.Data.SqlClient");
+            // place customer ID into a variable for updating the customer
+            customerID = (int)customerInfo[0].Id;
 
-            // create sql statement query string
-            const string sqlStatement = "select * from Customer where UserName = @UserName;";
-            string[] parms = { "@UserName" };
-            string[] value = { Membership.GetUser().UserName };
-
-            // get the unique row based on username
-            var customerInfo = dbConnect.ExecuteQuery(sqlStatement, parms, value);
-
-            // required to get column ordinal value from the row returned
-            var dr = customerInfo.CreateDataReader();
-
-            // get collumn data and fill in text boxes if not null
-            if (customerInfo.Tables[0].Rows[0]["FName"].ToString() != null)
-                txtFirstName.Text = customerInfo.Tables[0].Rows[0]["FName"].ToString();
-            if (customerInfo.Tables[0].Rows[0]["LName"].ToString() != null)
-                txtLastName.Text = customerInfo.Tables[0].Rows[0]["LName"].ToString();
-            if (customerInfo.Tables[0].Rows[0]["Address"].ToString() != null)
-                txtAddress.Text = customerInfo.Tables[0].Rows[0]["Address"].ToString();
-            if (customerInfo.Tables[0].Rows[0]["Address2"].ToString() != null)
-                txtAddress2.Text = customerInfo.Tables[0].Rows[0]["Address2"].ToString();
-            if (customerInfo.Tables[0].Rows[0]["City"].ToString() != null)
-                txtCity.Text = customerInfo.Tables[0].Rows[0]["City"].ToString();
-            if (customerInfo.Tables[0].Rows[0]["State"].ToString() != null)
-                cboState.Text = customerInfo.Tables[0].Rows[0]["State"].ToString();
-            if (customerInfo.Tables[0].Rows[0]["Zip"].ToString() != null)
-                txtZip.Text = customerInfo.Tables[0].Rows[0]["Zip"].ToString();
-            if (customerInfo.Tables[0].Rows[0]["Country"].ToString() != null)
-                cboCountry.Text = customerInfo.Tables[0].Rows[0]["Country"].ToString();
+            // put the user information into the form
+            txtFirstName.Text = customerInfo[0].FirstName;
+            txtLastName.Text = customerInfo[0].LastName;
+            txtAddress.Text = customerInfo[0].Address;
+            if (customerInfo[0].Address2 != null)
+                txtAddress2.Text = customerInfo[0].Address2;
+            txtCity.Text = customerInfo[0].City;
+            cboState.Text = customerInfo[0].State;
+            txtZip.Text = customerInfo[0].Zip;
+            cboCountry.Text = customerInfo[0].Country;
             txtEmail.Text = Membership.GetUser().Email;
-
-            // Dispose of the datareader and customer info dataset
-            dr.Dispose();
-            customerInfo.Dispose();
         }
         else
         {
@@ -108,30 +83,30 @@ public partial class EditProfile : System.Web.UI.Page
         }
         else
         {
-            // get new information from the text boxes
-            var dataAccess = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                                "System.Data.SqlClient");
+            // create customer data access object
+            CustomerDA customerDA = new CustomerDA();
 
-            //create sql Statement
-            var sql = "UPDATE customer SET FName = @FName, LName = @LName, Address = @Address,"
-                      + " Address2 = @Address2, City = @City, State = @State, Zip = @Zip, Country = @Country"
-                      + " WHERE UserName = @UserName;";
-            string[] parms = {
-                                 "@FName", "@LName", "@Address", "@Address2", "@City", "@State", "@Zip",
-                                 "@Country", "@UserName"
-                             };
-            string[] values = {
-                                  txtFirstName.Text, txtLastName.Text, txtAddress.Text, txtAddress2.Text,
-                                  txtCity.Text, cboState.Text, txtZip.Text, cboCountry.Text,
-                                  Membership.GetUser().UserName
-                              };
+            // get references to the textboxes on the page
+            MembershipUser currentUser = Membership.GetUser();
 
-            dataAccess.ExecuteNonQuery(sql, parms, values);
+            try
+            {
+                // create a customer business object
+                Customer customerObj = new Customer(customerID, true, currentUser.UserName, txtFirstName.Text, 
+                    txtLastName.Text, txtAddress.Text, txtAddress2.Text, txtCity.Text, cboState.Text, txtZip.Text, cboCountry.Text);
 
-            // Update user e-mail
-            var member = Membership.GetUser();
-            member.Email = txtEmail.Text;
-            Membership.UpdateUser(member);
+                // commit customer business object to the DB using the CustomerDA
+                customerDA.Save(customerObj);
+                
+                // Update user e-mail
+                currentUser.Email = txtEmail.Text;
+                Membership.UpdateUser(currentUser);
+            }
+            catch (Exception ex)
+            {
+                // there was an error in updating the users account
+                Response.Redirect("~/404.aspx");
+            }
 
             // redirect the user back to their profile
             Response.Redirect("ViewProfile.aspx");
@@ -146,131 +121,5 @@ public partial class EditProfile : System.Web.UI.Page
     protected void btnCancel_Click(object sender, EventArgs e)
     {
         Response.Redirect("ViewProfile.aspx");
-    }
-
-    /// <summary>
-    /// TextChanged event changes text to a default value if blank
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void txtFirstName_TextChanged(object sender, EventArgs e)
-    {
-        if (txtFirstName.Text == "")
-        {
-            txtFirstName.Attributes.CssStyle["color"] = "grey";
-            txtFirstName.Text = "First Name";
-        }
-        else
-        {
-            txtFirstName.Attributes.CssStyle["color"] = "black";
-        }
-    }
-
-    /// <summary>
-    /// TextChanged event changes text to a default value if blank
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void txtLastName_TextChanged(object sender, EventArgs e)
-    {
-        if (txtLastName.Text == "")
-        {
-            txtLastName.Attributes.CssStyle["color"] = "grey";
-            txtLastName.Text = "Last Name";
-        }
-        else
-        {
-            txtLastName.Attributes.CssStyle["color"] = "black";
-        }
-    }
-
-    /// <summary>
-    /// TextChanged event changes text to a default value if blank
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void txtAddress_TextChanged(object sender, EventArgs e)
-    {
-        if (txtAddress.Text == "")
-        {
-            txtAddress.Attributes.CssStyle["color"] = "grey";
-            txtAddress.Text = "Address 1";
-        }
-        else
-        {
-            txtAddress.Attributes.CssStyle["color"] = "black";
-        }
-    }
-
-    /// <summary>
-    /// TextChanged event changes text to a default value if blank
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void txtAddress2_TextChanged(object sender, EventArgs e)
-    {
-        if (txtAddress2.Text == "")
-        {
-            txtAddress2.Attributes.CssStyle["color"] = "grey";
-            txtAddress2.Text = "Address 2";
-        }
-        else
-        {
-            txtAddress2.Attributes.CssStyle["color"] = "black";
-        }
-    }
-
-    /// <summary>
-    /// TextChanged event changes text to a default value if blank
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void txtCity_TextChanged(object sender, EventArgs e)
-    {
-        if (txtCity.Text == "")
-        {
-            txtCity.Attributes.CssStyle["color"] = "grey";
-            txtCity.Text = "City";
-        }
-        else
-        {
-            txtCity.Attributes.CssStyle["color"] = "black";
-        }
-    }
-
-    /// <summary>
-    /// TextChanged event changes text to a default value if blank
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void txtZip_TextChanged(object sender, EventArgs e)
-    {
-        if (txtZip.Text == "")
-        {
-            txtZip.Attributes.CssStyle["color"] = "grey";
-            txtZip.Text = "Zip";
-        }
-        else
-        {
-            txtZip.Attributes.CssStyle["color"] = "black";
-        }
-    }
-
-    /// <summary>
-    /// TextChanged event changes text to a default value if blank
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void txtEmail_TextChanged(object sender, EventArgs e)
-    {
-        if (txtEmail.Text == "")
-        {
-            txtEmail.Attributes.CssStyle["color"] = "grey";
-            txtEmail.Text = "E-Mail";
-        }
-        else
-        {
-            txtEmail.Attributes.CssStyle["color"] = "black";
-        }
     }
 }

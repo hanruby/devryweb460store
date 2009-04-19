@@ -1,10 +1,9 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ViewProfile.aspx.cs" Inherits="ViewProfile" Title="View Profile" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ViewProfile.aspx.cs" Inherits="ViewProfile" Title="View Profile"%>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>Your Profile</title>
 </head>
-
 
 <body>
     <form id="viewProfile" runat="server">
@@ -84,9 +83,9 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" align="center">
+                <td colspan="2" align="right">
                     <asp:Button ID="btnEditProfile" runat="server" Text="Edit Profile" 
-                        onclick="btnEditProfile_Click" />
+                       onclick="btnEditProfile_Click" />
                 </td>
             </tr>
         </table>

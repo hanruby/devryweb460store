@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage2.master" AutoEventWireup="true"
-    CodeFile="CheckOut.aspx.cs" Inherits="CheckOut" %>
+    CodeFile="CheckOut.aspx.cs" Inherits="CheckOut" EnableEventValidation="false" %>
 
 <%@ Import Namespace="System.Collections.ObjectModel" %>
 <%@ Import Namespace="DataAccessModule" %>
@@ -9,10 +9,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="navMenuPH" runat="Server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent2" runat="Server">
-
     <!-- script manager for the page -->
     <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
+    
+ 
     <!-- view for logging in and registering/continueing without making an account -->
     <a href="CheckOut.aspx?CheckOut=true">Login</a> | <a href="CheckOut.aspx?Shipping=true">
         Shipping Information</a> | <a href="CheckOut.aspx?OrderReview=true">Order Review + PayPal</a>
@@ -27,9 +28,9 @@
                     <br />
                 </td>
                 <td>
-                    <asp:Login ID="Login1" runat="server" OnLoggedIn="LoggedIn" BackColor="#EFF3FB" BorderColor="#B5C7DE"
+                    <asp:Login ID="UserLogin" runat="server" OnLoggedIn="LoggedIn" BackColor="#EFF3FB" BorderColor="#B5C7DE"
                         BorderPadding="4" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana"
-                        Font-Size="12pt" ForeColor="#333333" Height="150px" Width="474px">
+                        Font-Size="12pt" ForeColor="#333333" Height="150px" Width="350px">
                         <TextBoxStyle Font-Size="12pt" Width="200" />
                         <LoginButtonStyle BackColor="White" BorderColor="#507CD1" BorderStyle="Solid" BorderWidth="1px"
                             Font-Names="Verdana" Font-Size="12pt" ForeColor="#284E98" />
@@ -139,7 +140,6 @@
                                 </td>
                                 <td>
                                     <asp:DropDownList ID="cboState" runat="server">
-                                    
                                     </asp:DropDownList>
                                 </td>
                             </tr>
@@ -159,32 +159,29 @@
                                 </td>
                                 <td>
                                     <asp:DropDownList ID="cboCountry" runat="server">
-                                   
-                        <asp:ListItem>United States Of America</asp:ListItem>
-                        <asp:ListItem>Antigua and Barbuda</asp:ListItem>
-                        <asp:ListItem>The Bahamas</asp:ListItem>
-                        <asp:ListItem>Barbados</asp:ListItem>
-                        <asp:ListItem>Belize</asp:ListItem>
-                        <asp:ListItem>Canada</asp:ListItem>
-                        <asp:ListItem>Costa Rica</asp:ListItem>
-                        <asp:ListItem>Cuba</asp:ListItem>
-                        <asp:ListItem>Dominica</asp:ListItem>
-                        <asp:ListItem>Dominican-Republic</asp:ListItem>
-                        <asp:ListItem>Greenland</asp:ListItem>
-                        <asp:ListItem>Grenada</asp:ListItem>
-                        <asp:ListItem>Guatemala</asp:ListItem>
-                        <asp:ListItem>Haiti</asp:ListItem>
-                        <asp:ListItem>Jamaica</asp:ListItem>
-                        <asp:ListItem>Mexico</asp:ListItem>
-                        <asp:ListItem>Nicaragua</asp:ListItem>
-                        <asp:ListItem>Panama</asp:ListItem>
-                        <asp:ListItem>Saint Kitts and Nevis</asp:ListItem>
-                        <asp:ListItem>Saint Lucia</asp:ListItem>
-                        <asp:ListItem>Saint Vincent and the Grenadines</asp:ListItem>
-                        <asp:ListItem>Trinidad and Tobago</asp:ListItem>
+                                        <asp:ListItem>United States Of America</asp:ListItem>
+                                        <asp:ListItem>Antigua and Barbuda</asp:ListItem>
+                                        <asp:ListItem>The Bahamas</asp:ListItem>
+                                        <asp:ListItem>Barbados</asp:ListItem>
+                                        <asp:ListItem>Belize</asp:ListItem>
+                                        <asp:ListItem>Canada</asp:ListItem>
+                                        <asp:ListItem>Costa Rica</asp:ListItem>
+                                        <asp:ListItem>Cuba</asp:ListItem>
+                                        <asp:ListItem>Dominica</asp:ListItem>
+                                        <asp:ListItem>Dominican-Republic</asp:ListItem>
+                                        <asp:ListItem>Greenland</asp:ListItem>
+                                        <asp:ListItem>Grenada</asp:ListItem>
+                                        <asp:ListItem>Guatemala</asp:ListItem>
+                                        <asp:ListItem>Haiti</asp:ListItem>
+                                        <asp:ListItem>Jamaica</asp:ListItem>
+                                        <asp:ListItem>Mexico</asp:ListItem>
+                                        <asp:ListItem>Nicaragua</asp:ListItem>
+                                        <asp:ListItem>Panama</asp:ListItem>
+                                        <asp:ListItem>Saint Kitts and Nevis</asp:ListItem>
+                                        <asp:ListItem>Saint Lucia</asp:ListItem>
+                                        <asp:ListItem>Saint Vincent and the Grenadines</asp:ListItem>
+                                        <asp:ListItem>Trinidad and Tobago</asp:ListItem>
                                     </asp:DropDownList>
-                                    
-                                   
                                 </td>
                             </tr>
                             <tr>
@@ -242,28 +239,23 @@
             </WizardSteps>
         </asp:CreateUserWizard>
     </div>
-    
     <!-- view for inputting in shipping  details -->
-    <div runat="server" id="billingInfo">
+    <div runat="server" id="billingInfo" class="billingInfo">
         <!-- display errors -->
         <asp:ValidationSummary ID="vsBillingInfo" runat="server" DisplayMode="List" />
-        
         <!-- start of table -->
-        <table>
-          <tr>
-          
+        <table class="shippingInfoBackground">
+            <tr>
                 <td colspan="2">
-                <h1>Shipping Information</h2>
-                <br />
+                    <h1>
+                        Shipping Information</h1>
+                    <br />
                 </td>
-               
             </tr>
-          <tr>
-          
+            <tr>
                 <th colspan="2">
-                Please make sure your shipping information is correct. Thank you!
+                    Please make sure your shipping information is correct. Thank you!
                 </th>
-               
             </tr>
             <tr>
                 <td>
@@ -416,7 +408,6 @@
                     Country:
                 </td>
                 <td>
-                
                     <asp:DropDownList ID="ddlCountry" runat="server">
                         <asp:ListItem Value="-1">Select</asp:ListItem>
                         <asp:ListItem>United States Of America</asp:ListItem>
@@ -457,17 +448,24 @@
         </table>
     </div>
     <!-- div for reviewing shopping cart information -->
-    <div runat="server" id="orderReview">
+    <div runat="server" id="orderReview"> 
+    
+    
         <h1>
             Order Review</h1>
         <!-- div for displaying item prices and quantity -->
-        <div style="font-family: Andalus; background-color: Olive;">
+          
+        <div class="OrderReviewCheckOutBodyBackground">
             <!-- shopping cart is empty message when anonymousUserName sessionID is empty -->
             <div runat="server" id="items">
             </div>
             <br />
+            <!-- div for spacing -->
+                <div style="padding:0px 20px 0px 20px">
             <h3>
                 Shipping Details:</h3>
+                
+               
             <!-- repeater to display shipping details -->
             <asp:Repeater runat="server" ID="rptShippingAddress">
                 <ItemTemplate>
@@ -534,11 +532,11 @@
                     Your Shopping Cart is empty.
                 </EmptyDataTemplate>
             </asp:GridView>
-            <br />
+          
             <!-- labels that display errors -->
             <asp:Label ID="lblError" runat="server" Text="" ForeColor="Red" Font-Size="10pt"></asp:Label>
             <asp:Label ID="lblQuantityError" runat="server" Text=" " ForeColor="Red" Font-Size="10pt"></asp:Label>
-            <br />
+           
             <div style="text-align: right;">
                 <!-- repeater for total price, tax, grosstotal, shipping? *future*??? -->
                 <asp:Repeater runat="server" ID="rptOne">
@@ -554,106 +552,103 @@
                     </ItemTemplate>
                 </asp:Repeater>
             </div>
+            
+            <!-- end of spacing div -->
+            </div>
+            
             <!-- end of shopping cart div -->
         </div>
         <!-- div for displaying update button -->
-        <div style="font-family: @Arial Unicode MS; background-color: Gray; height: auto;
-            text-align: center;" id="viewOrder">
+        <div class="OrderReviewCheckOutFooterBackground" id="viewOrder">
             <asp:Button ID="btnUpdateQuantity" runat="server" Text="Update Cart" OnClick="btnUpdateQuantity_Click" />
             <hr />
             <h2>
                 OR</h2>
             <hr />
-            
-            <form></form>
+            <!-- needs for to work -->
+            <form action="">
+            </form>
             <!-- check out with paypal   -->
             <div id="Div1" runat="server">
                 <% 
               
                        
               
-                        object customerID;
+                    object customerID;
 
-                        TextBox quantity;
-
-
-                        Label itemID;
-                        object orderID;
-                        object tax;
-                        double realTax;
-                       // double realOrderID;
-                        Label vendorID;
-                        Label totalIndividualItem;
-                        Label price;
-                        
-                        Label productName;
-
-                        // used to warn user if quantity entered is invalid
-                        // count and totalCount are used for counting 
-                        // the total price in the shopping cart
-                        int minQuantityInt;
-                        int quantityAvailableInt;
-                        int quantityInt;
-                        int count;
-                        int totalCount;
+                    TextBox quantity;
 
 
+                    Label itemID;
+                    object orderID;
+                    object tax;
+                    double realTax;
+                    // double realOrderID;
+                    Label vendorID;
+                    Label totalIndividualItem;
+                    Label price;
 
-                      
+                    Label productName;
+
+                    // used to warn user if quantity entered is invalid
+                    // count and totalCount are used for counting 
+                    // the total price in the shopping cart
+                    int minQuantityInt;
+                    int quantityAvailableInt;
+                    int quantityInt;
+                    int count;
+                    int totalCount;
 
 
 
 
-                        if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                    if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                    {
+                        // into the session
+
+
+                        Order order = new Order();
+                        order.CustomerId = int.Parse(GetCustomerID());
+                        order.TxnId = "";
+
+                        OrderDA orderDA = new OrderDA();
+
+                        Collection<Order> getOrder = orderDA.Get(order);
+
+
+                        orderID = getOrder[0].Id;
+                        tax = getOrder[0].Tax;
+
+                        realTax = double.Parse(tax.ToString(), System.Globalization.NumberStyles.Currency);
+
+
+
+
+                        //clear
+                        order = null;
+                        orderDA = null;
+                        getOrder = null;
+
+                        if (GridView1.Rows.Count > 0)
                         {
-                            // into the session
-                            DAL.DataAccess da20= new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                            // make command statement 
-                            string comm20 = "SELECT OrderID, Tax FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
-                            //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
-
-                            DataSet ds20 = new DataSet();
 
 
-                            // make arrays for paramaters and input
-                            string[] s20 = { "@customerID", "@txnID" };
-                            string[] v20 = { GetCustomerID(), "" };
-                            ds20 = da20.ExecuteQuery(comm20, s20, v20);
+                            Response.Write(" <form id='paypal' name='paypal' action='https://www.sandbox.paypal.com/us/cgi-bin/webscr' method='post' />");
+                            Response.Write(" <input type='hidden' name='cmd' value='_cart' />");
+                            Response.Write(" <input type='hidden' name='upload' value='1' />");
+                            Response.Write(" <input type='hidden' name='business' value='akagon_1236919720_biz@yahoo.com' />");
+                            Response.Write(" <input type='hidden' name='return' value='http://www.mypetsfavoritewebsite.com/PurchaseCompleted.aspx' />");
+                            Response.Write(" <input type='hidden' name='cancel_return' value='http://www.mypetsfavoritewebsite.com/PurchaseCancelled.aspx' />");
+                            Response.Write(" <input type='hidden' name='custom' value='" + orderID.ToString() + "' />");
 
+                            Response.Write("<input type='hidden' name='tax_cart' value='" + realTax.ToString("n2") + "' />");
 
-                            orderID = ds20.Tables[0].Rows[0]["OrderID"];
-                            tax = ds20.Tables[0].Rows[0]["Tax"];
-                            
-                            realTax = double.Parse(tax.ToString(), System.Globalization.NumberStyles.Currency);
-                            
-                            
-             
-                            
-                            //clear
-                            s20 = null;
-                            v20 = null;
-
-                            if (GridView1.Rows.Count > 0)
-                            {
-                              
-
-                                Response.Write(" <form id='paypal' name='paypal' action='https://www.sandbox.paypal.com/us/cgi-bin/webscr' method='post' />");
-                                Response.Write(" <input type='hidden' name='cmd' value='_cart' />");
-                                Response.Write(" <input type='hidden' name='upload' value='1' />");
-                                Response.Write(" <input type='hidden' name='business' value='akagon_1236919720_biz@yahoo.com' />");
-                                Response.Write(" <input type='hidden' name='return' value='http://www.mypetsfavoritewebsite.com/PurchaseCompleted.aspx' />");
-                                Response.Write(" <input type='hidden' name='cancel_return' value='http://www.mypetsfavoritewebsite.com/PurchaseCancelled.aspx' />");
-                                Response.Write(" <input type='hidden' name='custom' value='" + orderID.ToString() + "' />");
-
-                                Response.Write("<input type='hidden' name='tax_cart' value='" + realTax.ToString("n2") + "' />");
-
-                                Response.Write("<input type='hidden' name='currency_code' value='USD' />");
+                            Response.Write("<input type='hidden' name='currency_code' value='USD' />");
 
 
 
-                                // get customer shipping details to send to paypal
-                                 // get customer information to pass on to paypal
+                            // get customer shipping details to send to paypal
+                            // get customer information to pass on to paypal
                             //Instantiate our Customer specific DataAccess Class
                             CustomerDA customerDA = new CustomerDA();
 
@@ -668,183 +663,27 @@
                             //We will be returned a collection so lets Declare that and fill it using Get()
                             Collection<Customer> getCustomer = customerDA.Get(customer);
 
-                              
-                            
-                              
-                             
-                            
-                             
-                         
-
-
-
-                                // Enable override of payer's stored PayPal address. 
-                                Response.Write("<input type='hidden' name='address_override' value='1'/>");
-                                //<!-- Set prepopulation variables to override stored address. --> 
-                                Response.Write("<input type='hidden' name='first_name' value='" + getCustomer[0].FirstName.ToString()  + "' />");
-                                Response.Write("<input type='hidden' name='last_name' value='" + getCustomer[0].LastName.ToString()  + "' />");
-                                Response.Write("<input type='hidden' name='address1' value='" + getCustomer[0].Address.ToString() + " " + getCustomer[0].Address2.ToString() + "' />");
-                                Response.Write("<input type='hidden' name='state' value='" +  getCustomer[0].State.ToString() + "' />");
-                                Response.Write("<input type='hidden' name='city' value='" + getCustomer[0].City.ToString() + "' />");
-                                Response.Write("<input type='hidden' name='zip' value='" + getCustomer[0].Zip.ToString() + "' />");
-                                Response.Write("<input type='hidden' name='country' value='" + getCustomer[0].Country.ToString() + "' />");
-
-
-
-
-
-                                int itemCount = 1;
-                                int amountCount = 1;
-                                int quantityCount = 1;
-                                int itemNumberCount = 1;
-
-
-
-                                foreach (GridViewRow item in GridView1.Rows)
-                                {
-
-                                    //  
-                                    quantity = (TextBox)item.FindControl("txtQuantity");
-                                    itemID = (Label)item.FindControl("lblItemIDHidden");
-                                    productName = (Label)item.FindControl("lblItemNameAnswer");
-
-                                    price = (Label)item.FindControl("lblPrice");
-                                    totalIndividualItem = (Label)item.FindControl("lblTotaIndividualPrice");
-                                    vendorID = (Label)item.FindControl("lblVendorIDHidden");
-
-
-                                    double x = double.Parse(price.Text, System.Globalization.NumberStyles.Currency);
-
-
-                                    // get the item_name? plus the amount(price) and quantity(part of quantity is manual for now)
-                                    Response.Write("<input type='hidden' name='item_name_" + itemCount++ + "'" + " value='" + productName.Text +
-                                                        "'" + "  />");
-                                    Response.Write("<input type='hidden' name='amount_" + amountCount++ + "'" + " value='" + price.Text + "'" +
-                                    " />");
-                                    Response.Write("<input type='hidden' name='quantity_" + quantityCount++ + "'" + " value='" + quantity.Text + "' />");
-                                    Response.Write("<input type='hidden' name='item_number_" + itemNumberCount++ + "'" + " value='" +
-                                    itemID.Text + "' />");
-                                }
-                                // calculates total amount and submit input type
-                                Response.Write("<button type='submit'  value='Buy Now Using PayPal'><img src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif' width='125px' height='50px' /></button>" +
-                                       " </form>");
-
-                            }// end of if statement
-                        }
-
-                        else if (Session["AnonymousUserName"] != null)
-                        {
-                            // get the id of the user that I just created and put it
-                            // into the session
-                            DAL.DataAccess da19 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                            // make command statement 
-                            string comm19 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
-                            //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
-
-                            DataSet ds19 = new DataSet();
-
-
-                            // make arrays for paramaters and input
-                            string[] s19 = { "@username" };
-                            string[] v19 = { Session["AnonymousUserName"].ToString() };
-                            ds19 = da19.ExecuteQuery(comm19, s19, v19);
-
-
-                            customerID = ds19.Tables[0].Rows[0].ItemArray[0];
-
-
-
-                            //clear
-                            s19 = null;
-                            v19 = null;
-
-
-                            // into the session
-                            DAL.DataAccess da20 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                            // make command statement 
-                            string comm20 = "SELECT OrderID, Tax FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
-                            //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
-
-                            DataSet ds20 = new DataSet();
-
-
-                            // make arrays for paramaters and input
-                            string[] s20 = { "@customerID", "@txnID" };
-                            string[] v20 = { customerID.ToString(), "" };
-                            ds20 = da20.ExecuteQuery(comm20, s20, v20);
-
-
-                            orderID = ds20.Tables[0].Rows[0]["OrderID"];
-                            tax = ds20.Tables[0].Rows[0]["Tax"];
-
-
-                            //clear
-                            s19 = null;
-                            v19 = null; 
-                            
-                            
-                            if (GridView1.Rows.Count > 0)
-                        {
-                            
-                            // start of paypal form              
-                            Response.Write(" <form id='paypal' name='paypal' action='https://www.sandbox.paypal.com/us/cgi-bin/webscr' method='post' />");
-                            Response.Write(" <input type='hidden' name='cmd' value='_cart' />");
-                            Response.Write(" <input type='hidden' name='upload' value='1' />");
-                            Response.Write(" <input type='hidden' name='business' value='akagon_1236919720_biz@yahoo.com' />");
-                            Response.Write(" <input type='hidden' name='return' value='http://www.mypetsfavoritewebsite.com/PurchaseCompleted.aspx' />");
-                            Response.Write(" <input type='hidden' name='cancel_return' value='http://www.mypetsfavoritewebsite.com/PurchaseCancelled.aspx' />");
-                            Response.Write(" <input type='hidden' name='custom' value='" + orderID + "' />");
-
-                            Response.Write("<input type='hidden' name='tax_cart' value='" + tax + "' />");
-
-                            Response.Write("<input type='hidden' name='currency_code' value='USD' />");
-
-
                             
 
-                            // get customer information to pass on to paypal
-                            //Instantiate our Customer specific DataAccess Class
-                            CustomerDA customerDA = new CustomerDA();
 
-                            // check to see if user has items in their cart
-                            //Create an Object that specifies what we want to Get
-                            Customer customer = new Customer();
 
-                            //gets customer info based on customer id
-
-                            customer.Id = int.Parse(customerID.ToString());
-
-                            //We will be returned a collection so lets Declare that and fill it using Get()
-                            Collection<Customer> getCustomer = customerDA.Get(customer);
-                                
-                                
-                            
-                            
-                            
-                             
-                            
-                            
-                              
-                                  
-                             
-                       
                             // Enable override of payer's stored PayPal address. 
                             Response.Write("<input type='hidden' name='address_override' value='1'/>");
                             //<!-- Set prepopulation variables to override stored address. --> 
                             Response.Write("<input type='hidden' name='first_name' value='" + getCustomer[0].FirstName.ToString() + "' />");
                             Response.Write("<input type='hidden' name='last_name' value='" + getCustomer[0].LastName.ToString() + "' />");
-                            Response.Write("<input type='hidden' name='address1' value='" + getCustomer[0].Address.ToString() + " " + getCustomer[0].Address2.ToString() + "' />");
+                            Response.Write("<input type='hidden' name='address1' value='" + getCustomer[0].Address.ToString() + "' />");
+                            Response.Write("<input type='hidden' name='address2' value='" + getCustomer[0].Address2.ToString() + "' />");
                             Response.Write("<input type='hidden' name='state' value='" + getCustomer[0].State.ToString() + "' />");
                             Response.Write("<input type='hidden' name='city' value='" + getCustomer[0].City.ToString() + "' />");
                             Response.Write("<input type='hidden' name='zip' value='" + getCustomer[0].Zip.ToString() + "' />");
                             Response.Write("<input type='hidden' name='country' value='" + getCustomer[0].Country.ToString() + "' />");
 
-
-
-
-
+                            // clear
+                            customerDA = null;
+                            customer = null;
+                            getCustomer = null;
+                            
                             int itemCount = 1;
                             int amountCount = 1;
                             int quantityCount = 1;
@@ -882,7 +721,139 @@
                                    " </form>");
 
                         }// end of if statement
-                        }
+                    }
+
+                    else if (Session["AnonymousUserName"] != null)
+                    {
+
+                        Customer customerID2 = new Customer();
+                        customerID2.Username = Session["AnonymousUserName"].ToString();
+
+                        CustomerDA customerDA2 = new CustomerDA();
+
+                        Collection<Customer> getCustomer2 = customerDA2.Get(customerID2);
+
+                        customerID = getCustomer2[0].Id;
+
+
+                        //clear
+                        customerID2 = null;
+                        customerDA2 = null;
+                        getCustomer2 = null;
+
+
+                        Order order = new Order();
+                        order.CustomerId = int.Parse(GetCustomerID());
+                        order.TxnId = "";
+
+                        OrderDA orderDA = new OrderDA();
+
+                        Collection<Order> getOrder = orderDA.Get(order);
+
+
+                        orderID = getOrder[0].Id;
+                        tax = getOrder[0].Tax;
+
+
+                        //clear
+                        order = null;
+                        orderDA = null;
+                        getOrder = null;
+
+
+                        if (GridView1.Rows.Count > 0)
+                        {
+
+                            // start of paypal form              
+                            Response.Write(" <form id='paypal' name='paypal' action='https://www.sandbox.paypal.com/us/cgi-bin/webscr' method='post' />");
+                            Response.Write(" <input type='hidden' name='cmd' value='_cart' />");
+                            Response.Write(" <input type='hidden' name='upload' value='1' />");
+                            Response.Write(" <input type='hidden' name='business' value='akagon_1236919720_biz@yahoo.com' />");
+                            Response.Write(" <input type='hidden' name='return' value='http://www.mypetsfavoritewebsite.com/PurchaseCompleted.aspx' />");
+                            Response.Write(" <input type='hidden' name='cancel_return' value='http://www.mypetsfavoritewebsite.com/PurchaseCancelled.aspx' />");
+                            Response.Write(" <input type='hidden' name='custom' value='" + orderID + "' />");
+
+                            Response.Write("<input type='hidden' name='tax_cart' value='" + tax + "' />");
+
+                            Response.Write("<input type='hidden' name='currency_code' value='USD' />");
+
+
+
+                            // check to see if user has items in their cart
+                            //Create an Object that specifies what we want to Get
+                            Customer customer = new Customer();
+
+                            // get customer information to pass on to paypal
+                            //Instantiate our Customer specific DataAccess Class
+                            CustomerDA customerDA = new CustomerDA();
+
+                            // get customer info based on customer id
+
+                            customer.Id = int.Parse(customerID.ToString());
+
+                            //We will be returned a collection so lets Declare that and fill it using Get()
+                            Collection<Customer> getCustomer = customerDA.Get(customer);
+
+
+
+                            // Enable override of payer's stored PayPal address. 
+                            Response.Write("<input type='hidden' name='address_override' value='1'/>");
+                            //<!-- Set prepopulation variables to override stored address. --> 
+                            Response.Write("<input type='hidden' name='first_name' value='" + getCustomer[0].FirstName.ToString() + "' />");
+                            Response.Write("<input type='hidden' name='last_name' value='" + getCustomer[0].LastName.ToString() + "' />");
+                            Response.Write("<input type='hidden' name='address1' value='" + getCustomer[0].Address.ToString() +  "' />");
+                            Response.Write("<input type='hidden' name='address2' value='" + getCustomer[0].Address2.ToString() + "' />");
+                            Response.Write("<input type='hidden' name='state' value='" + getCustomer[0].State.ToString() + "' />");
+                            Response.Write("<input type='hidden' name='city' value='" + getCustomer[0].City.ToString() + "' />");
+                            Response.Write("<input type='hidden' name='zip' value='" + getCustomer[0].Zip.ToString() + "' />");
+                            Response.Write("<input type='hidden' name='country' value='" + getCustomer[0].Country.ToString() + "' />");
+                            
+                            // clear
+                            customerDA = null;
+                            customer = null;
+                            getCustomer = null;
+
+
+
+                            // create incremental variables
+                            int itemCount = 1;
+                            int amountCount = 1;
+                            int quantityCount = 1;
+                            int itemNumberCount = 1;
+
+
+
+                            foreach (GridViewRow item in GridView1.Rows)
+                            {
+
+                                //  
+                                quantity = (TextBox)item.FindControl("txtQuantity");
+                                itemID = (Label)item.FindControl("lblItemIDHidden");
+                                productName = (Label)item.FindControl("lblItemNameAnswer");
+
+                                price = (Label)item.FindControl("lblPrice");
+                                totalIndividualItem = (Label)item.FindControl("lblTotaIndividualPrice");
+                                vendorID = (Label)item.FindControl("lblVendorIDHidden");
+
+
+                                double x = double.Parse(price.Text, System.Globalization.NumberStyles.Currency);
+
+
+                                // get the item_name? plus the amount(price) and quantity(part of quantity is manual for now)
+                                Response.Write("<input type='hidden' name='item_name_" + itemCount++ + "'" + " value='" + productName.Text +
+                                                    "'" + "  />");
+                                Response.Write("<input type='hidden' name='amount_" + amountCount++ + "'" + " value='" + price.Text + "'" +
+                                " />");
+                                Response.Write("<input type='hidden' name='quantity_" + quantityCount++ + "'" + " value='" + quantity.Text + "' />");
+                                Response.Write("<input type='hidden' name='item_number_" + itemNumberCount++ + "'" + " value='" +
+                                itemID.Text + "' />");
+                            }
+                            // calculates total amount and submit input type
+                            Response.Write("<button type='submit'  value='Buy Now Using PayPal'><img src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif' width='125px' height='50px' /></button>" +
+                                   " </form>");
+
+                        }// end of if statement
+                    }
 
                         
                             

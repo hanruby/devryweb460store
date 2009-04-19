@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{97BEAA7C-1EA1-4A77-9FC1-1A9AF4D8C5BF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataAccessModule</RootNamespace>
+    <AssemblyName>DataAccessModule</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'TestDriver|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\TestDriver\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;TESTDRIVER</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.4.6.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\TesterBaseClass\TesterBaseClass.cs">
+      <Link>TesterBaseClass.cs</Link>
+    </Compile>
+    <Compile Include="Category.cs" />
+    <Compile Include="CategoryDA.cs" />
+    <Compile Include="CategoryMapper.cs" />
+    <Compile Include="DAConnect.cs" />
+    <Compile Include="ItemCategories.cs" />
+    <Compile Include="ItemCategoriesDA.cs" />
+    <Compile Include="ItemCategoriesMapper.cs" />
+    <Compile Include="MapperBase.cs" />
+    <Compile Include="NUintProductItem.cs" />
+    <Compile Include="NUnitCategory.cs" />
+    <Compile Include="NUnitItemCategories.cs" />
+    <Compile Include="NUnitTester.cs" />
+    <Compile Include="DataAccessBC.cs" />
+    <Compile Include="NUnitVendor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProductItemDA.cs" />
+    <Compile Include="ProductItemMapper.cs" />
+    <Compile Include="SQLServerConnector.cs" />
+    <Compile Include="ParmList.cs" />
+    <Compile Include="ProductItem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLServerConnect.cs" />
+    <Compile Include="Vendor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VendorDA.cs" />
+    <Compile Include="VendorMapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{EBE5BDE4-4032-4D2D-BB3C-6CC261F43B0C}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -33,27 +33,39 @@
         <td id="Td1" runat="server">
         </td>
     </EmptyItemTemplate>
-    <ItemTemplate>
-        <td id="Td1" runat="server" style="">
-            CategoryID:
-            <asp:Label ID="CategoryIDLabel" runat="server" Text='<%# Eval("CategoryID") %>'>
-            </asp:Label><br />
-            CategoryName:
+    <ItemTemplate >
+    
+     <td id="Td1" runat="server" class="cItemTemplate">
+    <!-- div for background image -->
+    <div class="categoriesItemTemplateBackground" >
+       
+           <br />
+         
             <asp:Label ID="CategoryNameLabel" runat="server" Text='<%# Eval("CategoryName") %>'>
             </asp:Label><br />
             
             <a href="Items.aspx?CategoryName=<%# Eval("CategoryName")  %>" ><asp:Image ID="imgItem" ImageUrl='<%# Eval("CategoryPhoto") %>' Width="100" Height="100" runat="server" /></a>
-        </td>
+        
+       </div>
+       
+       </td>
     </ItemTemplate>
-    <AlternatingItemTemplate>
-        <td id="Td2" runat="server" style="">
-            CategoryID:
-            <asp:Label ID="CategoryIDLabel" runat="server" Text='<%# Eval("CategoryID") %>'>
-            </asp:Label><br />
-            CategoryName:
+    <AlternatingItemTemplate >  
+    
+    
+     <td id="Td2" runat="server" class="cAlternativeItemTemplate">
+    <!-- div for background image -->
+    <div class="categoriesAlternativeItemTemplateBackground">
+    <!-- td for spacing and alignment -->
+     
+           <br />
+         
             <asp:Label ID="CategoryNameLabel" runat="server" Text='<%# Eval("CategoryName") %>'>
             </asp:Label><br />
             <a href="Items.aspx?CategoryName=<%# Eval("CategoryName")  %>" ><asp:Image ID="Image1" ImageUrl='<%# Eval("CategoryPhoto") %>' Width="100" Height="100" runat="server" /></a>
+     
+        
+        </div>
         </td>
     </AlternatingItemTemplate>
     <EmptyDataTemplate>
@@ -90,12 +102,12 @@
                 </td>
             </tr>
             <tr id="Tr2" runat="server">
-                <td id="Td4" runat="server" style="">
-                    <asp:DataPager ID="DataPager1" runat="server" PageSize="12">
+                <td id="Td4" runat="server" style="text-align:center;">
+                    <asp:DataPager ID="DataPager1" runat="server" PageSize="9">
                         <Fields>
                             <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" ShowNextPageButton="False"
                                 ShowPreviousPageButton="False" />
-                            <asp:NumericPagerField />
+                            <asp:NumericPagerField ButtonCount="5" />
                             <asp:NextPreviousPagerField ButtonType="Button" ShowLastPageButton="True" ShowNextPageButton="False"
                                 ShowPreviousPageButton="False" />
                         </Fields>
