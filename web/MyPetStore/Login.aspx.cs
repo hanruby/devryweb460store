@@ -313,4 +313,9 @@ public partial class Login : System.Web.UI.Page
 
         }
     }
+    protected void CancelButton_Click(object sender, EventArgs e)
+    {
+        // redirect user to the homepage
+        Response.Redirect("~/Default.aspx");
+    }
 }

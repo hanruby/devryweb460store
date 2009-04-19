@@ -16,8 +16,7 @@
                 <asp:Label ID="lblFirstName" runat="server" Text="First Name:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
-                <asp:TextBox ID="txtFirstName" runat="server" 
-                    ontextchanged="txtFirstName_TextChanged" AutoPostBack="true"></asp:TextBox>
+                <asp:TextBox ID="txtFirstName" runat="server" ></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -25,8 +24,7 @@
                 <asp:Label ID="lblLastName" runat="server" Text="Last Name:" Font-Bold="true"></asp:Label>         
             </td>
             <td>   
-                <asp:TextBox ID="txtLastName" runat="server" 
-                    ontextchanged="txtLastName_TextChanged" AutoPostBack="true"></asp:TextBox>
+                <asp:TextBox ID="txtLastName" runat="server" ></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -34,8 +32,7 @@
                 <asp:Label ID="lblAddress" runat="server" Text="Address:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
-                <asp:TextBox ID="txtAddress" runat="server" 
-                    ontextchanged="txtAddress_TextChanged" AutoPostBack="true"></asp:TextBox>
+                <asp:TextBox ID="txtAddress" runat="server" ></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -43,8 +40,7 @@
                 <asp:Label ID="lblAddress2" runat="server" Text="Address2:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
-                <asp:TextBox ID="txtAddress2" runat="server" 
-                    ontextchanged="txtAddress2_TextChanged" AutoPostBack="true"></asp:TextBox>
+                <asp:TextBox ID="txtAddress2" runat="server" ></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -52,8 +48,7 @@
                 <asp:Label ID="lblCity" runat="server" Text="City:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
-                <asp:TextBox ID="txtCity" runat="server" ontextchanged="txtCity_TextChanged"
-                 AutoPostBack="true"></asp:TextBox>
+                <asp:TextBox ID="txtCity" runat="server"></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -62,6 +57,57 @@
             </td>
             <td>
                 <asp:DropDownList ID="cboState" runat="server">
+                    <asp:ListItem>AK</asp:ListItem>
+                    <asp:ListItem>AL</asp:ListItem>
+                    <asp:ListItem>AR</asp:ListItem> 
+                    <asp:ListItem>AZ</asp:ListItem> 
+                    <asp:ListItem>CA</asp:ListItem> 
+                    <asp:ListItem>CO</asp:ListItem> 
+                    <asp:ListItem>CT</asp:ListItem> 
+                    <asp:ListItem>DC</asp:ListItem>               
+                    <asp:ListItem>DE</asp:ListItem> 
+                    <asp:ListItem>FL</asp:ListItem> 
+                    <asp:ListItem>GA</asp:ListItem> 
+                    <asp:ListItem>HI</asp:ListItem> 
+                    <asp:ListItem>IA</asp:ListItem> 
+                    <asp:ListItem>ID</asp:ListItem> 
+                    <asp:ListItem>IL</asp:ListItem> 
+                    <asp:ListItem>IN</asp:ListItem> 
+                    <asp:ListItem>KS</asp:ListItem>
+                    <asp:ListItem>KY</asp:ListItem>               
+                    <asp:ListItem>LA</asp:ListItem> 
+                    <asp:ListItem>MA</asp:ListItem> 
+                    <asp:ListItem>MD</asp:ListItem> 
+                    <asp:ListItem>ME</asp:ListItem> 
+                    <asp:ListItem>MI</asp:ListItem> 
+                    <asp:ListItem>MN</asp:ListItem> 
+                    <asp:ListItem>MO</asp:ListItem> 
+                    <asp:ListItem>MS</asp:ListItem> 
+                    <asp:ListItem>MT</asp:ListItem> 
+                    <asp:ListItem>NC</asp:ListItem>               
+                    <asp:ListItem>ND</asp:ListItem>
+                    <asp:ListItem>NE</asp:ListItem> 
+                    <asp:ListItem>NH</asp:ListItem> 
+                    <asp:ListItem>NJ</asp:ListItem> 
+                    <asp:ListItem>NM</asp:ListItem> 
+                    <asp:ListItem>NV</asp:ListItem> 
+                    <asp:ListItem>NY</asp:ListItem> 
+                    <asp:ListItem>OH</asp:ListItem> 
+                    <asp:ListItem>OK</asp:ListItem> 
+                    <asp:ListItem>OR</asp:ListItem>               
+                    <asp:ListItem>PA</asp:ListItem> 
+                    <asp:ListItem>RI</asp:ListItem> 
+                    <asp:ListItem>SC</asp:ListItem> 
+                    <asp:ListItem>SD</asp:ListItem> 
+                    <asp:ListItem>TN</asp:ListItem> 
+                    <asp:ListItem>TX</asp:ListItem> 
+                    <asp:ListItem>UT</asp:ListItem> 
+                    <asp:ListItem>VA</asp:ListItem> 
+                    <asp:ListItem>VT</asp:ListItem> 
+                    <asp:ListItem>WA</asp:ListItem> 
+                    <asp:ListItem>WI</asp:ListItem> 
+                    <asp:ListItem>WV</asp:ListItem>
+                    <asp:ListItem>WY</asp:ListItem>
                 </asp:DropDownList>
             </td>
         </tr>
@@ -70,8 +116,7 @@
                 <asp:Label ID="lblZip" runat="server" Text="Zip:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
-                <asp:TextBox ID="txtZip" runat="server" Columns="5" MaxLength="5" 
-                    ontextchanged="txtZip_TextChanged" AutoPostBack="true"></asp:TextBox>
+                <asp:TextBox ID="txtZip" runat="server" Columns="5" MaxLength="5"></asp:TextBox>
             </td>
         </tr>
         <tr>
@@ -110,8 +155,7 @@
                 <asp:Label ID="lblEmail" runat="server" Text="E-mail:" Font-Bold="true"></asp:Label>         
             </td>
             <td>
-                <asp:TextBox ID="txtEmail" runat="server" ontextchanged="txtEmail_TextChanged"
-                 AutoPostBack="true"></asp:TextBox>
+                <asp:TextBox ID="txtEmail" runat="server"></asp:TextBox>
             </td>
         </tr>
         <tr>
