@@ -12,6 +12,8 @@
     <!-- script manager for the page -->
     <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
+    
+ 
     <!-- view for logging in and registering/continueing without making an account -->
     <a href="CheckOut.aspx?CheckOut=true">Login</a> | <a href="CheckOut.aspx?Shipping=true">
         Shipping Information</a> | <a href="CheckOut.aspx?OrderReview=true">Order Review + PayPal</a>
@@ -28,7 +30,7 @@
                 <td>
                     <asp:Login ID="UserLogin" runat="server" OnLoggedIn="LoggedIn" BackColor="#EFF3FB" BorderColor="#B5C7DE"
                         BorderPadding="4" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana"
-                        Font-Size="12pt" ForeColor="#333333" Height="150px" Width="474px">
+                        Font-Size="12pt" ForeColor="#333333" Height="150px" Width="350px">
                         <TextBoxStyle Font-Size="12pt" Width="200" />
                         <LoginButtonStyle BackColor="White" BorderColor="#507CD1" BorderStyle="Solid" BorderWidth="1px"
                             Font-Names="Verdana" Font-Size="12pt" ForeColor="#284E98" />
@@ -446,17 +448,24 @@
         </table>
     </div>
     <!-- div for reviewing shopping cart information -->
-    <div runat="server" id="orderReview">
+    <div runat="server" id="orderReview"> 
+    
+    
         <h1>
             Order Review</h1>
         <!-- div for displaying item prices and quantity -->
-        <div style="font-family: Andalus; background-color: Olive;">
+          
+        <div class="OrderReviewCheckOutBodyBackground">
             <!-- shopping cart is empty message when anonymousUserName sessionID is empty -->
             <div runat="server" id="items">
             </div>
             <br />
+            <!-- div for spacing -->
+                <div style="padding:0px 20px 0px 20px">
             <h3>
                 Shipping Details:</h3>
+                
+               
             <!-- repeater to display shipping details -->
             <asp:Repeater runat="server" ID="rptShippingAddress">
                 <ItemTemplate>
@@ -543,11 +552,14 @@
                     </ItemTemplate>
                 </asp:Repeater>
             </div>
+            
+            <!-- end of spacing div -->
+            </div>
+            
             <!-- end of shopping cart div -->
         </div>
         <!-- div for displaying update button -->
-        <div style="font-family: @Arial Unicode MS; background-color: Gray; height: auto;
-            text-align: center;" id="viewOrder">
+        <div class="OrderReviewCheckOutFooterBackground" id="viewOrder">
             <asp:Button ID="btnUpdateQuantity" runat="server" Text="Update Cart" OnClick="btnUpdateQuantity_Click" />
             <hr />
             <h2>

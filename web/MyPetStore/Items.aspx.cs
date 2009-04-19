@@ -51,6 +51,8 @@ public partial class CategoryImages_Items : System.Web.UI.Page
 
         }
     }
+
+    // checks weather an item is on sale
     protected void CheckSale(object source, ListViewItemEventArgs e)
     {
 
