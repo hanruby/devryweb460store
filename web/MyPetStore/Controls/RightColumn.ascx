@@ -3,12 +3,17 @@
     <legend>Shopping Cart Items</legend>
     <br />
 <asp:Label ID="lblNoShoppingCartItems" runat="server" Text="" ></asp:Label>    
-  <asp:Repeater ID="rpShoppingCartItems" runat="server" >
+  <asp:Repeater ID="rpShoppingCartItems" runat="server"  >
 <ItemTemplate>
 
 <div class="rpShoppingCartItems">
 <br />
+<div style="text-align:left;">
+&nbsp;&nbsp;&nbsp;<asp:Label ID="lblItemNumber" runat="server" Text="" Font-Bold="true" Font-Size="18pt" ></asp:Label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="<%= Request.RawUrl %>?Delete=true&IID=<%# Eval("ItemID") %>&OID=<%# Eval("OrderID") %>&VID=<%# Eval("VendorID") %>">Delete</a>
+
+</div>
 <br />
 <asp:Label ID="lblProductName" runat="server" Text='<%# Eval("ProductName")%>'  ></asp:Label>
 <br />
@@ -29,3 +34,5 @@
   
  
 </fieldset>
+
+

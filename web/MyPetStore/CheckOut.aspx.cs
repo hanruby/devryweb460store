@@ -52,6 +52,11 @@ public partial class CheckOut : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
 
+        // clear lblError
+        lblError.Text = "";
+        lblQuantityError.Text = "";
+
+
         // for registration
         // create dropdownbox controls
         var cboState = (DropDownList)userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("cboState");
@@ -178,6 +183,11 @@ public partial class CheckOut : System.Web.UI.Page
                 // bind rptShipping
                 BindRPTShipping();
 
+
+                // check to see if any information is missing on OrderReview Page. If there is
+                // redirect the user.
+                EmptyShippingInfo();
+
                 //code for tablesorter ready gridviews
                 // check to see if gridview has data in it
                 // if gridview has data in it set everything
@@ -230,120 +240,134 @@ public partial class CheckOut : System.Web.UI.Page
         try
         {
 
-            if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+
+            foreach (GridViewRow row in GridView1.Rows)
             {
+                // Regex tagMatch = new Regex("<[^>]+>");
+                // gets the text of the control from the gridview
+                quantity = (TextBox)row.FindControl("txtQuantity");
+                itemID = (Label)row.FindControl("lblItemIDHidden");
+                orderID = (Label)row.FindControl("lblOrderIDHidden");
+                minQuantity = (Label)row.FindControl("lblMinQuantityAnswer");
+                quantityAvailable = (Label)row.FindControl("lblQuantityAvailableAnswer");
+                price = (Label)row.FindControl("lblPrice");
+                totalIndividualItem = (Label)row.FindControl("lblTotaIndividualPrice");
+                vendorID = (Label)row.FindControl("lblVendorIDHidden");
+                // make text from labels double types
+                addPrice = double.Parse(price.Text, System.Globalization.NumberStyles.Currency);
 
-                foreach (GridViewRow row in GridView1.Rows)
+                // quantityAvailable.Text = tagMatch.Replace(quantityAvailable.Text, "");
+                //  strText = tagMatch.Replace(strText, "");
+
+
+                minQuantityInt = int.Parse(minQuantity.Text, System.Globalization.NumberStyles.Integer);
+                quantityAvailableInt = int.Parse(quantityAvailable.Text, System.Globalization.NumberStyles.Integer);
+                quantityInt = int.Parse(quantity.Text, System.Globalization.NumberStyles.Integer);
+
+                double TotalPrice = addPrice * quantityInt;
+
+
+
+
+                // call method to validate quantity amount
+                ValidateQuantity(minQuantityInt, quantityAvailableInt, quantityInt);
+
+                if (quantityInt < minQuantityInt || quantityInt > quantityAvailableInt || quantityInt < 1)
                 {
-                    // Regex tagMatch = new Regex("<[^>]+>");
+                    quantity.BackColor = Color.Red;
 
-                    quantity = (TextBox)row.FindControl("txtQuantity");
-                    itemID = (Label)row.FindControl("lblItemIDHidden");
-                    orderID = (Label)row.FindControl("lblOrderIDHidden");
-                    minQuantity = (Label)row.FindControl("lblMinQuantityAnswer");
-                    quantityAvailable = (Label)row.FindControl("lblQuantityAvailableAnswer");
-                    price = (Label)row.FindControl("lblPrice");
-                    totalIndividualItem = (Label)row.FindControl("lblTotaIndividualPrice");
-                    vendorID = (Label)row.FindControl("lblVendorIDHidden");
-                    // make text from labels double types
-                    addPrice = double.Parse(price.Text, System.Globalization.NumberStyles.Currency);
-
-                    // quantityAvailable.Text = tagMatch.Replace(quantityAvailable.Text, "");
-                    //  strText = tagMatch.Replace(strText, "");
+                }
+                else
+                {
+                    // set quantity color back to original color
+                    quantity.BackColor = Color.White;
+                }
 
 
-                    minQuantityInt = int.Parse(minQuantity.Text, System.Globalization.NumberStyles.Integer);
-                    quantityAvailableInt = int.Parse(quantityAvailable.Text, System.Globalization.NumberStyles.Integer);
-                    quantityInt = int.Parse(quantity.Text, System.Globalization.NumberStyles.Integer);
-
-                    double TotalPrice = addPrice * quantityInt;
+                if (totalCount < 1)
+                {
 
 
 
+                    // calculate total price for each individual item
 
-                    // call method to validate quantity amount
-                    ValidateQuantity(minQuantityInt, quantityAvailableInt, quantityInt);
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.OrderId = int.Parse(orderID.Text);
+                    orderItem.ItemId = itemID.Text;
+                    orderItem.VendorId = int.Parse(vendorID.Text);
+                    orderItem.TotalPrice = decimal.Parse(TotalPrice.ToString("n2"));
+                    orderItem.Quantity = int.Parse(quantity.Text);
 
-                    //if (quantityInt < minQuantityInt || quantityInt > quantityAvailableInt || quantityInt < 1)
-                    //{
-                    //    quantity.BackColor = Color.Red;
+                    OrderItemDA orderItemDA = new OrderItemDA();
 
-                    //}
-                    //else
-                    //{
-                    //    // set quantity color back to original color
-                    //    quantity.BackColor = Color.White;
-                    //}
+                    //Save the Objects to the Database
+                    orderItemDA.Save(orderItem);
 
 
-                    if (totalCount < 1)
+                    //DAL.DataAccess da =
+                    //new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                    //         "System.Data.SqlClient");
+
+                    //string comm =
+                    //    "UPDATE OrderItem SET TotalPrice = @totalPrice, Quantity = @quantity WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
+
+                    //// array with quantity, itemID, orderiD, vendorID, and totalPrice
+                    //string[] p = { "@quantity", "@itemID", "@orderID", "@vendorID", "@totalPrice" };
+                    //string[] v = {
+                    //                 quantity.Text, itemID.Text, orderID.Text, vendorID.Text, TotalPrice.ToString("n2")
+                    //             };
+
+
+                    //da.ExecuteNonQuery(comm, p, v);
+
+                    // clear
+                    orderItem = null;
+                    orderItemDA = null;
+
+
+
+                    // add to total to calculate total 
+                    total += addPrice * Convert.ToDouble(quantity.Text);
+
+                    // access the checkbox
+                    CheckBox cb = (CheckBox)row.FindControl("ItemSelector");
+                    if (cb != null && cb.Checked)
                     {
 
+                        // delete item with specific itemID, orderId, and vendorId
+                        //OrderItem myOrderItemDelete = new OrderItem();
+
+                        //myOrderItemDelete.ItemId = itemID.Text;
+                        //myOrderItemDelete.OrderId = Convert.ToInt32(orderID.Text);
+                        //myOrderItemDelete.VendorId = Convert.ToInt32(vendorID.Text);
+
+                        //OrderItemDA orderItemDADelete = new OrderItemDA();
+                        //orderItemDADelete.Delete(myOrderItemDelete);
+
+                        DAL.DataAccess da3 =
+                       new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                          "System.Data.SqlClient");
+
+                        string comm3 =
+                            "Delete FROM OrderItem WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
+
+                        // array with itemID, orderID, and vendorID
+                        string[] p3 = { "@itemID", "@orderID", "@vendorID" };
+                        string[] v3 = { itemID.Text, orderID.Text, vendorID.Text };
 
 
-                        // calculate total price for each individual item
-                        //   double totalPrice = totalIndividualItemPrice*int.Parse((quantity.Text));
-
-                        DAL.DataAccess da =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        string comm =
-                            "UPDATE OrderItem SET TotalPrice = @totalPrice, Quantity = @quantity WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
-
-                        // array with quantity, itemID, orderiD, vendorID, and totalPrice
-                        string[] p = { "@quantity", "@itemID", "@orderID", "@vendorID", "@totalPrice" };
-                        string[] v = {
-                                         quantity.Text, itemID.Text, orderID.Text, vendorID.Text, TotalPrice.ToString("n2")
-                                     };
-
-
-                        da.ExecuteNonQuery(comm, p, v);
+                        da3.ExecuteNonQuery(comm3, p3, v3);
 
                         // clear
-                        p = null;
-                        v = null;
-
-                        // add to total to calculate total 
-                        total += addPrice * Convert.ToDouble(quantity.Text);
-
-                        // access the checkbox
-                        CheckBox cb = (CheckBox)row.FindControl("ItemSelector");
-                        if (cb != null && cb.Checked)
-                        {
-
-
-                            DAL.DataAccess da3 =
-                                new DAL.DataAccess(
-                                    ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                    "System.Data.SqlClient");
-
-                            string comm3 =
-                                "Delete FROM OrderItem WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
-
-                            // array with itemID, orderID, and vendorID
-                            string[] p3 = { "@itemID", "@orderID", "@vendorID" };
-                            string[] v3 = { itemID.Text, orderID.Text, vendorID.Text };
-
-
-                            da3.ExecuteNonQuery(comm3, p3, v3);
-
-                            // clear
-                            p3 = null;
-                            v3 = null;
-
-
-
-
-
-
-                        }
-
-
+                        p3 = null;
+                        v3 = null;
                     }
-
+                    // bind repeater and gridview
                     BindGridRepeater();
                 }
+
+
+
 
                 if (totalCount < 1)
                 {
@@ -376,12 +400,12 @@ public partial class CheckOut : System.Web.UI.Page
 
                     // redirect using if page ispost back so when user deletes
                     // items from shopping cart grosstotal, tax, and nettotal get updated.
-                    if (Page.IsPostBack)
-                    {
-                        Response.Redirect(Request.RawUrl);
-                        // UpdateQuantity();
-                        // Response.AppendHeader("Refresh", "0;URL=ShoppingCart.aspx");
-                    }
+                    //if (Page.IsPostBack)
+                    //{
+                    //    Response.Redirect("CheckOut.aspx?OrderReview=true");
+                    //    // UpdateQuantity();
+                    //    //Response.AppendHeader("Refresh", "0;URL=CheckOut.aspx?OrderReview=true");
+                    //}
 
 
 
@@ -441,24 +465,16 @@ public partial class CheckOut : System.Web.UI.Page
 
             // fill up repeater
             // instantiate class
-            DAL.DataAccess da2 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
 
-            // sql command
-            string comm2 =
-                "SELECT OrderID, CustomerID, GrossTotal, Tax, NetTotal, OrderID FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
+            Order order = new Order();
+            order.CustomerId = int.Parse(GetCustomerID());
+            order.TxnId = "";
+            OrderDA orderDA = new OrderDA();
+            Collection<Order> getOrder = orderDA.Get(order);
 
-            // data set
-            DataSet ds2 = new DataSet();
 
-            // empty array
-            string[] p2 = { "@customerID", "@txnID" };
-            string[] v2 = { GetCustomerID(), "" };
 
-            ds2 = da2.ExecuteQuery(comm2, p2, v2);
-
-            rptOne.DataSource = ds2.Tables[0];
+            rptOne.DataSource = getOrder;
             rptOne.DataBind();
 
             // clear
@@ -536,9 +552,6 @@ public partial class CheckOut : System.Web.UI.Page
                 "Shopping Cart couldn't be updated: quantity cannot be less than minimum quantity, quantity cannot be less than 1, and  quantity cannot be greater than quantity available" +
                 ".";
 
-
-
-
             }
 
 
@@ -571,7 +584,7 @@ public partial class CheckOut : System.Web.UI.Page
 
             //gets customer info based on customer username
 
-            customer.Username = Login1.UserName;
+            customer.Username = UserLogin.UserName;
 
             //We will be returned a collection so lets Declare that and fill it using Get()
             Collection<Customer> getCustomer = customerDA.Get(customer);
@@ -579,28 +592,24 @@ public partial class CheckOut : System.Web.UI.Page
 
             // count orders with customerid = @customerid and txtnid = @txnid
             // instantiate class
-            DAL.DataAccess da2 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
+            Order orders = new Order();
+            orders.CustomerId = getCustomer[0].Id;
+            orders.TxnId = "";
 
-            // sql command
-            string comm2 =
-                "SELECT Count(*) FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
+            OrderDA orderDA = new OrderDA();
+            Collection<Order> getOrders = orderDA.Get(orders);
 
-            // data set
-            DataSet ds2 = new DataSet();
 
-            // empty array
-            string[] p2 = { "@customerID", "@txnID" };
-            string[] v2 = { getCustomer[0].Id.ToString(), "" };
 
-            ds2 = da2.ExecuteQuery(comm2, p2, v2);
+            // returns number of orders
+            object getOrder = getOrders.Count;
 
-            object getOrder = ds2.Tables[0].Rows[0].ItemArray[0];
 
-            // clear
-            p2 = null;
-            v2 = null;
+            //clear
+            orders = null;
+            orderDA = null;
+            getOrders = null;
+
 
             // if the user who is logged has items in his cart as an anonymous user
             // delete the items he had previously on his cart and add the new items and order
@@ -614,49 +623,48 @@ public partial class CheckOut : System.Web.UI.Page
 
                 // get the orderID of the customer that he had on going order
                 // instantiate class
-                DAL.DataAccess da3 =
-                    new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                       "System.Data.SqlClient");
+                Order oID = new Order();
+                oID.CustomerId = getCustomer[0].Id;
+                oID.TxnId = "";
 
-                // sql command
-                string comm3 =
-                    "SELECT OrderID FROM Orders WHERE CustomerID = @customerID AND TXNID = @txnID";
-
-                // data set
-                DataSet ds3 = new DataSet();
-
-                // empty array
-                string[] p3 = { "@customerID", "@txnID" };
-                string[] v3 = { getCustomer[0].Id.ToString(), "" };
-
-                ds3 = da3.ExecuteQuery(comm3, p3, v3);
-
-                object getOrderID = ds3.Tables[0].Rows[0].ItemArray[0];
-
-                // clear
-                p3 = null;
-                v3 = null;
+                OrderDA ordersDA = new OrderDA();
+                Collection<Order> getOID = ordersDA.Get(oID);
 
 
 
+                // returns one item
+                object getOrderID = getOID[0].Id;
 
+
+                //clear
+                oID = null;
+                ordersDA = null;
+                getOID = null;
+
+
+
+                // delete the order and items that involve the order above 
                 // delete items from the orderItem table associated with that order if any
-                //Instantiate our Category specific DataAccess Class
-                //OrderDA deleteOrderItemDA = new OrderDA();
 
-                ////Create an Object that specifies what we want to Get
-                //Order deleteOrderItem = new Order();
+                //Create an Object that specifies what we want to Get
+                // OrderItem deleteOrderItem = new OrderItem(); 
+
+                //OrderItemDA deleteOrderItemDA = new OrderItemDA();
 
                 ////gets orderItem info based on customerID
 
-                //deleteOrderItem.Id = int.Parse(getOrderID.ToString());
+                //deleteOrderItem.OrderId = int.Parse(getOrderID.ToString());
 
                 //// deletes the orderItems with that customerID
                 //deleteOrderItemDA.Delete(deleteOrderItem);
+
+                //// clear
+                //deleteOrderItemDA = null;
+                //deleteOrderItem = null;
                 DAL.DataAccess da5 =
-                                              new DAL.DataAccess(
-                                                  ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                                  "System.Data.SqlClient");
+                                            new DAL.DataAccess(
+                                                ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                                "System.Data.SqlClient");
 
                 string comm5 =
                     "Delete FROM OrderItem WHERE OrderID = @orderID";
@@ -675,38 +683,24 @@ public partial class CheckOut : System.Web.UI.Page
 
 
 
+                // delete order
+                //Instantiate our Order specific DataAccess Class
+                OrderDA deleteOrderDA = new OrderDA();
 
-                // delete the order and items that involve the order above 
-                //Instantiate our Category specific DataAccess Class
-                //  OrderDA deleteOrderDA = new OrderDA();
+                //Create an Object that specifies what we want to Get
+                Order deleteOrder = new Order();
 
-                //  //Create an Object that specifies what we want to Get
-                //  Order deleteOrder = new Order();
+                //gets order info based on customerID
 
-                //  //gets order info based on customerID
+                deleteOrder.Id = int.Parse(getOrderID.ToString());
 
-                //  deleteOrder.Id = int.Parse(GetCustomerID());
+                // deletes the order with that customerID
+                deleteOrderDA.Delete(deleteOrder);
 
-                //// deletes the order with that customerID
-                // deleteOrderDA.Delete(deleteOrder);
-                DAL.DataAccess da7 =
-                                                 new DAL.DataAccess(
-                                                         ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                                         "System.Data.SqlClient");
-
-                string comm7 =
-                    "Delete FROM Orders WHERE OrderID = @orderID";
-
-                // array with orderID
-                string[] p7 = { "@orderID" };
-                string[] v7 = { getOrderID.ToString() };
-
-
-                da7.ExecuteNonQuery(comm7, p7, v7);
 
                 // clear
-                p7 = null;
-                v7 = null;
+                deleteOrderDA = null;
+                deleteOrder = null;
 
 
 
@@ -732,24 +726,23 @@ public partial class CheckOut : System.Web.UI.Page
                 //}
 
 
+
                 // get orderID of anonymous user
-                OrderDA orderDA = new OrderDA();
-
-
                 //Create an Object that specifies what we want to Get
-                Order order = new Order();
+                Order ordersID = new Order();
 
                 //gets order info based on customerID
+                ordersID.CustomerId = getCustomer2[0].Id;
 
-                order.CustomerId = getCustomer2[0].Id;
+                OrderDA ordersIDDA = new OrderDA();
+
 
                 // deletes the order with that customerID
-                Collection<Order> getOrder2 = orderDA.Get(order);
+                Collection<Order> getOrder2 = ordersIDDA.Get(ordersID);
 
 
 
                 // update the customerid of the anonymous order to the customer, of the user who just logged on
-
                 DAL.DataAccess da4 =
                     new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
                                        "System.Data.SqlClient");
@@ -770,9 +763,26 @@ public partial class CheckOut : System.Web.UI.Page
                 v4 = null;
 
 
-                // clear session and abandon it
-                Session.Clear();
+
+                // delete anonymous customer from customer table
+                Customer customers = new Customer();
+                customers.Id = getCustomer2[0].Id;
+
+                CustomerDA customersDA = new CustomerDA();
+
+                customersDA.Delete(customers);
+
+                // clear
+                customers = null;
+                customersDA = null;
+
+
+
+
+                //  abandon session
                 Session.Abandon();
+
+
 
             }
             // if user doesn't have an on going order just
@@ -801,19 +811,18 @@ public partial class CheckOut : System.Web.UI.Page
 
 
                 // get orderID of anonymous user based on customerID
-                OrderDA orderDA = new OrderDA();
+                OrderDA ordersIDDA = new OrderDA();
 
 
                 //Create an Object that specifies what we want to Get
-                Order order = new Order();
+                Order ordersID = new Order();
 
                 //gets order info based on customerID
 
-                order.CustomerId = getCustomer2[0].Id;
+                ordersID.CustomerId = getCustomer2[0].Id;
 
                 // deletes the order with that customerID
-                Collection<Order> getOrder2 = orderDA.Get(order);
-
+                Collection<Order> getOrder2 = ordersIDDA.Get(ordersID);
 
 
                 // update the customerid of the anonymous order to the customer, of the user who just logged on
@@ -838,8 +847,39 @@ public partial class CheckOut : System.Web.UI.Page
                 v4 = null;
 
 
-                // clear session and abandon it
-                Session.Clear();
+
+                // delete anonymous customer from customer table
+                Customer customers = new Customer();
+                customers.Id = getCustomer2[0].Id;
+
+                CustomerDA customersDA = new CustomerDA();
+
+                customersDA.Delete(customers);
+
+                // clear
+                customers = null;
+                customersDA = null;
+
+                //DAL.DataAccess da8 =
+                //                                 new DAL.DataAccess(
+                //                                         ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                //                                         "System.Data.SqlClient");
+
+                //string comm8 =
+                //    "Delete FROM Customer WHERE CustomerID = @customerID";
+
+                //// array with customerID
+                //string[] p8 = { "@customerID" };
+                //string[] v8 = { getCustomer2[0].Id.ToString() };
+
+
+                //da8.ExecuteNonQuery(comm8, p8, v8);
+
+                //// clear
+                //p8 = null;
+                //v8 = null;
+
+                // abandon session              
                 Session.Abandon();
             }
 
@@ -855,38 +895,42 @@ public partial class CheckOut : System.Web.UI.Page
     {
 
 
-        // DAL
-        //// update user shipping information
-        //// create customer objects
-        //var customer = new Customer("", true, User.Identity.Name, 
-        //    txtFirstName.Text, txtLastName.Text, txtAddress1.Text, txtAddress2.Text, txtCity.Text, 
-        //    ddlState.SelectedItem.Text, txtZipCode.Text, ddlCountry.Text);
-
-        ////Instantiate our CustomerDA specific DataAccess Class
-        //CustomerDA customerDA = new CustomerDA();
-
-        ////Save the Objects to the Database
-        //customerDA.Save(customer);
-
-
         // update info for anonymous users of orders table for the customer / anonymous user
-        DAL.DataAccess da1 =
-            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                               "System.Data.SqlClient");
 
-        string comm1 =
-            "UPDATE Customer SET FName = @fName, LName = @lName, Address = @address, Address2 = @address2, City = @city, State = @state, Zip = @zip, Country = @country  WHERE CustomerID = @customerID";
+        Customer customers = new Customer();
+        customers.Id = int.Parse(GetCustomerID());
+        customers.FirstName = txtFirstName.Text;
+        customers.LastName = txtLastName.Text;
+        customers.Address = txtAddress1.Text;
+        customers.Address2 = txtAddress2.Text;
+        customers.City = txtCity.Text;
+        customers.State = ddlState.SelectedItem.Text;
+        customers.Zip = txtZipCode.Text;
+        customers.Country = ddlCountry.SelectedItem.Text;
 
-        // empty array
-        string[] p1 = { "@fName", "@lName", "@address", "@address2", "@city", "@state", "@zip", "@country", "@customerID" };
-        string[] v1 = { txtFirstName.Text, txtLastName.Text, txtAddress1.Text, txtAddress2.Text, txtCity.Text, ddlState.SelectedItem.Text, txtZipCode.Text, ddlCountry.SelectedItem.Text, GetCustomerID() };
+        CustomerDA customersDA = new CustomerDA();
+
+        customersDA.Save(customers);
 
 
-        da1.ExecuteNonQuery(comm1, p1, v1);
+
+        //DAL.DataAccess da1 =
+        //    new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+        //                       "System.Data.SqlClient");
+
+        //string comm1 =
+        //    "UPDATE Customer SET FName = @fName, LName = @lName, Address = @address, Address2 = @address2, City = @city, State = @state, Zip = @zip, Country = @country  WHERE CustomerID = @customerID";
+
+        //// empty array
+        //string[] p1 = { "@fName", "@lName", "@address", "@address2", "@city", "@state", "@zip", "@country", "@customerID" };
+        //string[] v1 = { txtFirstName.Text, txtLastName.Text, txtAddress1.Text, txtAddress2.Text, txtCity.Text, ddlState.SelectedItem.Text, txtZipCode.Text, ddlCountry.SelectedItem.Text, GetCustomerID() };
+
+
+        //da1.ExecuteNonQuery(comm1, p1, v1);
 
         // clear
-        p1 = null;
-        v1 = null;
+        customers = null;
+        customersDA = null;
 
 
         // redirect the user       
@@ -897,16 +941,16 @@ public partial class CheckOut : System.Web.UI.Page
     {
         if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated || Session["AnonymousUserName"] != null)
         {
-            //Instantiate our Category specific DataAccess Class
-            CustomerDA customerDA = new CustomerDA();
-
-            // check to see if user has items in their cart
-            //Create an Object that specifies what we want to Get
-            Customer customer = new Customer();
 
             //gets customer info based on customer id
 
+
+            Customer customer = new Customer();
+
+
             customer.Id = int.Parse(GetCustomerID());
+
+            CustomerDA customerDA = new CustomerDA();
 
             //We will be returned a collection so lets Declare that and fill it using Get()
             Collection<Customer> getCustomer = customerDA.Get(customer);
@@ -916,10 +960,12 @@ public partial class CheckOut : System.Web.UI.Page
             {
                 txtFirstName.Text = getCustomer[0].FirstName;
             }
+
             if (getCustomer[0].LastName != "")
             {
                 txtLastName.Text = getCustomer[0].LastName;
             }
+
             if (getCustomer[0].Address != "")
             {
                 txtAddress1.Text = getCustomer[0].Address;
@@ -946,6 +992,67 @@ public partial class CheckOut : System.Web.UI.Page
             if (getCustomer[0].Country != "")
             {
                 ddlCountry.Text = getCustomer[0].Country;
+            }
+        }
+    }
+
+    // if shipping details are empty redirect the user to shipping=true
+    public void EmptyShippingInfo()
+    {
+        // makes sure vales are not empty to avoid nullreference exception
+        if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated || Session["AnonymousUserName"] != null)
+        {
+            //Instantiate our customer specific DataAccess Class
+            CustomerDA customerDA = new CustomerDA();
+
+            // check to see if user has items in their cart
+            //Create an Object that specifies what we want to Get
+            Customer customer = new Customer();
+
+            //gets customer info based on customer id
+
+            customer.Id = int.Parse(GetCustomerID());
+
+            //We will be returned a collection so lets Declare that and fill it using Get()
+            Collection<Customer> getCustomer = customerDA.Get(customer);
+
+            // makes sure vales are not empty to avoid nullreference exception
+            if (getCustomer[0].FirstName == "")
+            {
+                Response.Redirect("CheckOut.aspx?Shipping=true");
+            }
+
+            if (getCustomer[0].LastName == "")
+            {
+                Response.Redirect("CheckOut.aspx?Shipping=true");
+            }
+
+            if (getCustomer[0].Address == "")
+            {
+                Response.Redirect("CheckOut.aspx?Shipping=true");
+            }
+            if (getCustomer[0].Address2 == "")
+            {
+                Response.Redirect("CheckOut.aspx?Shipping=true");
+            }
+
+            if (getCustomer[0].City == "")
+            {
+                Response.Redirect("CheckOut.aspx?Shipping=true");
+            }
+
+            if (getCustomer[0].State == "")
+            {
+                Response.Redirect("CheckOut.aspx?Shipping=true");
+            }
+            if (getCustomer[0].Zip == "")
+            {
+                Response.Redirect("CheckOut.aspx?Shipping=true");
+            }
+
+            if (getCustomer[0].Country == "")
+            {
+                Response.Redirect("CheckOut.aspx?Shipping=true");
             }
         }
     }
@@ -1004,13 +1111,17 @@ public partial class CheckOut : System.Web.UI.Page
     // redirect user to shipping
     protected void ReconfigureOrder(object sender, EventArgs e)
     {
-        // seeing if there is an order just in case I missed something
+
         if (Session["AnonymousUserName"] != null)
         {
-            //Instantiate our Category specific DataAccess Class
+
+            // get customerid of user to use customer id
+            // for updating user information
+
+            //Instantiate our customer specific DataAccess Class
             CustomerDA customerDA = new CustomerDA();
 
-            // check to see if user has items in their cart
+
             //Create an Object that specifies what we want to Get
             Customer customer = new Customer();
 
@@ -1044,33 +1155,39 @@ public partial class CheckOut : System.Web.UI.Page
             DropDownList country =
                        (DropDownList)userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("cboCountry");
 
-            // update total of orders table for the customer
-            DAL.DataAccess da1 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
 
-            string comm1 =
-                "UPDATE Customer SET IsActive = @isActive, UserName = @userName, FName = @fName, LName = @lName, Address = @address, Address2 = @address2, City = @city, State = @state, Zip = @zip, Country = @country  WHERE CustomerID = @customerID";
+            // update customer information      
+            Customer customerShipping = new Customer();
+            customerShipping.Id = getCustomer[0].Id;
+            customerShipping.IsActive = true;
+            customerShipping.Username = userName.Text;
+            customerShipping.FirstName = firstName.Text;
+            customerShipping.LastName = lastName.Text;
+            customerShipping.Address = address.Text;
+            customerShipping.Address2 = address2.Text;
+            customerShipping.City = city.Text;
+            customerShipping.State = state.Text;
+            customerShipping.Zip = zipCode.Text;
+            customerShipping.Country = country.Text;
 
-            // empty array
-            string[] p1 = { "@isActive", "@userName", "@fName", "@lName", "@address", "@address2", "@city", "@state", "@zip", "@country", "@customerID" };
-            string[] v1 = { "True", userName.Text, lastName.Text, lastName.Text, address.Text, address2.Text, city.Text, state.Text, zipCode.Text, country.Text, getCustomer[0].Id.ToString() };
+
+            //Instantiate our customer specific DataAccess Class
+            CustomerDA customerDAShipping = new CustomerDA();
 
 
-
-            da1.ExecuteNonQuery(comm1, p1, v1);
+            // save customer information
+            customerDAShipping.Save(customerShipping);
 
             // clear
-            p1 = null;
-            v1 = null;
+            customerShipping = null;
+            customerDAShipping = null;
 
 
             // LogIn User
             System.Web.Security.FormsAuthentication.SetAuthCookie(userName.Text, false);
 
 
-            // clear and abanden the session
-            Session.Clear();
+            // abandon the session
             Session.Abandon();
 
             // redirect user to shipping=true
@@ -1091,68 +1208,50 @@ public partial class CheckOut : System.Web.UI.Page
     // retrieves customerID of anonymous and customer 
     public string GetCustomerID()
     {
+
         if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
         {
 
             // get the customerID of the user who is logged on
-            DAL.DataAccess da5 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
+            Customer customerIDID = new Customer();
+            customerIDID.Username = User.Identity.Name;
+            CustomerDA customerIDDA = new CustomerDA();
 
-            // make command statement 
-            string comm5 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
+            Collection<Customer> getCustomers3 = customerIDDA.Get(customerIDID);
 
-            DataSet ds5 = new DataSet();
-
-
-            // make arrays for paramaters and input
-            string[] s5 = { "@username" };
-            string[] v5 = { User.Identity.Name };
-            ds5 = da5.ExecuteQuery(comm5, s5, v5);
+            customerID = getCustomers3[0].Id;
 
 
-            // returns one item
-            customerID = ds5.Tables[0].Rows[0].ItemArray[0];
+            // clear
+            customerIDID = null;
+            customerIDDA = null;
+            getCustomers3 = null;
 
-
-            //clear
-            s5 = null;
-            v5 = null;
 
             return customerID.ToString();
         }
         else
         {
             // get the customerID of the user who is logged on
-            DAL.DataAccess da5 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
+            // get the customerID of the user who is logged on
+            Customer customerIDID = new Customer();
+            customerIDID.Username = Session["AnonymousUserName"].ToString();
 
-            // make command statement 
-            string comm5 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
+            CustomerDA customerIDDA = new CustomerDA();
 
-            DataSet ds5 = new DataSet();
+            Collection<Customer> getCustomers3 = customerIDDA.Get(customerIDID);
 
+            customerID = getCustomers3[0].Id;
 
-            // make arrays for paramaters and input
-            string[] s5 = { "@username" };
-            string[] v5 = { Session["AnonymousUserName"].ToString() };
-            ds5 = da5.ExecuteQuery(comm5, s5, v5);
-
-
-            // returns one item
-            customerID = ds5.Tables[0].Rows[0].ItemArray[0];
-
-
-            //clear
-            s5 = null;
-            v5 = null;
+            // clear
+            customerIDID = null;
+            customerIDDA = null;
+            getCustomers3 = null;
 
             return customerID.ToString();
         }
+
+
     }
-
-
-
 
 }

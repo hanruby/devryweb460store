@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using DataAccessModule;
 /**
  * Author: Daniel Aguayo
  * 
@@ -22,6 +23,8 @@ public partial class RightColumn : System.Web.UI.UserControl
 
         if (!Page.IsPostBack)
         {
+
+
             ////code for tablesorter ready gridviews
             //if (this.gvShoppingCartItems.Rows.Count > 0)
             //{
@@ -35,6 +38,9 @@ public partial class RightColumn : System.Web.UI.UserControl
             // bind grid view
             BindGridRepeater();
 
+            // display number
+            AddNumber();
+
             if (rpShoppingCartItems.Items.Count > 0)
             {
 
@@ -44,24 +50,35 @@ public partial class RightColumn : System.Web.UI.UserControl
                 // delete item with specific itemID, orderID, and VendorID 
                 if (Request.QueryString["Delete"] == "true" && Request.QueryString["Delete"] != null && System.Web.HttpContext.Current.User.Identity.IsAuthenticated || Session["AnonymousUserName"] != null)
                 {
-                    // deletes orderItem from shopping cart
-                    DAL.DataAccess da = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
-
-                    string comm = "Delete FROM OrderItem WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
-
-                    // array with itemID, orderID, and vendorID
-                    string[] p = { "@itemID", "@orderID", "@vendorID" };
-                    string[] v = { Request.QueryString["IID"], Request.QueryString["OID"], Request.QueryString["VID"] };
+                    try
+                    {
 
 
-                    da.ExecuteNonQuery(comm, p, v);
+                        // deletes orderItem from shopping cart
+                        OrderItem orderItem = new OrderItem();
+                        orderItem.ItemId = Request.QueryString["IID"];
+                        orderItem.OrderId = int.Parse(Request.QueryString["OID"]);
+                        orderItem.VendorId = int.Parse(Request.QueryString["VID"]);
 
-                    // clear
-                    p = null;
-                    v = null;
+                        OrderItemDA orderItemDA = new OrderItemDA();
 
-                    // redirects back to previous page
-                    Response.Redirect(Request.UrlReferrer.ToString());
+                        orderItemDA.Delete(orderItem);
+
+                        // clear
+                        orderItem = null;
+                        orderItemDA = null;
+
+                        // redirects back to previous page
+                        Response.Redirect(Request.UrlReferrer.ToString());
+                    }
+                    catch (NullReferenceException)
+                    {
+
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                 }
             }
             else
@@ -131,62 +148,59 @@ public partial class RightColumn : System.Web.UI.UserControl
         if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
         {
 
+
             // get the customerID of the user who is logged on
-            DAL.DataAccess da5 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
+            Customer customer = new Customer();
+            customer.Username = Membership.GetUser().UserName;
+            CustomerDA customerDA = new CustomerDA();
 
-            // make command statement 
-            string comm5 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
+            Collection<Customer> getCustomers = customerDA.Get(customer);
 
-            DataSet ds5 = new DataSet();
-
-
-            // make arrays for paramaters and input
-            string[] s5 = { "@username" };
-            string[] v5 = { Membership.GetUser().UserName };
-            ds5 = da5.ExecuteQuery(comm5, s5, v5);
+            customerID = getCustomers[0].Id;
 
 
-            // returns one item
-            customerID = ds5.Tables[0].Rows[0].ItemArray[0];
+            // clear
+            customer = null;
+            customerDA = null;
 
-
-            //clear
-            s5 = null;
-            v5 = null;
 
             return customerID.ToString();
         }
         else
         {
-            // get the customerID of the user who is logged on
-            DAL.DataAccess da5 =
-                new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                   "System.Data.SqlClient");
+            // get the customerID of the user who is not logged on
 
-            // make command statement 
-            string comm5 = "SELECT CustomerID FROM Customer WHERE UserName = @username";
+            Customer customer = new Customer();
+            customer.Username = Session["AnonymousUserName"].ToString();
+            CustomerDA customerDA = new CustomerDA();
 
-            DataSet ds5 = new DataSet();
+            Collection<Customer> getCustomers = customerDA.Get(customer);
 
-
-            // make arrays for paramaters and input
-            string[] s5 = { "@username" };
-            string[] v5 = { Session["AnonymousUserName"].ToString() };
-            ds5 = da5.ExecuteQuery(comm5, s5, v5);
+            customerID = getCustomers[0].Id;
 
 
-            // returns one item
-            customerID = ds5.Tables[0].Rows[0].ItemArray[0];
-
-
-            //clear
-            s5 = null;
-            v5 = null;
+            // clear
+            customer = null;
+            customerDA = null;
 
             return customerID.ToString();
         }
     }
 
+
+    private void AddNumber()
+    {
+        int count = 1;
+
+        foreach (RepeaterItem item in rpShoppingCartItems.Items)
+        {
+
+
+            Label itemNumber = (Label)item.FindControl("lblItemNumber");
+
+            itemNumber.Text = count++.ToString();
+        }
+
+
+    }
 }

@@ -16,15 +16,17 @@
     </asp:ScriptManager>
 
 <!-- top div -->
-<div style="font-family:@Arial Unicode MS; background-color:Gray;">
+<div class="shoppingCartHeader">
+<img src="Images/shoppingCartCart.png" alt="Shoping Cart." class="shoppingCartImage" />
 <h1 style="font-size:40pt">Shopping Cart</h1>
+
 </div>
 
 <!-- div for displaying item prices and quantity -->
-<div style="font-family:Andalus; background-color:Olive;" >
+<div class="shoppingCartBody" >
 
 <!-- shopping cart is empty message when anonymousUserName sessionID is empty -->
-<div runat="server" id="items"></div>
+<div runat="server" id="items" ></div>
 
 <!-- GridView to display items -->
 <br />
@@ -96,7 +98,7 @@ Your Shopping Cart is empty.
 
 
 <!-- div for displaying total price and tax -->
-<div style="font-family:@Arial Unicode MS; background-color:Gray; height:auto; text-align:center;" id="viewOrder">
+<div class="shoppingCartFooter" id="viewOrder">
 
  
 <!-- repeater for total price, tax, grosstotal, shipping? -->
