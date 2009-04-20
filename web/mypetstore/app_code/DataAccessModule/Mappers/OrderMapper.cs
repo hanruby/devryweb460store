@@ -54,7 +54,7 @@ namespace DataAccessModule
 
             //Date
             if (record[OrderTable.DateColumn] != DBNull.Value)
-                order.Date = (string)record[OrderTable.DateColumn];
+                order.Date = (DateTime)record[OrderTable.DateColumn];
 
             return order;
         }

@@ -17,6 +17,7 @@ public partial class Controls_ViewOrders2 : System.Web.UI.UserControl
     {
         if (!IsPostBack && Request.QueryString["OrderID"] != "" && Request.QueryString["OrderID"] != null)
         {
+            txtOrderID.Text = Request.QueryString["OrderID"];
             GetOrderInfo();
         }
     }

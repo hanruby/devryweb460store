@@ -23,14 +23,14 @@ namespace DataAccessModule
         private decimal? tax;
         private decimal? netTotal;
         private string txnId;
-        private string date;
+        private DateTime? date;
 
 
         public Order()
         {
         }
 
-        public Order(int id, int customerId, decimal grossTotal, decimal tax, decimal netTotal, string txnId, string date)
+        public Order(int id, int customerId, decimal grossTotal, decimal tax, decimal netTotal, string txnId, DateTime date)
         {
             this.id = id;
             this.customerId = customerId;
@@ -38,6 +38,7 @@ namespace DataAccessModule
             this.tax = tax;
             this.netTotal = netTotal;
             this.txnId = txnId;
+            this.date = date;
         }
 
         #region Properties
@@ -77,7 +78,7 @@ namespace DataAccessModule
             set { txnId = value; }
         }
 
-        public string Date
+        public DateTime? Date
         {
             get { return date; }
             set { date = value; }

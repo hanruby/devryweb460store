@@ -156,8 +156,14 @@ public partial class RightColumn : System.Web.UI.UserControl
 
             Collection<Customer> getCustomers = customerDA.Get(customer);
 
-            customerID = getCustomers[0].Id;
-
+            if (getCustomers.Count > 0)
+            {
+                customerID = getCustomers[0].Id;
+            }
+            else
+            {
+                customerID = 0;
+            }
 
             // clear
             customer = null;
