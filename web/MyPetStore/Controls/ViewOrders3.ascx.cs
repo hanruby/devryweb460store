@@ -63,9 +63,12 @@ public partial class Controls_ViewOrders3 : System.Web.UI.UserControl
         DataSet ds = new DataSet();
 
         string s1;
-        string p = "";
-        string v = "";
         string s2 = "";
+        int fields = CountUsedFields();
+        int p;
+        string[] p1 = new string[fields];
+        string[] v1 = new string[fields];
+        
 
         s1 = "SELECT o.* FROM Orders o " +
             "RIGHT OUTER JOIN Customer c ON o.CustomerID = c.CustomerID ";
@@ -80,88 +83,138 @@ public partial class Controls_ViewOrders3 : System.Web.UI.UserControl
         if (Orders_OrderDate_Start != "")
         {
             s2 += "AND o.OrderDate >= @OrderDate ";
-            p += "\"@OrderDate\", ";
-            v += "\"" + Orders_OrderDate_Start + "\", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@OrderDate";
+            v1[p] = Orders_OrderDate_Start;
         }
 
         if (Orders_OrderDate_End != "")
         {
             s2 += "AND o.OrderDate <= @OrderDate ";
-            p += "\"@OrderDate\", ";
-            v += "\"" + Orders_OrderDate_End + "\", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@OrderDate";
+            v1[p] = Orders_OrderDate_End;
         }
 
         if (Orders_NetTotal_Start != "")
         {
             s2 += "AND o.NetTotal >= @NetTotal ";
-            p += "@NetTotal, ";
-            v += Orders_NetTotal_Start + ", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@NetTotal, ";
+            v1[p] = Orders_NetTotal_Start + ", ";
         }
 
         if (Orders_NetTotal_End != "")
         {
             s2 += "AND o.NetTotal <= @NetTotal ";
-            p += "@NetTotal, ";
-            v += Orders_NetTotal_End + ", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@NetTotal, ";
+            v1[p] = Orders_NetTotal_End + ", ";
         }
 
         if (Customer_CustomerID != "")
         {
             s2 += "AND c.CustomerID = @CustomerID ";
-            p += "@CustomerID, ";
-            v += Customer_CustomerID + ", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@CustomerID, ";
+            v1[p] = Customer_CustomerID + ", ";
         }
 
         if (Customer_FName != "")
         {
             s2 += "AND c.FName = @FName ";
-            p += "@FName, ";
-            v += Customer_FName + ", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@FName, ";
+            v1[p] = Customer_FName + ", ";
         }
 
         if (Customer_LName != "")
         {
             s2 += "AND c.LName = @LName ";
-            p += "@LName, ";
-            v += Customer_LName + ", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@LName, ";
+            v1[p] = Customer_LName + ", ";
         }
 
         if (Customer_UserName != "")
         {
             s2 += "AND c.UserName = @UserName ";
-            p += "@UserName, ";
-            v += Customer_UserName + ", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@UserName, ";
+            v1[p] = Customer_UserName + ", ";
         }
 
         if (Customer_City != "")
         {
             s2 += "AND c.City = @City ";
-            p += "@City, ";
-            v += Customer_City + ", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@City, ";
+            v1[p] = Customer_City + ", ";
         }
 
         if (Customer_State != "")
         {
             s2 += "AND c.State = @State ";
-            p += "@State, ";
-            v += Customer_State + ", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@State, ";
+            v1[p] = Customer_State + ", ";
         }
 
         if (Items_ProductName != "")
         {
             s2 += "AND i.ProductName = @ProductName ";
-            p += "@ProductName, ";
-            v += Items_ProductName + ", ";
+            p = 0;
+            while (p1[p] != "")
+            {
+                p += 1;
+            }
+            p1[p] = "@ProductName, ";
+            v1[p] = Items_ProductName + ", ";
         }
 
         s2 = s2.TrimStart('A', 'N', 'D', ' ');
-        p = p.TrimEnd(' ', ',');
-        v = v.TrimEnd(' ', ',');
-
         s1 += s2;
-        string[] p1 = { p };
-        string[] v1 = { v };
-
+        
         ds = da.ExecuteQuery(s1, p1, v1);
 
         gvOrders1.DataSource = ds.Tables[0];
@@ -223,5 +276,22 @@ public partial class Controls_ViewOrders3 : System.Web.UI.UserControl
         }
     }
 
-    
+    private int CountUsedFields()
+    {
+        int x = 0;
+
+        if (txtOrders_OrderDate_Start.Text != "") { x += 1; }
+        if (txtOrders_OrderDate_End.Text != "") { x += 1; }
+        if (txtOrders_NetTotal_Start.Text != "") { x += 1; }
+        if (txtOrders_NetTotal_End.Text != "") { x += 1; }
+        if (txtCustomer_CustomerID.Text != "") { x += 1; }
+        if (txtCustomer_FName.Text != "") { x += 1; }
+        if (txtCustomer_LName.Text != "") { x += 1; }
+        if (txtCustomer_UserName.Text != "") { x += 1; }
+        if (txtCustomer_City.Text != "") { x += 1; }
+        if (txtCustomer_State.Text != "") { x += 1; }
+        if (txtItems_ProductName.Text != "") { x += 1; }
+
+        return x;
+    }
 }
