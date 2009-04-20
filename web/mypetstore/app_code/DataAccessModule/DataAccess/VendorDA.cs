@@ -36,7 +36,7 @@ namespace DataAccessModule
                 return ExecuteQuery(null, BuildSQLSelectText(VendorTable.TableName, null, "", ""));
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(vendor);
+            DatabaseParameter[] parameters = CreateAllParameters(vendor);
 
             //Build a SELECT CommandText
             string selectQuery = base.BuildSQLSelectText(VendorTable.TableName, parameters, whereSeperator, whereOperator);
@@ -68,14 +68,14 @@ namespace DataAccessModule
         public override int Save(Vendor vendor)
         {
             //Check for the objects existsence in the database using the Primary key
-            var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(VendorTable.IdParam, vendor.Id, VendorTable.IdColumn);
+            var checkParam = new DatabaseParameter[1];
+            checkParam[0] = CreateParameter(VendorTable.TableName, VendorTable.IdParam, vendor.Id, VendorTable.IdColumn);
             string commandText = base.BuildSQLSelectText(VendorTable.TableName, checkParam, "", "=");
             Collection<Vendor> vendorCheck = ExecuteQuery(checkParam, commandText);
 
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(vendor);
+            DatabaseParameter[] parameters = CreateAllParameters(vendor);
             
 
             if (vendorCheck.Count == 0)
@@ -88,8 +88,8 @@ namespace DataAccessModule
             {   //Row exists, do UPDATE
                 
                 //Build Parameters for WHERE clause using Primary Key
-                List<DbParameter> whereParameters = new List<DbParameter>();
-                whereParameters.Add(CreateParameter(VendorTable.IdParam, vendor.Id, VendorTable.IdColumn));
+                List<DatabaseParameter> whereParameters = new List<DatabaseParameter>();
+                whereParameters.Add( CreateParameter(VendorTable.TableName, VendorTable.IdParam, vendor.Id, VendorTable.IdColumn));
 
                 string updateCommandText = base.BuildSQLUpdateText(VendorTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
                 return base.ExecuteNonQuery(parameters, updateCommandText);
@@ -115,8 +115,8 @@ namespace DataAccessModule
         public override int Delete(Vendor vendor)
         {
             //Build DELETE statement using Primary Key
-            DbParameter[] whereParameters = new DbParameter[1];
-            whereParameters[0] = (CreateParameter(VendorTable.IdParam, vendor.Id, VendorTable.IdColumn));
+            DatabaseParameter[] whereParameters = new DatabaseParameter[1];
+            whereParameters[0] = ( CreateParameter(VendorTable.TableName, VendorTable.IdParam, vendor.Id, VendorTable.IdColumn));
 
             string updateCommandText = base.BuildSQLDeleteText(VendorTable.TableName, whereParameters, "AND", "=");
             return base.ExecuteNonQuery(whereParameters, updateCommandText);
@@ -134,39 +134,39 @@ namespace DataAccessModule
         }
 
 
-        protected override DbParameter[] CreateAllParameters(Vendor vendor)
+        protected override DatabaseParameter[] CreateAllParameters(Vendor vendor)
         {
             //Build Parameters from Properties with Values
-            List<DbParameter> parameters = new List<DbParameter>();
+            List<DatabaseParameter> parameters = new List<DatabaseParameter>();
 
             if (vendor.Id != null)
-                parameters.Add(CreateParameter(VendorTable.IdParam, vendor.Id, VendorTable.IdColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.IdParam, vendor.Id, VendorTable.IdColumn));
             if (vendor.IsActive != null)
-                parameters.Add(CreateParameter(VendorTable.IsActiveParam, vendor.IsActive, VendorTable.IsActiveColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.IsActiveParam, vendor.IsActive, VendorTable.IsActiveColumn));
             if (vendor.Name != null)
-                parameters.Add(CreateParameter(VendorTable.NameParam, vendor.Name, VendorTable.NameColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.NameParam, vendor.Name, VendorTable.NameColumn));
             if (vendor.MainPhone != null)
-                parameters.Add(CreateParameter(VendorTable.MainPhoneParam, vendor.MainPhone, VendorTable.MainPhoneColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.MainPhoneParam, vendor.MainPhone, VendorTable.MainPhoneColumn));
             if (vendor.ContactName != null)
-                parameters.Add(CreateParameter(VendorTable.ContactNameParam, vendor.ContactName, VendorTable.ContactNameColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.ContactNameParam, vendor.ContactName, VendorTable.ContactNameColumn));
             if (vendor.Email != null)
-                parameters.Add(CreateParameter(VendorTable.EmailParam, vendor.Email, VendorTable.EmailColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.EmailParam, vendor.Email, VendorTable.EmailColumn));
             if (vendor.Phone != null)
-                parameters.Add(CreateParameter(VendorTable.PhoneParam, vendor.Phone, VendorTable.PhoneColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.PhoneParam, vendor.Phone, VendorTable.PhoneColumn));
             if (vendor.Website != null)
-                parameters.Add(CreateParameter(VendorTable.WebsiteParam, vendor.Website, VendorTable.WebsiteColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.WebsiteParam, vendor.Website, VendorTable.WebsiteColumn));
             if (vendor.Address != null)
-                parameters.Add(CreateParameter(VendorTable.AddressParam, vendor.Address, VendorTable.AddressColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.AddressParam, vendor.Address, VendorTable.AddressColumn));
             if (vendor.Address2 != null)
-                parameters.Add(CreateParameter(VendorTable.Address2Param, vendor.Address2, VendorTable.Address2Column));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.Address2Param, vendor.Address2, VendorTable.Address2Column));
             if (vendor.City != null)
-                parameters.Add(CreateParameter(VendorTable.CityParam, vendor.City, VendorTable.CityColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.CityParam, vendor.City, VendorTable.CityColumn));
             if (vendor.State != null)
-                parameters.Add(CreateParameter(VendorTable.StateParam, vendor.State, VendorTable.StateColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.StateParam, vendor.State, VendorTable.StateColumn));
             if (vendor.Zip != null)
-                parameters.Add(CreateParameter(VendorTable.ZipParam, vendor.Zip, VendorTable.ZipColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.ZipParam, vendor.Zip, VendorTable.ZipColumn));
             if (vendor.Country != null)
-                parameters.Add(CreateParameter(VendorTable.CountryParam, vendor.Country, VendorTable.CountryColumn));
+                parameters.Add( CreateParameter(VendorTable.TableName, VendorTable.CountryParam, vendor.Country, VendorTable.CountryColumn));
 
             return parameters.ToArray();
         }

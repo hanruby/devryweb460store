@@ -26,6 +26,6 @@ public static class CategoryTable
     //Parameters
     public const string IdParam = "@CategoryID";
     public const string NameParam = "@CategoryName";
-    public const string ImageParam = "@CategoryPhoto";
+    public const string ImageParam = "@CategoryPhoto";    
 }
 

@@ -36,7 +36,7 @@ namespace DataAccessModule
                 return ExecuteQuery(null, BuildSQLSelectText(ItemVideoTable.TableName, null, "", ""));
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(itemVideo);
+            DatabaseParameter[] parameters = CreateAllParameters(itemVideo);
 
             //Build a SELECT CommandText
             string selectQuery = base.BuildSQLSelectText(ItemVideoTable.TableName, parameters, whereSeperator, whereOperator);
@@ -68,14 +68,14 @@ namespace DataAccessModule
         public override int Save(ItemVideo itemVideo)
         {
             //Check for the objects existsence in the database using the Primary key
-            var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn);
+            var checkParam = new DatabaseParameter[1];
+            checkParam[0] = CreateParameter(ItemVideoTable.TableName, ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn);
             string commandText = base.BuildSQLSelectText(ItemVideoTable.TableName, checkParam, "", "=");
             Collection<ItemVideo> itemVideoCheck = ExecuteQuery(checkParam, commandText);
 
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(itemVideo);
+            DatabaseParameter[] parameters = CreateAllParameters(itemVideo);
             
 
             if (itemVideoCheck.Count == 0)
@@ -88,8 +88,8 @@ namespace DataAccessModule
             {   //Row exists, do UPDATE
                 
                 //Build Parameters for WHERE clause using Primary Key
-                List<DbParameter> whereParameters = new List<DbParameter>();
-                whereParameters.Add(CreateParameter(ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn));
+                List<DatabaseParameter> whereParameters = new List<DatabaseParameter>();
+                whereParameters.Add(CreateParameter(ItemVideoTable.TableName, ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn));
 
                 string updateCommandText = base.BuildSQLUpdateText(ItemVideoTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
                 return base.ExecuteNonQuery(parameters, updateCommandText);
@@ -115,8 +115,8 @@ namespace DataAccessModule
         public override int Delete(ItemVideo itemVideo)
         {
             //Build DELETE statement using Primary Key
-            DbParameter[] whereParameters = new DbParameter[1];
-            whereParameters[0] = (CreateParameter(ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn));
+            DatabaseParameter[] whereParameters = new DatabaseParameter[1];
+            whereParameters[0] = (CreateParameter(ItemVideoTable.TableName, ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn));
 
             string updateCommandText = base.BuildSQLDeleteText(ItemVideoTable.TableName, whereParameters, "AND", "=");
             return base.ExecuteNonQuery(whereParameters, updateCommandText);
@@ -134,25 +134,25 @@ namespace DataAccessModule
         }
 
 
-        protected override DbParameter[] CreateAllParameters(ItemVideo itemVideo)
+        protected override DatabaseParameter[] CreateAllParameters(ItemVideo itemVideo)
         {
             //Build Parameters from Properties with Values
-            List<DbParameter> parameters = new List<DbParameter>();
+            var parameters = new List<DatabaseParameter>();
 
             if (itemVideo.Id != null)
-                parameters.Add(CreateParameter(ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn));
+                parameters.Add(CreateParameter(ItemVideoTable.TableName, ItemVideoTable.IdParam, itemVideo.Id, ItemVideoTable.IdColumn));
             if (itemVideo.ItemId != null)
-                parameters.Add(CreateParameter(ItemVideoTable.ItemIdParam, itemVideo.ItemId, ItemVideoTable.ItemIdColumn));
+                parameters.Add(CreateParameter(ItemVideoTable.TableName, ItemVideoTable.ItemIdParam, itemVideo.ItemId, ItemVideoTable.ItemIdColumn));
             if (itemVideo.VendorId != null)
-                parameters.Add(CreateParameter(ItemVideoTable.VendorIdParam, itemVideo.VendorId, ItemVideoTable.VendorIdColumn));
+                parameters.Add(CreateParameter(ItemVideoTable.TableName, ItemVideoTable.VendorIdParam, itemVideo.VendorId, ItemVideoTable.VendorIdColumn));
             if (itemVideo.VideoName != null)
-                parameters.Add(CreateParameter(ItemVideoTable.NameParam, itemVideo.VideoName, ItemVideoTable.NameColumn));
+                parameters.Add(CreateParameter(ItemVideoTable.TableName, ItemVideoTable.NameParam, itemVideo.VideoName, ItemVideoTable.NameColumn));
             if (itemVideo.Description != null)
-                parameters.Add(CreateParameter(ItemVideoTable.DescriptionParam, itemVideo.Description, ItemVideoTable.DescriptionColumn));
+                parameters.Add(CreateParameter(ItemVideoTable.TableName, ItemVideoTable.DescriptionParam, itemVideo.Description, ItemVideoTable.DescriptionColumn));
             if (itemVideo.Url != null)
-                parameters.Add(CreateParameter(ItemVideoTable.UrlParam, itemVideo.Url, ItemVideoTable.UrlColumn));
+                parameters.Add(CreateParameter(ItemVideoTable.TableName, ItemVideoTable.UrlParam, itemVideo.Url, ItemVideoTable.UrlColumn));
             if (itemVideo.Source != null)
-                parameters.Add(CreateParameter(ItemVideoTable.SourceParam, itemVideo.Source, ItemVideoTable.SourceColumn));
+                parameters.Add(CreateParameter(ItemVideoTable.TableName, ItemVideoTable.SourceParam, itemVideo.Source, ItemVideoTable.SourceColumn));
 
             return parameters.ToArray();
         }

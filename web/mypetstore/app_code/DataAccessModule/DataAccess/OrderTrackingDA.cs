@@ -36,7 +36,7 @@ namespace DataAccessModule
                 return ExecuteQuery(null, BuildSQLSelectText(OrderTrackingTable.TableName, null, "", ""));
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(orderTracking);
+            DatabaseParameter[] parameters = CreateAllParameters(orderTracking);
 
             //Build a SELECT CommandText
             string selectQuery = base.BuildSQLSelectText(OrderTrackingTable.TableName, parameters, whereSeperator, whereOperator);
@@ -68,14 +68,14 @@ namespace DataAccessModule
         public override int Save(OrderTracking orderTracking)
         {
             //Check for the objects existsence in the database using the Primary key
-            var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(OrderTrackingTable.IdParam, orderTracking.Id, OrderTrackingTable.IdColumn);
+            var checkParam = new DatabaseParameter[1];
+            checkParam[0] = CreateParameter(OrderTrackingTable.TableName, OrderTrackingTable.IdParam, orderTracking.Id, OrderTrackingTable.IdColumn);
             string commandText = base.BuildSQLSelectText(OrderTrackingTable.TableName, checkParam, "", "=");
             Collection<OrderTracking> orderTrackingCheck = ExecuteQuery(checkParam, commandText);
 
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(orderTracking);
+            DatabaseParameter[] parameters = CreateAllParameters(orderTracking);
             
 
             if (orderTrackingCheck.Count == 0)
@@ -88,8 +88,8 @@ namespace DataAccessModule
             {   //Row exists, do UPDATE
                 
                 //Build Parameters for WHERE clause using Primary Key
-                List<DbParameter> whereParameters = new List<DbParameter>();
-                whereParameters.Add(CreateParameter(OrderTrackingTable.IdParam, orderTracking.Id, OrderTrackingTable.IdColumn));
+                List<DatabaseParameter> whereParameters = new List<DatabaseParameter>();
+                whereParameters.Add(CreateParameter(OrderTrackingTable.TableName, OrderTrackingTable.IdParam, orderTracking.Id, OrderTrackingTable.IdColumn));
 
                 string updateCommandText = base.BuildSQLUpdateText(OrderTrackingTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
                 return base.ExecuteNonQuery(parameters, updateCommandText);
@@ -115,8 +115,8 @@ namespace DataAccessModule
         public override int Delete(OrderTracking orderTracking)
         {
             //Build DELETE statement using Primary Key
-            DbParameter[] whereParameters = new DbParameter[1];
-            whereParameters[0] = (CreateParameter(OrderTrackingTable.IdParam, orderTracking.Id, OrderTrackingTable.IdColumn));
+            DatabaseParameter[] whereParameters = new DatabaseParameter[1];
+            whereParameters[0] = (CreateParameter(OrderTrackingTable.TableName, OrderTrackingTable.IdParam, orderTracking.Id, OrderTrackingTable.IdColumn));
 
             string updateCommandText = base.BuildSQLDeleteText(OrderTrackingTable.TableName, whereParameters, "AND", "=");
             return base.ExecuteNonQuery(whereParameters, updateCommandText);
@@ -134,25 +134,25 @@ namespace DataAccessModule
         }
 
 
-        protected override DbParameter[] CreateAllParameters(OrderTracking orderTracking)
+        protected override DatabaseParameter[] CreateAllParameters(OrderTracking orderTracking)
         {
             //Build Parameters from Properties with Values
-            List<DbParameter> parameters = new List<DbParameter>();
+            List<DatabaseParameter> parameters = new List<DatabaseParameter>();
 
             if (orderTracking.Id != null)
-                parameters.Add(CreateParameter(OrderTrackingTable.IdParam, orderTracking.Id, OrderTrackingTable.IdColumn));
+                parameters.Add(CreateParameter(OrderTrackingTable.TableName, OrderTrackingTable.IdParam, orderTracking.Id, OrderTrackingTable.IdColumn));
             if (orderTracking.OrderId != null)
-                parameters.Add(CreateParameter(OrderTrackingTable.OrderIdParam, orderTracking.OrderId, OrderTrackingTable.OrderIdColumn));
+                parameters.Add(CreateParameter(OrderTrackingTable.TableName, OrderTrackingTable.OrderIdParam, orderTracking.OrderId, OrderTrackingTable.OrderIdColumn));
             if (orderTracking.ItemId != null)
-                parameters.Add(CreateParameter(OrderTrackingTable.ItemIdParam, orderTracking.ItemId, OrderTrackingTable.ItemIdColumn));
+                parameters.Add(CreateParameter(OrderTrackingTable.TableName, OrderTrackingTable.ItemIdParam, orderTracking.ItemId, OrderTrackingTable.ItemIdColumn));
             if (orderTracking.VendorId != null)
-                parameters.Add(CreateParameter(OrderTrackingTable.VendorIdParam, orderTracking.VendorId, OrderTrackingTable.VendorIdColumn));
+                parameters.Add(CreateParameter(OrderTrackingTable.TableName, OrderTrackingTable.VendorIdParam, orderTracking.VendorId, OrderTrackingTable.VendorIdColumn));
             if (orderTracking.ShipDate != null)
-                parameters.Add(CreateParameter(OrderTrackingTable.ShipDateParam, orderTracking.ShipDate, OrderTrackingTable.ShipDateColumn));
+                parameters.Add(CreateParameter(OrderTrackingTable.TableName, OrderTrackingTable.ShipDateParam, orderTracking.ShipDate, OrderTrackingTable.ShipDateColumn));
             if (orderTracking.EstimatedArrival != null)
-                parameters.Add(CreateParameter(OrderTrackingTable.EstimatedArrivalParam, orderTracking.EstimatedArrival, OrderTrackingTable.EstimatedArrivalColumn));
+                parameters.Add(CreateParameter(OrderTrackingTable.TableName, OrderTrackingTable.EstimatedArrivalParam, orderTracking.EstimatedArrival, OrderTrackingTable.EstimatedArrivalColumn));
             if (orderTracking.Url != null)
-                parameters.Add(CreateParameter(OrderTrackingTable.UrlParam, orderTracking.Url, OrderTrackingTable.UrlColumn));
+                parameters.Add(CreateParameter(OrderTrackingTable.TableName, OrderTrackingTable.UrlParam, orderTracking.Url, OrderTrackingTable.UrlColumn));
 
             return parameters.ToArray();
         }

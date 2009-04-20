@@ -36,7 +36,7 @@ namespace DataAccessModule
                 return ExecuteQuery(null, BuildSQLSelectText(CategoryTable.TableName, null, "", ""));
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(category);
+            DatabaseParameter[] parameters = CreateAllParameters(category);
 
             //Build a SELECT CommandText
             string selectQuery = base.BuildSQLSelectText(CategoryTable.TableName, parameters, whereSeperator, whereOperator);
@@ -68,14 +68,14 @@ namespace DataAccessModule
         public override int Save(Category category)
         {
             //Check for the objects existsence in the database using the Primary key
-            var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(CategoryTable.IdParam, category.Id, CategoryTable.IdColumn);
+            var checkParam = new DatabaseParameter[1];
+            checkParam[0] = CreateParameter(CategoryTable.TableName, CategoryTable.IdParam, category.Id, CategoryTable.IdColumn);
             string commandText = base.BuildSQLSelectText(CategoryTable.TableName, checkParam, "", "=");
             Collection<Category> categoryCheck = ExecuteQuery(checkParam, commandText);
 
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(category);
+            DatabaseParameter[] parameters = CreateAllParameters(category);
             
 
             if (categoryCheck.Count == 0)
@@ -88,8 +88,8 @@ namespace DataAccessModule
             {   //Row exists, do UPDATE
                 
                 //Build Parameters for WHERE clause using Primary Key
-                List<DbParameter> whereParameters = new List<DbParameter>();
-                whereParameters.Add(CreateParameter(CategoryTable.IdParam, category.Id, CategoryTable.IdColumn));
+                List<DatabaseParameter> whereParameters = new List<DatabaseParameter>();
+                whereParameters.Add(CreateParameter(CategoryTable.TableName, CategoryTable.IdParam, category.Id, CategoryTable.IdColumn));
 
                 string updateCommandText = base.BuildSQLUpdateText(CategoryTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
                 return base.ExecuteNonQuery(parameters, updateCommandText);
@@ -115,8 +115,8 @@ namespace DataAccessModule
         public override int Delete(Category category)
         {
             //Build DELETE statement using Primary Key
-            DbParameter[] whereParameters = new DbParameter[1];
-            whereParameters[0] = (CreateParameter(CategoryTable.IdParam, category.Id, CategoryTable.IdColumn));
+            DatabaseParameter[] whereParameters = new DatabaseParameter[1];
+            whereParameters[0] = (CreateParameter(CategoryTable.TableName, CategoryTable.IdParam, category.Id, CategoryTable.IdColumn));
 
             string updateCommandText = base.BuildSQLDeleteText(CategoryTable.TableName, whereParameters, "AND", "=");
             return base.ExecuteNonQuery(whereParameters, updateCommandText);
@@ -134,20 +134,20 @@ namespace DataAccessModule
         }
 
 
-        protected override DbParameter[] CreateAllParameters(Category category)
+        protected override DatabaseParameter[] CreateAllParameters(Category category)
         {
             //Build Parameters from Properties with Values
-            List<DbParameter> parameters = new List<DbParameter>();
+            List<DatabaseParameter> parameters = new List<DatabaseParameter>();
 
             //Id
             if (category.Id != null)
-                parameters.Add(CreateParameter(CategoryTable.IdParam, category.Id, CategoryTable.IdColumn));
+                parameters.Add(CreateParameter(CategoryTable.TableName, CategoryTable.IdParam, category.Id, CategoryTable.IdColumn));
             //Name
             if (category.Name != null)
-                parameters.Add(CreateParameter(CategoryTable.NameParam, category.Name, CategoryTable.NameColumn));
+                parameters.Add(CreateParameter(CategoryTable.TableName, CategoryTable.NameParam, category.Name, CategoryTable.NameColumn));
             //ImageLocation
             if (category.ImageLocation != null)
-                parameters.Add(CreateParameter(CategoryTable.ImageParam, category.ImageLocation, CategoryTable.ImageColumn));
+                parameters.Add(CreateParameter(CategoryTable.TableName, CategoryTable.ImageParam, category.ImageLocation, CategoryTable.ImageColumn));
 
             return parameters.ToArray();
         }

@@ -36,7 +36,7 @@ namespace DataAccessModule
                 return ExecuteQuery(null, BuildSQLSelectText(OrderItemTable.TableName, null, "", ""));
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(orderItem);
+            DatabaseParameter[] parameters = CreateAllParameters(orderItem);
 
             //Build a SELECT CommandText
             string selectQuery = base.BuildSQLSelectText(OrderItemTable.TableName, parameters, whereSeperator, whereOperator);
@@ -68,17 +68,17 @@ namespace DataAccessModule
         public override int Save(OrderItem orderItem)
         {
             //Check for the objects existsence in the database using the Primary key
-            DbParameter[] checkParam = new DbParameter[3];
-            checkParam[0] = CreateParameter(OrderItemTable.OrderIdParam, orderItem.OrderId, OrderItemTable.OrderIdColumn);
-            checkParam[1] = CreateParameter(OrderItemTable.ItemIdParam, orderItem.ItemId, OrderItemTable.ItemIdColumn);
-            checkParam[2] = CreateParameter(OrderItemTable.VendorIdParam, orderItem.VendorId, OrderItemTable.VendorIdColumn);
+            DatabaseParameter[] checkParam = new DatabaseParameter[3];
+            checkParam[0] = CreateParameter(OrderItemTable.TableName, OrderItemTable.OrderIdParam, orderItem.OrderId, OrderItemTable.OrderIdColumn);
+            checkParam[1] = CreateParameter(OrderItemTable.TableName, OrderItemTable.ItemIdParam, orderItem.ItemId, OrderItemTable.ItemIdColumn);
+            checkParam[2] = CreateParameter(OrderItemTable.TableName, OrderItemTable.VendorIdParam, orderItem.VendorId, OrderItemTable.VendorIdColumn);
 
             string commandText = base.BuildSQLSelectText(OrderItemTable.TableName, checkParam, "AND", "=");
             Collection<OrderItem> orderItemCheck = ExecuteQuery(checkParam, commandText);
 
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(orderItem);
+            DatabaseParameter[] parameters = CreateAllParameters(orderItem);
             
 
             if (orderItemCheck.Count == 0)
@@ -91,10 +91,10 @@ namespace DataAccessModule
             {   //Row exists, do UPDATE
                 
                 //Build Parameters for WHERE clause using Primary Key
-                DbParameter[] whereParameters = new DbParameter[3];
-                whereParameters[0] = CreateParameter(OrderItemTable.OrderIdParam, orderItem.OrderId, OrderItemTable.OrderIdColumn);
-                whereParameters[1] = CreateParameter(OrderItemTable.ItemIdParam, orderItem.ItemId, OrderItemTable.ItemIdColumn);
-                whereParameters[2] = CreateParameter(OrderItemTable.VendorIdParam, orderItem.VendorId, OrderItemTable.VendorIdColumn);
+                DatabaseParameter[] whereParameters = new DatabaseParameter[3];
+                whereParameters[0] = CreateParameter(OrderItemTable.TableName, OrderItemTable.OrderIdParam, orderItem.OrderId, OrderItemTable.OrderIdColumn);
+                whereParameters[1] = CreateParameter(OrderItemTable.TableName, OrderItemTable.ItemIdParam, orderItem.ItemId, OrderItemTable.ItemIdColumn);
+                whereParameters[2] = CreateParameter(OrderItemTable.TableName, OrderItemTable.VendorIdParam, orderItem.VendorId, OrderItemTable.VendorIdColumn);
 
                 string updateCommandText = base.BuildSQLUpdateText(OrderItemTable.TableName, parameters, whereParameters, "AND", "=");
                 return base.ExecuteNonQuery(parameters, updateCommandText);
@@ -120,10 +120,10 @@ namespace DataAccessModule
         public override int Delete(OrderItem orderItem)
         {
             //Build DELETE statement using Primary Key
-            DbParameter[] whereParameters = new DbParameter[3];
-            whereParameters[0] = CreateParameter(OrderItemTable.OrderIdParam, orderItem.OrderId, OrderItemTable.OrderIdColumn);
-            whereParameters[1] = CreateParameter(OrderItemTable.ItemIdParam, orderItem.ItemId, OrderItemTable.ItemIdColumn);
-            whereParameters[2] = CreateParameter(OrderItemTable.VendorIdParam, orderItem.VendorId, OrderItemTable.VendorIdColumn);
+            DatabaseParameter[] whereParameters = new DatabaseParameter[3];
+            whereParameters[0] = CreateParameter(OrderItemTable.TableName, OrderItemTable.OrderIdParam, orderItem.OrderId, OrderItemTable.OrderIdColumn);
+            whereParameters[1] = CreateParameter(OrderItemTable.TableName, OrderItemTable.ItemIdParam, orderItem.ItemId, OrderItemTable.ItemIdColumn);
+            whereParameters[2] = CreateParameter(OrderItemTable.TableName, OrderItemTable.VendorIdParam, orderItem.VendorId, OrderItemTable.VendorIdColumn);
 
             
 
@@ -143,23 +143,23 @@ namespace DataAccessModule
         }
 
 
-        protected override DbParameter[] CreateAllParameters(OrderItem orderItem)
+        protected override DatabaseParameter[] CreateAllParameters(OrderItem orderItem)
         {
             //Build Parameters from Properties with Values
-            List<DbParameter> parameters = new List<DbParameter>();
+            List<DatabaseParameter> parameters = new List<DatabaseParameter>();
 
             if (orderItem.OrderId != null)
-                parameters.Add(CreateParameter(OrderItemTable.OrderIdParam, orderItem.OrderId, OrderItemTable.OrderIdColumn));
+                parameters.Add(CreateParameter(OrderItemTable.TableName, OrderItemTable.OrderIdParam, orderItem.OrderId, OrderItemTable.OrderIdColumn));
             if (orderItem.ItemId != null)
-                parameters.Add(CreateParameter(OrderItemTable.ItemIdParam, orderItem.ItemId, OrderItemTable.ItemIdColumn));
+                parameters.Add(CreateParameter(OrderItemTable.TableName, OrderItemTable.ItemIdParam, orderItem.ItemId, OrderItemTable.ItemIdColumn));
             if (orderItem.VendorId != null)
-                parameters.Add(CreateParameter(OrderItemTable.VendorIdParam, orderItem.VendorId, OrderItemTable.VendorIdColumn));
+                parameters.Add(CreateParameter(OrderItemTable.TableName, OrderItemTable.VendorIdParam, orderItem.VendorId, OrderItemTable.VendorIdColumn));
             if (orderItem.Price != null)
-                parameters.Add(CreateParameter(OrderItemTable.PriceParam, orderItem.Price, OrderItemTable.PriceColumn));
+                parameters.Add(CreateParameter(OrderItemTable.TableName, OrderItemTable.PriceParam, orderItem.Price, OrderItemTable.PriceColumn));
             if (orderItem.TotalPrice != null)
-                parameters.Add(CreateParameter(OrderItemTable.TotalPriceParam, orderItem.TotalPrice, OrderItemTable.TotalPriceColumn));
+                parameters.Add(CreateParameter(OrderItemTable.TableName, OrderItemTable.TotalPriceParam, orderItem.TotalPrice, OrderItemTable.TotalPriceColumn));
             if (orderItem.Quantity != null)
-                parameters.Add(CreateParameter(OrderItemTable.QuantityParam, orderItem.Quantity, OrderItemTable.QuantityColumn));
+                parameters.Add(CreateParameter(OrderItemTable.TableName, OrderItemTable.QuantityParam, orderItem.Quantity, OrderItemTable.QuantityColumn));
 
             return parameters.ToArray();
         }

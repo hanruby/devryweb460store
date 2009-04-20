@@ -36,7 +36,7 @@ namespace DataAccessModule
                 return ExecuteQuery(null, BuildSQLSelectText(CustomerTable.TableName, null, "", ""));
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(customer);
+            DatabaseParameter[] parameters = CreateAllParameters(customer);
 
             //Build a SELECT CommandText
             string selectQuery = base.BuildSQLSelectText(CustomerTable.TableName, parameters, whereSeperator, whereOperator);
@@ -68,14 +68,14 @@ namespace DataAccessModule
         public override int Save(Customer customer)
         {
             //Check for the objects existsence in the database using the Primary key
-            var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(CustomerTable.IdParam, customer.Id, CustomerTable.IdColumn);
+            var checkParam = new DatabaseParameter[1];
+            checkParam[0] = CreateParameter(CustomerTable.TableName, CustomerTable.IdParam, customer.Id, CustomerTable.IdColumn);
             string commandText = base.BuildSQLSelectText(CustomerTable.TableName, checkParam, "", "=");
             Collection<Customer> customerCheck = ExecuteQuery(checkParam, commandText);
 
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(customer);
+            DatabaseParameter[] parameters = CreateAllParameters(customer);
             
 
             if (customerCheck.Count == 0)
@@ -88,8 +88,8 @@ namespace DataAccessModule
             {   //Row exists, do UPDATE
                 
                 //Build Parameters for WHERE clause using Primary Key
-                List<DbParameter> whereParameters = new List<DbParameter>();
-                whereParameters.Add(CreateParameter(CustomerTable.IdParam, customer.Id, CustomerTable.IdColumn));
+                List<DatabaseParameter> whereParameters = new List<DatabaseParameter>();
+                whereParameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.IdParam, customer.Id, CustomerTable.IdColumn));
 
                 string updateCommandText = base.BuildSQLUpdateText(CustomerTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
                 return base.ExecuteNonQuery(parameters, updateCommandText);
@@ -115,8 +115,8 @@ namespace DataAccessModule
         public override int Delete(Customer customer)
         {
             //Build DELETE statement using Primary Key
-            DbParameter[] whereParameters = new DbParameter[1];
-            whereParameters[0] = (CreateParameter(CustomerTable.IdParam, customer.Id, CustomerTable.IdColumn));
+            DatabaseParameter[] whereParameters = new DatabaseParameter[1];
+            whereParameters[0] = (CreateParameter(CustomerTable.TableName, CustomerTable.IdParam, customer.Id, CustomerTable.IdColumn));
 
             string updateCommandText = base.BuildSQLDeleteText(CustomerTable.TableName, whereParameters, "AND", "=");
             return base.ExecuteNonQuery(whereParameters, updateCommandText);
@@ -134,33 +134,33 @@ namespace DataAccessModule
         }
 
 
-        protected override DbParameter[] CreateAllParameters(Customer customer)
+        protected override DatabaseParameter[] CreateAllParameters(Customer customer)
         {
             //Build Parameters from Properties with Values
-            List<DbParameter> parameters = new List<DbParameter>();
+            List<DatabaseParameter> parameters = new List<DatabaseParameter>();
 
             if (customer.Id != null)
-                parameters.Add(CreateParameter(CustomerTable.IdParam, customer.Id, CustomerTable.IdColumn));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.IdParam, customer.Id, CustomerTable.IdColumn));
             if (customer.IsActive != null)
-                parameters.Add(CreateParameter(CustomerTable.IsActiveParam, customer.IsActive, CustomerTable.IsActiveColumn));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.IsActiveParam, customer.IsActive, CustomerTable.IsActiveColumn));
             if (customer.Username != null)
-                parameters.Add(CreateParameter(CustomerTable.UsernameParam, customer.Username, CustomerTable.UsernameColumn));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.UsernameParam, customer.Username, CustomerTable.UsernameColumn));
             if (customer.FirstName != null)
-                parameters.Add(CreateParameter(CustomerTable.FirstNameParam, customer.FirstName, CustomerTable.FirstNameColumn));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.FirstNameParam, customer.FirstName, CustomerTable.FirstNameColumn));
             if (customer.LastName != null)
-                parameters.Add(CreateParameter(CustomerTable.LastNameParam, customer.LastName, CustomerTable.LastNameColumn));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.LastNameParam, customer.LastName, CustomerTable.LastNameColumn));
             if (customer.Address != null)
-                parameters.Add(CreateParameter(CustomerTable.AddressParam, customer.Address, CustomerTable.AddressColumn));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.AddressParam, customer.Address, CustomerTable.AddressColumn));
             if (customer.Address2 != null)
-                parameters.Add(CreateParameter(CustomerTable.Address2Param, customer.Address2, CustomerTable.Address2Column));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.Address2Param, customer.Address2, CustomerTable.Address2Column));
             if (customer.City != null)
-                parameters.Add(CreateParameter(CustomerTable.CityParam, customer.City, CustomerTable.CityColumn));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.CityParam, customer.City, CustomerTable.CityColumn));
             if (customer.State != null)
-                parameters.Add(CreateParameter(CustomerTable.StateParam, customer.State, CustomerTable.StateColumn));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.StateParam, customer.State, CustomerTable.StateColumn));
             if (customer.Zip != null)
-                parameters.Add(CreateParameter(CustomerTable.ZipParam, customer.Zip, CustomerTable.ZipColumn));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.ZipParam, customer.Zip, CustomerTable.ZipColumn));
             if (customer.Country != null)
-                parameters.Add(CreateParameter(CustomerTable.CountryParam, customer.Country, CustomerTable.CountryColumn));
+                parameters.Add(CreateParameter(CustomerTable.TableName, CustomerTable.CountryParam, customer.Country, CustomerTable.CountryColumn));
 
             return parameters.ToArray();
         }

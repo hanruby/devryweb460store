@@ -36,7 +36,7 @@ namespace DataAccessModule
                 return ExecuteQuery(null, BuildSQLSelectText(ItemTable.TableName, null, "", ""));
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(item);
+            DatabaseParameter[] parameters = CreateAllParameters(item);
 
             //Build a SELECT CommandText
             string selectQuery = base.BuildSQLSelectText(ItemTable.TableName, parameters, whereSeperator, whereOperator);
@@ -68,14 +68,14 @@ namespace DataAccessModule
         public override int Save(Item item)
         {
             //Check for the objects existsence in the database using the Primary key
-            var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(ItemTable.IdParam, item.Id, ItemTable.IdColumn);
+            var checkParam = new DatabaseParameter[1];
+            checkParam[0] = CreateParameter(ItemTable.TableName, ItemTable.IdParam, item.Id, ItemTable.IdColumn);
             string commandText = base.BuildSQLSelectText(ItemTable.TableName, checkParam, "", "=");
             Collection<Item> itemCheck = ExecuteQuery(checkParam, commandText);
 
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(item);
+            DatabaseParameter[] parameters = CreateAllParameters(item);
             
 
             if (itemCheck.Count == 0)
@@ -88,8 +88,8 @@ namespace DataAccessModule
             {   //Row exists, do UPDATE
                 
                 //Build Parameters for WHERE clause using Primary Key
-                List<DbParameter> whereParameters = new List<DbParameter>();
-                whereParameters.Add(CreateParameter(ItemTable.IdParam, item.Id, ItemTable.IdColumn));
+                List<DatabaseParameter> whereParameters = new List<DatabaseParameter>();
+                whereParameters.Add(CreateParameter(ItemTable.TableName, ItemTable.IdParam, item.Id, ItemTable.IdColumn));
 
                 string updateCommandText = base.BuildSQLUpdateText(ItemTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
                 return base.ExecuteNonQuery(parameters, updateCommandText);
@@ -115,8 +115,8 @@ namespace DataAccessModule
         public override int Delete(Item item)
         {
             //Build DELETE statement using Primary Key
-            DbParameter[] whereParameters = new DbParameter[1];
-            whereParameters[0] = (CreateParameter(ItemTable.IdParam, item.Id, ItemTable.IdColumn));
+            DatabaseParameter[] whereParameters = new DatabaseParameter[1];
+            whereParameters[0] = (CreateParameter(ItemTable.TableName, ItemTable.IdParam, item.Id, ItemTable.IdColumn));
 
             string updateCommandText = base.BuildSQLDeleteText(ItemTable.TableName, whereParameters, "AND", "=");
             return base.ExecuteNonQuery(whereParameters, updateCommandText);
@@ -134,56 +134,56 @@ namespace DataAccessModule
         }
 
 
-        protected override DbParameter[] CreateAllParameters(Item item)
+        protected override DatabaseParameter[] CreateAllParameters(Item item)
         {
             //Build Parameters from Properties with Values
-            List<DbParameter> parameters = new List<DbParameter>();
+            List<DatabaseParameter> parameters = new List<DatabaseParameter>();
 
             //Id
             if (item.Id != null)
-                parameters.Add(CreateParameter(ItemTable.IdParam, item.Id, ItemTable.IdColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.IdParam, item.Id, ItemTable.IdColumn));
             //VendorId
             if (item.VendorId != null)
-                parameters.Add(CreateParameter(ItemTable.VendorIdParam, item.VendorId, ItemTable.VendorIdColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.VendorIdParam, item.VendorId, ItemTable.VendorIdColumn));
             //IsActive
             if (item.IsActive != null)
-                parameters.Add(CreateParameter(ItemTable.IsActiveParam, item.IsActive, ItemTable.IsActiveColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.IsActiveParam, item.IsActive, ItemTable.IsActiveColumn));
             //Description
             if (item.Description != null)
-                parameters.Add(CreateParameter(ItemTable.DescriptionParam, item.Description, ItemTable.DescriptionColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.DescriptionParam, item.Description, ItemTable.DescriptionColumn));
             //QuantityAvailable
             if (item.QuantityAvailable != null)
-                parameters.Add(CreateParameter(ItemTable.QuantityAvailableParam, item.QuantityAvailable, ItemTable.QuantityAvailableColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.QuantityAvailableParam, item.QuantityAvailable, ItemTable.QuantityAvailableColumn));
             //Price
             if (item.Price != null)
-                parameters.Add(CreateParameter(ItemTable.PriceParam, item.Price, ItemTable.PriceColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.PriceParam, item.Price, ItemTable.PriceColumn));
             //ImageName
             if (item.ImageName != null)
-                parameters.Add(CreateParameter(ItemTable.ImageNameParam, item.ImageName, ItemTable.ImageNameColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.ImageNameParam, item.ImageName, ItemTable.ImageNameColumn));
             //ImageLocation
             if (item.ImageLocation != null)
-                parameters.Add(CreateParameter(ItemTable.ImageLocationParam, item.ImageLocation, ItemTable.ImageLocationColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.ImageLocationParam, item.ImageLocation, ItemTable.ImageLocationColumn));
             //MinQuantity
             if (item.MinQuantity != null)
-                parameters.Add(CreateParameter(ItemTable.MinQuantityParam, item.MinQuantity, ItemTable.MinQuantityColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.MinQuantityParam, item.MinQuantity, ItemTable.MinQuantityColumn));
             //CostPrice
             if (item.CostPrice != null)
-                parameters.Add(CreateParameter(ItemTable.CostPriceParam, item.CostPrice, ItemTable.CostPriceColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.CostPriceParam, item.CostPrice, ItemTable.CostPriceColumn));
             //RecommendedPrice
             if (item.RecommendPrice != null)
-                parameters.Add(CreateParameter(ItemTable.RecommendedPriceParam, item.RecommendPrice, ItemTable.RecommendedPriceColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.RecommendedPriceParam, item.RecommendPrice, ItemTable.RecommendedPriceColumn));
             //UPC
             if (item.Upc != null)
-                parameters.Add(CreateParameter(ItemTable.UPCParam, item.Upc, ItemTable.UPCColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.UPCParam, item.Upc, ItemTable.UPCColumn));
             //Name
             if (item.Name != null)
-                parameters.Add(CreateParameter(ItemTable.NameParam, item.Name, ItemTable.NameColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.NameParam, item.Name, ItemTable.NameColumn));
             //Code
             if (item.Code != null)
-                parameters.Add(CreateParameter(ItemTable.CodeParam, item.Code, ItemTable.CodeColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.CodeParam, item.Code, ItemTable.CodeColumn));
             //Size
             if (item.Size != null)
-                parameters.Add(CreateParameter(ItemTable.SizeParam, item.Size, ItemTable.SizeColumn));
+                parameters.Add(CreateParameter(ItemTable.TableName, ItemTable.SizeParam, item.Size, ItemTable.SizeColumn));
 
             return parameters.ToArray();
         }

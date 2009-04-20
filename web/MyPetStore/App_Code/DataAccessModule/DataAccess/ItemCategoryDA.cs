@@ -36,7 +36,7 @@ namespace DataAccessModule
                 return ExecuteQuery(null, BuildSQLSelectText(ItemCategoryTable.TableName, null, "", ""));
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(itemCategory);
+            DatabaseParameter[] parameters = CreateAllParameters(itemCategory);
 
             //Build a SELECT CommandText
             string selectQuery = base.BuildSQLSelectText(ItemCategoryTable.TableName, parameters, whereSeperator, whereOperator);
@@ -68,17 +68,17 @@ namespace DataAccessModule
         public override int Save(ItemCategory itemCategory)
         {
             //Check for the objects existsence in the database using the Primary key
-            DbParameter[] checkParam = new DbParameter[3];
-            checkParam[0] = CreateParameter(ItemCategoryTable.ItemIdParam, itemCategory.ItemId, ItemCategoryTable.ItemIdColumn);
-            checkParam[1] = CreateParameter(ItemCategoryTable.VendorIdParam, itemCategory.VendorId, ItemCategoryTable.VendorIdColumn);
-            checkParam[2] = CreateParameter(ItemCategoryTable.CategoryIdParam, itemCategory.CategoryId, ItemCategoryTable.CategoryIdColumn);
+            DatabaseParameter[] checkParam = new DatabaseParameter[3];
+            checkParam[0] = CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.ItemIdParam, itemCategory.ItemId, ItemCategoryTable.ItemIdColumn);
+            checkParam[1] = CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.VendorIdParam, itemCategory.VendorId, ItemCategoryTable.VendorIdColumn);
+            checkParam[2] = CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.CategoryIdParam, itemCategory.CategoryId, ItemCategoryTable.CategoryIdColumn);
 
             string commandText = base.BuildSQLSelectText(ItemCategoryTable.TableName, checkParam, "", "=");
             Collection<ItemCategory> itemCategoryCheck = ExecuteQuery(checkParam, commandText);
 
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(itemCategory);
+            DatabaseParameter[] parameters = CreateAllParameters(itemCategory);
             
 
             if (itemCategoryCheck.Count == 0)
@@ -91,10 +91,10 @@ namespace DataAccessModule
             {   //Row exists, do UPDATE
                 
                 //Build Parameters for WHERE clause using Primary Key
-                DbParameter[] whereParameters = new DbParameter[3];
-                whereParameters[0] = CreateParameter(ItemCategoryTable.ItemIdParam, itemCategory.ItemId, ItemCategoryTable.ItemIdColumn);
-                whereParameters[1] = CreateParameter(ItemCategoryTable.VendorIdParam, itemCategory.VendorId, ItemCategoryTable.VendorIdColumn);
-                whereParameters[2] = CreateParameter(ItemCategoryTable.CategoryIdParam, itemCategory.CategoryId, ItemCategoryTable.CategoryIdColumn);
+                DatabaseParameter[] whereParameters = new DatabaseParameter[3];
+                whereParameters[0] = CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.ItemIdParam, itemCategory.ItemId, ItemCategoryTable.ItemIdColumn);
+                whereParameters[1] = CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.VendorIdParam, itemCategory.VendorId, ItemCategoryTable.VendorIdColumn);
+                whereParameters[2] = CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.CategoryIdParam, itemCategory.CategoryId, ItemCategoryTable.CategoryIdColumn);
 
                 string updateCommandText = base.BuildSQLUpdateText(ItemCategoryTable.TableName, parameters, whereParameters, "AND", "=");
                 return base.ExecuteNonQuery(parameters, updateCommandText);
@@ -120,10 +120,10 @@ namespace DataAccessModule
         public override int Delete(ItemCategory itemCategory)
         {
             //Build DELETE statement using Primary Key
-            DbParameter[] whereParameters = new DbParameter[3];
-            whereParameters[0] = CreateParameter(ItemCategoryTable.ItemIdParam, itemCategory.ItemId, ItemCategoryTable.ItemIdColumn);
-            whereParameters[1] = CreateParameter(ItemCategoryTable.VendorIdParam, itemCategory.VendorId, ItemCategoryTable.VendorIdColumn);
-            whereParameters[2] = CreateParameter(ItemCategoryTable.CategoryIdParam, itemCategory.CategoryId, ItemCategoryTable.CategoryIdColumn);
+            DatabaseParameter[] whereParameters = new DatabaseParameter[3];
+            whereParameters[0] = CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.ItemIdParam, itemCategory.ItemId, ItemCategoryTable.ItemIdColumn);
+            whereParameters[1] = CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.VendorIdParam, itemCategory.VendorId, ItemCategoryTable.VendorIdColumn);
+            whereParameters[2] = CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.CategoryIdParam, itemCategory.CategoryId, ItemCategoryTable.CategoryIdColumn);
 
             string updateCommandText = base.BuildSQLDeleteText(ItemCategoryTable.TableName, whereParameters, "AND", "=");
             return base.ExecuteNonQuery(whereParameters, updateCommandText);
@@ -141,17 +141,17 @@ namespace DataAccessModule
         }
 
 
-        protected override DbParameter[] CreateAllParameters(ItemCategory itemCategory)
+        protected override DatabaseParameter[] CreateAllParameters(ItemCategory itemCategory)
         {
             //Build Parameters from Properties with Values
-            List<DbParameter> parameters = new List<DbParameter>();
+            List<DatabaseParameter> parameters = new List<DatabaseParameter>();
 
             if (itemCategory.ItemId != null)
-                parameters.Add(CreateParameter(ItemCategoryTable.ItemIdParam, itemCategory.ItemId, ItemCategoryTable.ItemIdColumn));
+                parameters.Add(CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.ItemIdParam, itemCategory.ItemId, ItemCategoryTable.ItemIdColumn));
             if (itemCategory.VendorId != null)
-                parameters.Add(CreateParameter(ItemCategoryTable.VendorIdParam, itemCategory.VendorId, ItemCategoryTable.VendorIdColumn));
+                parameters.Add(CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.VendorIdParam, itemCategory.VendorId, ItemCategoryTable.VendorIdColumn));
             if (itemCategory.CategoryId != null)
-                parameters.Add(CreateParameter(ItemCategoryTable.CategoryIdParam, itemCategory.CategoryId, ItemCategoryTable.CategoryIdColumn));
+                parameters.Add(CreateParameter(ItemCategoryTable.TableName, ItemCategoryTable.CategoryIdParam, itemCategory.CategoryId, ItemCategoryTable.CategoryIdColumn));
 
             return parameters.ToArray();
         }

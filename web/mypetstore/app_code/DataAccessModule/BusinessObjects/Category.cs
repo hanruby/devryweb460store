@@ -25,12 +25,13 @@ namespace DataAccessModule
         {
         }
 
-        public Category(int id, string name, string imageLocation)
+        public Category(int? id, string name, string imageLocation)
         {
             this.id = id;
             this.name = name;
             this.imageLocation = imageLocation;
         }
+
 
         public int? Id
         {
@@ -49,9 +50,5 @@ namespace DataAccessModule
             get { return imageLocation; }
             set { imageLocation = value; }
         }
-
-         
-
-
     }
 }

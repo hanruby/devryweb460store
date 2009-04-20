@@ -40,7 +40,7 @@ namespace DataAccessModule
             //ImageLocation
             if (record[CategoryTable.ImageColumn] != DBNull.Value)
                 category.ImageLocation = (string)record[CategoryTable.ImageColumn];
-            
+
             return category;
         }
     }

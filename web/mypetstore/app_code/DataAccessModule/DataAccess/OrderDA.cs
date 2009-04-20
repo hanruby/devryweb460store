@@ -36,7 +36,7 @@ namespace DataAccessModule
                 return ExecuteQuery(null, BuildSQLSelectText(OrderTable.TableName, null, "", ""));
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(order);
+            DatabaseParameter[] parameters = CreateAllParameters(order);
 
             //Build a SELECT CommandText
             string selectQuery = base.BuildSQLSelectText(OrderTable.TableName, parameters, whereSeperator, whereOperator);
@@ -68,14 +68,14 @@ namespace DataAccessModule
         public override int Save(Order order)
         {
             //Check for the objects existsence in the database using the Primary key
-            var checkParam = new DbParameter[1];
-            checkParam[0] = CreateParameter(OrderTable.IdParam, order.Id, OrderTable.IdColumn);
+            var checkParam = new DatabaseParameter[1];
+            checkParam[0] = CreateParameter(OrderTable.TableName, OrderTable.IdParam, order.Id, OrderTable.IdColumn);
             string commandText = base.BuildSQLSelectText(OrderTable.TableName, checkParam, "", "=");
             Collection<Order> orderCheck = ExecuteQuery(checkParam, commandText);
 
 
             //Build Parameters for base query
-            DbParameter[] parameters = CreateAllParameters(order);
+            DatabaseParameter[] parameters = CreateAllParameters(order);
             
 
             if (orderCheck.Count == 0)
@@ -88,8 +88,8 @@ namespace DataAccessModule
             {   //Row exists, do UPDATE
                 
                 //Build Parameters for WHERE clause using Primary Key
-                List<DbParameter> whereParameters = new List<DbParameter>();
-                whereParameters.Add(CreateParameter(OrderTable.IdParam, order.Id, OrderTable.IdColumn));
+                List<DatabaseParameter> whereParameters = new List<DatabaseParameter>();
+                whereParameters.Add(CreateParameter(OrderTable.TableName, OrderTable.IdParam, order.Id, OrderTable.IdColumn));
 
                 string updateCommandText = base.BuildSQLUpdateText(OrderTable.TableName, parameters, whereParameters.ToArray(), "AND", "=");
                 return base.ExecuteNonQuery(parameters, updateCommandText);
@@ -115,8 +115,8 @@ namespace DataAccessModule
         public override int Delete(Order order)
         {
             //Build DELETE statement using Primary Key
-            DbParameter[] whereParameters = new DbParameter[1];
-            whereParameters[0] = (CreateParameter(OrderTable.IdParam, order.Id, OrderTable.IdColumn));
+            DatabaseParameter[] whereParameters = new DatabaseParameter[1];
+            whereParameters[0] = (CreateParameter(OrderTable.TableName, OrderTable.IdParam, order.Id, OrderTable.IdColumn));
 
             string updateCommandText = base.BuildSQLDeleteText(OrderTable.TableName, whereParameters, "AND", "=");
             return base.ExecuteNonQuery(whereParameters, updateCommandText);
@@ -134,25 +134,25 @@ namespace DataAccessModule
         }
 
 
-        protected override DbParameter[] CreateAllParameters(Order order)
+        protected override DatabaseParameter[] CreateAllParameters(Order order)
         {
             //Build Parameters from Properties with Values
-            List<DbParameter> parameters = new List<DbParameter>();
+            List<DatabaseParameter> parameters = new List<DatabaseParameter>();
 
             if (order.Id != null)
-                parameters.Add(CreateParameter(OrderTable.IdParam, order.Id, OrderTable.IdColumn));
+                parameters.Add(CreateParameter(OrderTable.TableName, OrderTable.IdParam, order.Id, OrderTable.IdColumn));
             if (order.CustomerId != null)
-                parameters.Add(CreateParameter(OrderTable.CustomerIdParam, order.CustomerId, OrderTable.CustomerIdColumn));
+                parameters.Add(CreateParameter(OrderTable.TableName, OrderTable.CustomerIdParam, order.CustomerId, OrderTable.CustomerIdColumn));
             if (order.GrossTotal != null)
-                parameters.Add(CreateParameter(OrderTable.GrossTotalParam, order.GrossTotal, OrderTable.GrossTotalColumn));
+                parameters.Add(CreateParameter(OrderTable.TableName, OrderTable.GrossTotalParam, order.GrossTotal, OrderTable.GrossTotalColumn));
             if (order.Tax != null)
-                parameters.Add(CreateParameter(OrderTable.TaxParam, order.Tax, OrderTable.TaxColumn));
+                parameters.Add(CreateParameter(OrderTable.TableName, OrderTable.TaxParam, order.Tax, OrderTable.TaxColumn));
             if (order.NetTotal != null)
-                parameters.Add(CreateParameter(OrderTable.NetTotalParam, order.NetTotal, OrderTable.NetTotalColumn));
+                parameters.Add(CreateParameter(OrderTable.TableName, OrderTable.NetTotalParam, order.NetTotal, OrderTable.NetTotalColumn));
             if (order.TxnId != null)
-                parameters.Add(CreateParameter(OrderTable.TXNIDParam, order.TxnId, OrderTable.TXNIDColumn));
+                parameters.Add(CreateParameter(OrderTable.TableName, OrderTable.TXNIDParam, order.TxnId, OrderTable.TXNIDColumn));
             if (order.Date != null)
-                parameters.Add(CreateParameter(OrderTable.DateParam, order.Date, OrderTable.DateColumn));
+                parameters.Add(CreateParameter(OrderTable.TableName, OrderTable.DateParam, order.Date, OrderTable.DateColumn));
 
             return parameters.ToArray();
         }
