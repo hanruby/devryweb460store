@@ -733,6 +733,7 @@ public partial class CheckOut : System.Web.UI.Page
 
                 //gets order info based on customerID
                 ordersID.CustomerId = getCustomer2[0].Id;
+                ordersID.TxnId = "";
 
                 OrderDA ordersIDDA = new OrderDA();
 
@@ -779,8 +780,9 @@ public partial class CheckOut : System.Web.UI.Page
 
 
 
-                //  abandon session
+                //abandon session
                 Session.Abandon();
+                Session.Clear();
 
 
 
@@ -879,8 +881,9 @@ public partial class CheckOut : System.Web.UI.Page
                 //p8 = null;
                 //v8 = null;
 
-                // abandon session              
+                //abandon session
                 Session.Abandon();
+                Session.Clear();
             }
 
         }
@@ -1187,8 +1190,9 @@ public partial class CheckOut : System.Web.UI.Page
             System.Web.Security.FormsAuthentication.SetAuthCookie(userName.Text, false);
 
 
-            // abandon the session
+            //abandon session
             Session.Abandon();
+            Session.Clear();
 
             // redirect user to shipping=true
             Response.Redirect("CheckOut.aspx?Shipping=true");

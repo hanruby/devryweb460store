@@ -81,5 +81,88 @@ public partial class UserRegistration : System.Web.UI.Page
             // there was an error creating the users account, delete the users account
             Membership.DeleteUser(newUser.UserName);
         }
+
+
+        if (Session["AnonymousUserName"] != null)
+        {
+
+            // get customerid of user to use customer id
+            // for updating user information
+
+            //Instantiate our customer specific DataAccess Class
+            CustomerDA customerDA2 = new CustomerDA();
+
+
+            //Create an Object that specifies what we want to Get
+            Customer customer2 = new Customer();
+
+            //gets customer info based on customer username
+
+            customer2.Username = Session["AnonymousUserName"].ToString();
+
+            //We will be returned a collection so lets Declare that and fill it using Get()
+            Collection<Customer> getCustomer2 = customerDA.Get(customer2);
+
+
+
+            TextBox userName =
+                (TextBox) userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("UserName");
+
+            TextBox firstName =
+                (TextBox) userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("RtxtFirstName");
+
+            TextBox lastName =
+                (TextBox) userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("RtxtLastName");
+            TextBox address =
+                (TextBox) userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("RtxtAddress");
+            TextBox address2 =
+                (TextBox) userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("RtxtAddress2");
+            TextBox city =
+                (TextBox) userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("RtxtCity");
+            DropDownList state =
+                (DropDownList) userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("cboState");
+            TextBox zipCode =
+                (TextBox) userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("RtxtZip");
+            DropDownList country =
+                (DropDownList) userRegistrationWizard.CreateUserStep.ContentTemplateContainer.FindControl("cboCountry");
+
+
+            // update customer information      
+            Customer customerShipping = new Customer();
+            customerShipping.Id = getCustomer2[0].Id;
+            customerShipping.IsActive = true;
+            customerShipping.Username = userName.Text;
+            customerShipping.FirstName = firstName.Text;
+            customerShipping.LastName = lastName.Text;
+            customerShipping.Address = address.Text;
+            customerShipping.Address2 = address2.Text;
+            customerShipping.City = city.Text;
+            customerShipping.State = state.Text;
+            customerShipping.Zip = zipCode.Text;
+            customerShipping.Country = country.Text;
+
+
+            //Instantiate our customer specific DataAccess Class
+            CustomerDA customerDAShipping = new CustomerDA();
+
+
+            // save customer information
+            customerDAShipping.Save(customerShipping);
+
+            // clear
+            customerShipping = null;
+            customerDAShipping = null;
+
+
+            // LogIn User
+            System.Web.Security.FormsAuthentication.SetAuthCookie(userName.Text, false);
+
+
+            //abandon session
+            Session.Abandon();
+            Session.Clear();
+        }
+
+
     }
 }

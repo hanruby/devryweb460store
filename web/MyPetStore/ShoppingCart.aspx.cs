@@ -222,36 +222,36 @@ public partial class ShoppingCart : System.Web.UI.Page
                     {
 
                         // delete all checked items
-                        //OrderItem orderItemDelete = new OrderItem();
-                        //orderItemDelete.OrderId = int.Parse(orderID.Text);
-                        //orderItemDelete.ItemId = itemID.Text;             
-                        //orderItemDelete.VendorId = int.Parse(vendorID.Text);
+                        OrderItem orderItemDelete = new OrderItem();
+                        orderItemDelete.OrderId = int.Parse(orderID.Text);
+                        orderItemDelete.ItemId = itemID.Text;
+                        orderItemDelete.VendorId = int.Parse(vendorID.Text);
 
 
-                        //OrderItemDA orderItemDeleteDA = new OrderItemDA();
-                        //orderItemDeleteDA.Delete(orderItem);
-
-                        //// clear
-                        //orderItemDelete = null;
-                        //orderItemDeleteDA = null;
-
-                        DAL.DataAccess da3 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        string comm3 =
-                            "Delete FROM OrderItem WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
-
-                        // array with itemID, orderID, and vendorID
-                        string[] p3 = { "@itemID", "@orderID", "@vendorID" };
-                        string[] v3 = { itemID.Text, orderID.Text, vendorID.Text };
-
-
-                        da3.ExecuteNonQuery(comm3, p3, v3);
+                        OrderItemDA orderItemDeleteDA = new OrderItemDA();
+                        orderItemDeleteDA.Delete(orderItemDelete);
 
                         // clear
-                        p3 = null;
-                        v3 = null;
+                        orderItemDelete = null;
+                        orderItemDeleteDA = null;
+
+                        //DAL.DataAccess da3 =
+                        //    new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                        //                       "System.Data.SqlClient");
+
+                        //string comm3 =
+                        //    "Delete FROM OrderItem WHERE ItemID = @itemID AND OrderID = @orderID AND VendorID = @vendorID";
+
+                        //// array with itemID, orderID, and vendorID
+                        //string[] p3 = { "@itemID", "@orderID", "@vendorID" };
+                        //string[] v3 = { itemID.Text, orderID.Text, vendorID.Text };
+
+
+                        //da3.ExecuteNonQuery(comm3, p3, v3);
+
+                        //// clear
+                        //p3 = null;
+                        //v3 = null;
 
 
 

@@ -296,9 +296,7 @@
                 </td>
                 <td>
                     <asp:TextBox ID="txtAddress2" runat="server" MaxLength="50" ToolTip="Enter your address."></asp:TextBox>
-                    <!-- required field validator -->
-                    <asp:RequiredFieldValidator ID="rvAddress2" runat="server" ErrorMessage="Address 2 is required."
-                        Text="*" ControlToValidate="txtAddress2"></asp:RequiredFieldValidator>
+                   
                 </td>
             </tr>
             <tr>

@@ -235,8 +235,9 @@ public partial class Login : System.Web.UI.Page
 
 
 
-                //  abandon session
+                //abandon session
                 Session.Abandon();
+                Session.Clear();
 
 
 
@@ -335,8 +336,9 @@ public partial class Login : System.Web.UI.Page
                 //p8 = null;
                 //v8 = null;
 
-                // abandon session              
+                //abandon session
                 Session.Abandon();
+                Session.Clear();
             }
 
         }

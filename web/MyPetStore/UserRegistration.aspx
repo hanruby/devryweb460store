@@ -9,7 +9,7 @@
 <form id="userRegistrationForm" runat="server">
     <div id="userRegistration">
         <!--Richard Crouch - User registration form-->
-        <asp:CreateUserWizard ID="userRegistrationWizard" runat="server" 
+        <asp:CreateUserWizard ID="userRegistrationWizard" runat="server"  
             OnContinueButtonClick="UserRegistrationWizard_ContinueButtonClick" 
             oncreateduser="userRegistrationWizard_CreatedUser" BackColor="#94b6ff" 
             BorderColor="#133463" BorderStyle="Solid" BorderWidth="1px" 

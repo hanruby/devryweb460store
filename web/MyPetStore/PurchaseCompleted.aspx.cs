@@ -29,13 +29,15 @@ public partial class PurchaseCompleted : System.Web.UI.Page
     private string payer_email;
     private double mc_fee;
     private string tax_cart;
-
+    private string invoice; // for running loop to check prices of items
     private string amount;
+    private string mc_shipping; // for retrieving shipping
     private string orderID; // orderID of payment that goes in custom
 
     private string parent_txn_id; // original txnID used for canceled orders etc
 
     private object txnID;
+    private DateTime datetime;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -74,260 +76,326 @@ public partial class PurchaseCompleted : System.Web.UI.Page
             //process payment
 
 
-
-
-
-            payment_status = Request.Form["payment_status"];
-            //  payment_amount = double.Parse(Request.Form["mc_gross"]).ToString("n2");       //full amount of payment before transaction fee is subtracted
-            //  mc_fee = double.Parse(Request.Form["mc_fee"]); // transaction fee
-            //  payment_currency = Request.Form["mc_currency"];
-            txn_id = Request.Form["txn_id"];                   //unique transaction id
-            receiver_email = Request.Form["receiver_email"];
-            //  payer_email = Request.Form["payer_email"];
-            //  tax_cart = Request.Form["tax"]; // tax for the whole entire cart
-            parent_txn_id = Request.Form["parent_txn_id"]; // original transaction ID
-
-
-            // custom info that we send,
-            // user cannot see it 
-            // used to run loop for as many items as there is
-            orderID = Request.Form["custom"];
-
-
-
-            // check database what price of item is 
-            // and compare it to price paid
-            //string amountThatWasPaid = item_name;
-
-            // if payment status is Completed put order in database
-            // we got the money in our bank!
-
-            if (receiver_email == "akagon_1236919720_biz@yahoo.com") // make sure the receiver email is ours
+            // try catch
+            try
             {
 
 
+                payment_status = Request.Form["payment_status"];
+                payment_amount = double.Parse(Request.Form["mc_gross"]).ToString("n2");       //full amount of payment before transaction fee is subtracted
+                //  mc_fee = double.Parse(Request.Form["mc_fee"]); // transaction fee
+                //  payment_currency = Request.Form["mc_currency"];
+                txn_id = Request.Form["txn_id"];                   //unique transaction id
+                receiver_email = Request.Form["receiver_email"];
+                //  payer_email = Request.Form["payer_email"];
+                //  tax_cart = Request.Form["tax"]; // tax for the whole entire cart
+                parent_txn_id = Request.Form["parent_txn_id"]; // original transaction ID
+                mc_shipping = Request.Form["invoice"]; // used for calculating price paid for comparing with database price paid
 
-                // count how many orderIDs that have not been verified exist in the orders table
-                DAL.DataAccess da5 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
+
+                // custom info that we send,
+                orderID = Request.Form["custom"];
+
+
+                // creates datetime
+                datetime = DateTime.Now;
+
+                // check database what price of item is 
+                // and compare it to price paid
+                //string amountThatWasPaid = item_name;
+
+                // if payment status is Completed put order in database
+                // we got the money in our bank!
+
+
+
+                decimal grossTotal;
+
+
+
+
+
+
+                // see if item exists in database 
+                DAL.DataAccess da6 = new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString, "System.Data.SqlClient");
 
                 // make command statement 
-                string comm5 = "SELECT COUNT(OrderID) FROM Orders WHERE TXNID = @txnID";
-                //"SELECT Count(*) FROM Orders"; //WHERE CustomerID = @customerID AND TXNID = @txnID";
+                string comm6 = "SELECT GrossTotal FROM Orders WHERE OrderID = @orderID";
 
-                DataSet ds5 = new DataSet();
+                DataSet ds6 = new DataSet();
 
 
                 // make arrays for paramaters and input
-                string[] s5 = { "@txnID" };
-                string[] v5 = { txn_id };
-                ds5 = da5.ExecuteQuery(comm5, s5, v5);
+                string[] s6 = { "@orderID" };
+                string[] v6 = { orderID };
+                ds6 = da6.ExecuteQuery(comm6, s6, v6);
 
+                // returns a 1 if the item exists if not the transaction is a dummy 
+                grossTotal = decimal.Parse(ds6.Tables[0].Rows[0].ItemArray[0].ToString());
 
-                // returns one item
-                txnID = ds5.Tables[0].Rows[0].ItemArray[0];
-
+                // subtract shipping to compare to gross total 
+               decimal total = decimal.Parse(grossTotal.ToString("n2")) - decimal.Parse(mc_shipping);
 
                 //clear
-                s5 = null;
-                v5 = null;
+                s6 = null;
+                v6 = null;
 
 
-                if (int.Parse(txnID.ToString()) == 0)
+                // make sure customer paid the correct amount
+                // total < 0 for reversals
+                if (grossTotal.ToString("n2") == total.ToString("n2") || total < 0)
                 {
-                    if (payment_status == "Completed")
+
+                    // check to see if email returned is ours
+                    if (receiver_email == "akagon_1236919720_biz@yahoo.com") // make sure the receiver email is ours
                     {
-                        // update total of orders table for the customer
-                        DAL.DataAccess da2 =
+
+
+
+                        // count how many orderIDs that have not been verified exist in the orders table
+                        DAL.DataAccess da5 =
                             new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
                                                "System.Data.SqlClient");
 
-                        string comm2 =
-                            "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus WHERE OrderID = @orderID";
+                        // make command statement 
+                        string comm5 = "SELECT COUNT(OrderID) FROM Orders WHERE TXNID = @txnID";
+
+                        DataSet ds5 = new DataSet();
+
+
+                        // make arrays for paramaters and input
+                        string[] s5 = { "@txnID" };
+                        string[] v5 = { txn_id };
+                        ds5 = da5.ExecuteQuery(comm5, s5, v5);
+
+
+                        // returns one item
+                        txnID = ds5.Tables[0].Rows[0].ItemArray[0];
+
+
+                        //clear
+                        s5 = null;
+                        v5 = null;
+
+
+                        if (int.Parse(txnID.ToString()) == 0)
+                        {
+                            if (payment_status == "Completed")
+                            {
+                                // update total of orders table for the customer
+                                DAL.DataAccess da2 =
+                                    new DAL.DataAccess(
+                                        ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                        "System.Data.SqlClient");
+
+                                string comm2 =
+                                    "UPDATE Orders SET TXNID = @txnID, PaymentStatus, Date = @date = @paymentStatus WHERE OrderID = @orderID";
 
 
 
-                        // empty array
-                        string[] p2 = { "@txnID", "@paymentStatus", "@orderID" };
-                        string[] v2 = { txn_id, "Completed", orderID };
+                                // empty array
+                                string[] p2 = { "@txnID", "@paymentStatus", "@orderID", "@date" };
+                                string[] v2 = { txn_id, "Completed", orderID, datetime.ToString() };
 
 
-                        da2.ExecuteNonQuery(comm2, p2, v2);
+                                da2.ExecuteNonQuery(comm2, p2, v2);
 
-                        // clear
-                        p2 = null;
-                        v2 = null;
-
-
-                    }
-
-                    // if payment status is pending
-                    if (payment_status == "Pending")
-                    {
-                        // update total of orders table for the customer
-                        DAL.DataAccess da2 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        string comm2 =
-                            "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus WHERE OrderID = @orderID";
+                                // clear
+                                p2 = null;
+                                v2 = null;
 
 
-                        // empty array
-                        string[] p2 = { "@txnID", "@paymentStatus", "@orderID" };
-                        string[] v2 = { txn_id, "Pending", orderID };
+                            }
+
+                            // if payment status is pending
+                            if (payment_status == "Pending")
+                            {
+                                // update total of orders table for the customer
+                                DAL.DataAccess da2 =
+                                    new DAL.DataAccess(
+                                        ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                        "System.Data.SqlClient");
+
+                                string comm2 =
+                                    "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus, Date = @date WHERE OrderID = @orderID";
 
 
-                        da2.ExecuteNonQuery(comm2, p2, v2);
-
-                        // clear
-                        p2 = null;
-                        v2 = null;
-                    }
-                    // if payment status is Processed
-                    if (payment_status == "Processed")
-                    {
-                        // update total of orders table for the customer
-                        DAL.DataAccess da2 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        string comm2 =
-                            "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus WHERE OrderID = @orderID";
+                                // empty array
+                                string[] p2 = { "@txnID", "@paymentStatus", "@orderID", "@date" };
+                                string[] v2 = { txn_id, "Pending", orderID, datetime.ToString() };
 
 
-                        // empty array
-                        string[] p2 = { "@txnID", "@paymentStatus", "@orderID" };
-                        string[] v2 = { txn_id, "Processed", orderID };
+                                da2.ExecuteNonQuery(comm2, p2, v2);
+
+                                // clear
+                                p2 = null;
+                                v2 = null;
+                            }
+                            // if payment status is Processed
+                            if (payment_status == "Processed")
+                            {
+                                // update total of orders table for the customer
+                                DAL.DataAccess da2 =
+                                    new DAL.DataAccess(
+                                        ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                        "System.Data.SqlClient");
+
+                                string comm2 =
+                                    "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus, Date = @date WHERE OrderID = @orderID";
 
 
-                        da2.ExecuteNonQuery(comm2, p2, v2);
-
-                        // clear
-                        p2 = null;
-                        v2 = null;
-                    }
-                    // if payment status is Refunded 
-                    //  parent_txn_id = old txn_id
-                    if (payment_status == "Refunded")
-                    {
-                        // update total of orders table for the customer
-                        DAL.DataAccess da2 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        string comm2 =
-                            "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus WHERE OrderID = @orderID";
+                                // empty array
+                                string[] p2 = { "@txnID", "@paymentStatus", "@orderID", "@date" };
+                                string[] v2 = { txn_id, "Processed", orderID, datetime.ToString() };
 
 
-                        // empty array
-                        string[] p2 = { "@txnID", "@paymentStatus", "@orderID" };
-                        string[] v2 = { txn_id, "Refunded", orderID };
+                                da2.ExecuteNonQuery(comm2, p2, v2);
+
+                                // clear
+                                p2 = null;
+                                v2 = null;
+                            }
+                            // if payment status is Refunded 
+                            //  parent_txn_id = old txn_id
+                            if (payment_status == "Refunded")
+                            {
+                                // update total of orders table for the customer
+                                DAL.DataAccess da2 =
+                                    new DAL.DataAccess(
+                                        ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                        "System.Data.SqlClient");
+
+                                string comm2 =
+                                    "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus, Date = @date WHERE OrderID = @orderID";
 
 
-                        da2.ExecuteNonQuery(comm2, p2, v2);
-
-                        // clear
-                        p2 = null;
-                        v2 = null;
-                    }
-                    // if payment status is Reversed
-                    //  parent_txn_id = old txn_id
-                    if (payment_status == "Reversed")
-                    {
-                        // update total of orders table for the customer
-                        DAL.DataAccess da2 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        string comm2 =
-                            "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus WHERE OrderID = @orderID";
+                                // empty array
+                                string[] p2 = { "@txnID", "@paymentStatus", "@orderID", "@date" };
+                                string[] v2 = { txn_id, "Refunded", orderID, datetime.ToString() };
 
 
-                        // empty array
-                        string[] p2 = { "@txnID", "@paymentStatus", "@orderID" };
-                        string[] v2 = { txn_id, "Reversed", orderID };
+                                da2.ExecuteNonQuery(comm2, p2, v2);
+
+                                // clear
+                                p2 = null;
+                                v2 = null;
+                            }
+                            // if payment status is Reversed
+                            //  parent_txn_id = old txn_id
+                            if (payment_status == "Reversed")
+                            {
+                                // update total of orders table for the customer
+                                DAL.DataAccess da2 =
+                                    new DAL.DataAccess(
+                                        ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                        "System.Data.SqlClient");
+
+                                string comm2 =
+                                    "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus, Date = @date WHERE OrderID = @orderID";
 
 
-                        da2.ExecuteNonQuery(comm2, p2, v2);
-
-                        // clear
-                        p2 = null;
-                        v2 = null;
-                    }
-                    // if payment status is Canceled_Reversal
-                    //  parent_txn_id = old txn_id
-                    if (payment_status == "Canceled_Reversal")
-                    {
-                        // update total of orders table for the customer
-                        DAL.DataAccess da2 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        string comm2 =
-                            "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus WHERE OrderID = @orderID";
+                                // empty array
+                                string[] p2 = { "@txnID", "@paymentStatus", "@orderID", "@date" };
+                                string[] v2 = { txn_id, "Reversed", orderID, datetime.ToString() };
 
 
-                        // empty array
-                        string[] p2 = { "@txnID", "@paymentStatus", "@orderID" };
-                        string[] v2 = { txn_id, "Canceled Reversal", orderID };
+                                da2.ExecuteNonQuery(comm2, p2, v2);
+
+                                // clear
+                                p2 = null;
+                                v2 = null;
+                            }
+                            // if payment status is Canceled_Reversal
+                            //  parent_txn_id = old txn_id
+                            if (payment_status == "Canceled_Reversal")
+                            {
+                                // update total of orders table for the customer
+                                DAL.DataAccess da2 =
+                                    new DAL.DataAccess(
+                                        ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                        "System.Data.SqlClient");
+
+                                string comm2 =
+                                    "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus, Date = @date WHERE OrderID = @orderID";
 
 
-                        da2.ExecuteNonQuery(comm2, p2, v2);
-
-                        // clear
-                        p2 = null;
-                        v2 = null;
-                    }
-                    // if payment status is Voided
-                    if (payment_status == "Voided")
-                    {
-                        // update total of orders table for the customer
-                        DAL.DataAccess da2 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        string comm2 =
-                            "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus WHERE OrderID = @orderID";
+                                // empty array
+                                string[] p2 = { "@txnID", "@paymentStatus", "@orderID", "@date" };
+                                string[] v2 = { txn_id, "Canceled Reversal", orderID, datetime.ToString() };
 
 
-                        // empty array
-                        string[] p2 = { "@txnID", "@paymentStatus", "@orderID" };
-                        string[] v2 = { txn_id, "Voided", orderID };
+                                da2.ExecuteNonQuery(comm2, p2, v2);
+
+                                // clear
+                                p2 = null;
+                                v2 = null;
+                            }
+                            // if payment status is Voided
+                            if (payment_status == "Voided")
+                            {
+                                // update total of orders table for the customer
+                                DAL.DataAccess da2 =
+                                    new DAL.DataAccess(
+                                        ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                        "System.Data.SqlClient");
+
+                                string comm2 =
+                                    "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus, Date = @date WHERE OrderID = @orderID";
 
 
-                        da2.ExecuteNonQuery(comm2, p2, v2);
-
-                        // clear
-                        p2 = null;
-                        v2 = null;
-                    }
-                    // if payment status is Denied
-                    if (payment_status == "Denied")
-                    {
-                        // update total of orders table for the customer
-                        DAL.DataAccess da2 =
-                            new DAL.DataAccess(ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
-                                               "System.Data.SqlClient");
-
-                        string comm2 =
-                            "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus WHERE OrderID = @orderID";
+                                // empty array
+                                string[] p2 = { "@txnID", "@paymentStatus", "@orderID", "@date" };
+                                string[] v2 = { txn_id, "Voided", orderID, datetime.ToString() };
 
 
-                        // empty array
-                        string[] p2 = { "@txnID", "@paymentStatus", "@orderID" };
-                        string[] v2 = { txn_id, "Denied", orderID };
+                                da2.ExecuteNonQuery(comm2, p2, v2);
+
+                                // clear
+                                p2 = null;
+                                v2 = null;
+                            }
+                            // if payment status is Denied
+                            if (payment_status == "Denied")
+                            {
+                                // update total of orders table for the customer
+                                DAL.DataAccess da2 =
+                                    new DAL.DataAccess(
+                                        ConfigurationManager.ConnectionStrings["MyPetStoreDB"].ConnectionString,
+                                        "System.Data.SqlClient");
+
+                                string comm2 =
+                                    "UPDATE Orders SET TXNID = @txnID, PaymentStatus = @paymentStatus, Date = @date WHERE OrderID = @orderID";
 
 
-                        da2.ExecuteNonQuery(comm2, p2, v2);
+                                // empty array
+                                string[] p2 = { "@txnID", "@paymentStatus", "@orderID", "@date" };
+                                string[] v2 = { txn_id, "Denied", orderID, datetime.ToString() };
 
-                        // clear
-                        p2 = null;
-                        v2 = null;
+
+                                da2.ExecuteNonQuery(comm2, p2, v2);
+
+                                // clear
+                                p2 = null;
+                                v2 = null;
+                            }
+
+                        }
+
+                        //abandon session
+                        Session.Abandon();
+                        Session.Clear();
                     }
 
                 }
+            } // end of try
+            catch (SqlException)
+            {
+                // nothing
             }
-
+            catch (Exception)
+            {
+                // nothing
+            }
             //   string paymentStatus = HttpUtility.UrlDecode(Request.Form["payment_status"].ToString());
         }
         else if (strResponse == "INVALID")
