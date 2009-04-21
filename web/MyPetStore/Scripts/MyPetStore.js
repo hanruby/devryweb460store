@@ -13,7 +13,16 @@ $(document).ready(function() {
         href: "Login.aspx?height=140&width=215&modal=true",
         title: "Login"
     }).addClass('thickbox');
-
+    
+    $("a:contains('Not a member?')").attr({
+        href: "UserRegistration.aspx?height=470&width=300&modal=true",
+        title: "UserRegistration"
+    }).addClass('thickbox');
+    
+//    $("a:contains('My Account')").attr({
+//        href: "ViewProfile.aspx?height=400&width=300&modal=true",
+//        title: "ViewProfile"
+//    }).addClass('thickbox');
 
     //call tablesorter plugin on all gv's with tablesorter class
     $(".tablesorter").tablesorter();

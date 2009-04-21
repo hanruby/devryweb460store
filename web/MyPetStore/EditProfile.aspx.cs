@@ -14,8 +14,8 @@ public partial class EditProfile : System.Web.UI.Page
         if (Membership.GetUser() != null && !Page.IsPostBack)
         {
             // create customer object to search for
-            Customer customerSearchObject = new Customer(null,null,Membership.GetUser().UserName,null,null,null,
-                null,null,null,null,null);
+            Customer customerSearchObject = new Customer(null, null, Membership.GetUser().UserName, null, null, null,
+                null, null, null, null, null);
 
             // get current user customer account information from the database
             CustomerDA customerDA = new CustomerDA();
@@ -92,12 +92,12 @@ public partial class EditProfile : System.Web.UI.Page
             try
             {
                 // create a customer business object
-                Customer customerObj = new Customer(customerID, true, currentUser.UserName, txtFirstName.Text, 
+                Customer customerObj = new Customer(customerID, true, currentUser.UserName, txtFirstName.Text,
                     txtLastName.Text, txtAddress.Text, txtAddress2.Text, txtCity.Text, cboState.Text, txtZip.Text, cboCountry.Text);
 
                 // commit customer business object to the DB using the CustomerDA
                 customerDA.Save(customerObj);
-                
+
                 // Update user e-mail
                 currentUser.Email = txtEmail.Text;
                 Membership.UpdateUser(currentUser);

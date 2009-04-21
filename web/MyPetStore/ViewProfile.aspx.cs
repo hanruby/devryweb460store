@@ -40,6 +40,6 @@ public partial class ViewProfile : System.Web.UI.Page
     protected void btnEditProfile_Click(object sender, EventArgs e)
     {
         // redirect user to edit profile page
-        Response.Redirect("EditProfile.aspx" );
+        Response.Redirect("EditProfile.aspx");
     }
 }

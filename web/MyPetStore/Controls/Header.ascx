@@ -4,7 +4,7 @@
     <!--Richard Crouch - This code displays the users login status and gives them the option of logging in and out-->
     <p><asp:LoginView ID="view" runat="server">
         <AnonymousTemplate>
-            <asp:LoginStatus ID="loginStatus1" runat="server" /> | Not a member? <a href="UserRegistration.aspx">Click here!</a>
+            <asp:LoginStatus ID="loginStatus1" runat="server" /> | <a href="UserRegistration.aspx">Not a member? Click here!</a>
         </AnonymousTemplate>
         <LoggedInTemplate>
             Welcome, <asp:LoginName ID="loginName" runat="server" />! | <asp:LoginStatus ID="loginStatus1" runat="server" />

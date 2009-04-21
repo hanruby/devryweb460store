@@ -1,14 +1,19 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="EditProfile.aspx.cs" Inherits="EditProfile" Title="Edit Profile" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="EditProfile.aspx.cs" Inherits="EditProfile" Title="Untitled Page" %>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1" runat="server">
-    <title>Edit Profile</title>
-</head>
-
-<body>
-<form id="editProfile" runat="server">
-    <p>Editing your profile . . .</p>
+<asp:Content ID="Content1" ContentPlaceHolderID="headPH" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="headerPH" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="navMenuPH" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="leftColumnPH" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content5" ContentPlaceHolderID="PagePhotoPH" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content6" ContentPlaceHolderID="rightColumnPH" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content7" ContentPlaceHolderID="mainContentPH" Runat="Server">
+<p>Editing your profile . . .</p>
     <br />
     <table border="0" cellpadding="1" cellspacing="0">
         <tr>
@@ -172,6 +177,7 @@
             </td>
         </tr>
     </table>
-</form>
-</body>
-</html>
+</asp:Content>
+<asp:Content ID="Content8" ContentPlaceHolderID="footerPH" Runat="Server">
+</asp:Content>
+
